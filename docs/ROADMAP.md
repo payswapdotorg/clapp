@@ -8,11 +8,11 @@ Legend:
 ```
 CLAPP
 │
-├── ⬜ P0 Foundation
-│   ├── ⬜ workspace + CI
-│   ├── ⬜ persistence/artifact layer
-│   ├── ⬜ sandbox + execution contract
-│   └── ⬜ worker orchestration contract
+├── ✅ P0 Foundation
+│   ├── ✅ workspace + CI (CLAPP-001, merged feec678)
+│   ├── ✅ persistence/artifact layer (CLAPP-002, merged 234d29f)
+│   ├── ✅ sandbox + execution contract (CLAPP-003, merged cc5aa94)
+│   └── 🟡 worker orchestration contract (dispatch via replay verified; repo-side contract pending)
 │
 ├── ⬜ P1 Web Observation
 │   ├── ⬜ Playwright runner
