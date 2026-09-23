@@ -1,0 +1,9 @@
+{
+  "name": "@clapp/core",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "CLAPP run/event/artifact core contract (v0) and pure helpers.",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}
