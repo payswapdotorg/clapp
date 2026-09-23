@@ -1,0 +1,9 @@
+{
+  // Root typecheck program. A solution-style `references` setup was rejected
+  // for this wave: sibling packages (store, sandbox) do not exist yet, so a
+  // references list would either break or require per-wave edits. This include
+  // glob instead typechecks the sources of EVERY workspace package that
+  // exists, automatically, in one strict program.
+  "extends": "./tsconfig.base.json",
+  "include": ["packages/*/src/**/*.ts"]
+}

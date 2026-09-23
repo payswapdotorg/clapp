@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# OS / editor noise
+.DS_Store
+
+# Local logs
+*.log
+
+# Secrets — never commit (platform-wide policy)
+.env
+.env.*
