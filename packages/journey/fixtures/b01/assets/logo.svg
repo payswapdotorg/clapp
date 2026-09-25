@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Nimbus Notes logo">
+  <title>Nimbus Notes logo</title>
+  <path d="M18 40a9 9 0 0 1 .9-17.96A13 13 0 0 1 44 24.5 8.5 8.5 0 0 1 43.5 40Z" fill="#0f766e"/>
+  <rect x="22" y="40" width="20" height="16" rx="2.5" fill="#f7f5f0" stroke="#1f2933" stroke-width="2"/>
+  <line x1="26" y1="45" x2="38" y2="45" stroke="#1f2933" stroke-width="2" stroke-linecap="round"/>
+  <line x1="26" y1="50" x2="34" y2="50" stroke="#1f2933" stroke-width="2" stroke-linecap="round"/>
+</svg>

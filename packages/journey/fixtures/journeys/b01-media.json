@@ -1,0 +1,17 @@
+{
+  "id": "journey_3a803288-80fa-48d1-8cff-274d36bcc857",
+  "name": "B01 media and assets tour",
+  "targetId": "bench/b01-static",
+  "actions": [
+    { "type": "navigate", "url": "/" },
+    { "type": "assert-visible", "target": { "role": "img", "name": "Nimbus Notes logo" } },
+    { "type": "assert-visible", "target": { "role": "img", "name": "Illustration of notes organized among clouds" } },
+    { "type": "wait", "ms": 25 },
+    { "type": "click", "target": { "role": "link", "name": "Features", "nth": 0 } },
+    { "type": "assert-visible", "target": { "role": "heading", "name": "Everything you need to stay organized" } },
+    { "type": "assert-visible", "target": { "role": "img", "name": "Nimbus Notes logo" } },
+    { "type": "click", "target": { "role": "link", "name": "Features", "nth": 1 } },
+    { "type": "assert-visible", "target": { "role": "heading", "name": "Everything you need to stay organized" } },
+    { "type": "assert-visible", "target": { "role": "contentinfo" } }
+  ]
+}

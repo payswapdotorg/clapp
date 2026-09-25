@@ -16,9 +16,36 @@
       "name": "@clapp/core",
       "version": "0.1.0",
     },
+    "packages/journey": {
+      "name": "@clapp/journey",
+      "version": "0.1.0",
+      "devDependencies": {
+        "@clapp/sandbox": "workspace:*",
+      },
+    },
+    "packages/sandbox": {
+      "name": "@clapp/sandbox",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+      },
+    },
+    "packages/store": {
+      "name": "@clapp/store",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+      },
+    },
   },
   "packages": {
     "@clapp/core": ["@clapp/core@workspace:packages/core"],
+
+    "@clapp/journey": ["@clapp/journey@workspace:packages/journey"],
+
+    "@clapp/sandbox": ["@clapp/sandbox@workspace:packages/sandbox"],
+
+    "@clapp/store": ["@clapp/store@workspace:packages/store"],
 
     "@eslint-community/eslint-utils": ["@eslint-community/eslint-utils@4.10.1", "", { "dependencies": { "eslint-visitor-keys": "^3.4.3" }, "peerDependencies": { "eslint": "^6.0.0 || ^7.0.0 || >=8.0.0" } }, "sha512-cuadcxVFE8sDK6iWJbs8Sn0av2Nrh2QSGQhVlBW9AaAHqHwjWsZHT8LJ4hFGPh7ASBV2deFdM7H/DPjulmh8rg=="],
 

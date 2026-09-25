@@ -1,0 +1,18 @@
+{
+  "id": "journey_5bee1e16-86b8-4447-8c9e-26ee583a341a",
+  "name": "B01 navigation walkthrough",
+  "targetId": "bench/b01-static",
+  "actions": [
+    { "type": "navigate", "url": "/" },
+    { "type": "assert-visible", "target": { "role": "navigation", "name": "Main" } },
+    { "type": "click", "target": { "testId": "nav-features" } },
+    { "type": "assert-visible", "target": { "role": "heading", "name": "Everything you need to stay organized" } },
+    { "type": "click", "target": { "role": "link", "name": "Pricing", "nth": 0 } },
+    { "type": "assert-visible", "target": { "role": "heading", "name": "Simple, honest pricing" } },
+    { "type": "click", "target": { "testId": "nav-home" } },
+    { "type": "assert-visible", "target": { "role": "heading", "name": "Capture every idea, calmly" } },
+    { "type": "click", "target": { "role": "link", "name": "Contact", "nth": 0 } },
+    { "type": "assert-visible", "target": { "role": "heading", "name": "We'd love to hear from you" } },
+    { "type": "wait", "ms": 25 }
+  ]
+}

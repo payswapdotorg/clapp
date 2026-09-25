@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact — Nimbus Notes</title>
+  <meta name="description" content="Send the Nimbus Notes team a message: questions, support, or sales.">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <a class="logo-link" href="/" aria-label="Nimbus Notes home" data-testid="logo-link">
+      <img class="logo" src="assets/logo.svg" alt="Nimbus Notes logo" width="40" height="40">
+      <span class="logo-word">Nimbus Notes</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" data-testid="nav-toggle">
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
+    </button>
+    <nav class="main-nav" aria-label="Main">
+      <a href="/" data-testid="nav-home">Home</a>
+      <a href="features.html" data-testid="nav-features">Features</a>
+      <a href="pricing.html" data-testid="nav-pricing">Pricing</a>
+      <a href="contact.html" data-testid="nav-contact">Contact</a>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <h1 data-testid="contact-heading">We'd love to hear from you</h1>
+    <p class="lead">Questions, support, or sales — one form, no ticket maze.</p>
+
+    <form class="contact-form" action="contact-success.html" method="get" data-testid="contact-form">
+      <p>
+        <label for="contact-name">Your name</label>
+        <input id="contact-name" name="name" type="text" autocomplete="name" data-testid="contact-name" required>
+      </p>
+      <p>
+        <label for="contact-email">Email address</label>
+        <input id="contact-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" data-testid="contact-email" required>
+      </p>
+      <p>
+        <label for="contact-topic">Topic</label>
+        <select id="contact-topic" name="topic" data-testid="contact-topic">
+          <option value="general" selected>General question</option>
+          <option value="support">Support</option>
+          <option value="sales">Sales</option>
+        </select>
+      </p>
+      <p>
+        <label for="contact-message">Message</label>
+        <textarea id="contact-message" name="message" rows="6" data-testid="contact-message" required></textarea>
+      </p>
+      <button class="button" type="submit" data-testid="contact-submit">Send message</button>
+    </form>
+
+    <aside class="contact-aside">
+      <h2>Other ways to reach us</h2>
+      <p>Write to <strong>hello@nimbusnotes.example</strong> any time.</p>
+      <p>We reply within two business days.</p>
+    </aside>
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Footer">
+      <a href="/">Home</a>
+      <a href="features.html">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <form class="newsletter-form" action="newsletter-success.html" method="get">
+      <h2>Stay in the loop</h2>
+      <label for="newsletter-email">Email address</label>
+      <input id="newsletter-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" data-testid="newsletter-email" required>
+      <button type="submit" data-testid="newsletter-submit">Subscribe</button>
+    </form>
+    <p class="copyright"><small>&copy; <span data-year="2026">2026</span> Nimbus Notes. A CLAPP b01 benchmark fixture.</small></p>
+  </footer>
+</body>
+</html>

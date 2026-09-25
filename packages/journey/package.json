@@ -1,0 +1,13 @@
+{
+  "name": "@clapp/journey",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CLAPP journey recording/replay, DOM action applier, and bench-b01 fixture corpus (CLAPP-012).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@clapp/sandbox": "workspace:*"
+  }
+}
