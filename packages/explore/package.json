@@ -1,0 +1,22 @@
+{
+  "name": "@clapp/explore",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CLAPP exploration policy: budgeted walks of an authorized app that discover screens, record journeys and action-level evidence through the frozen applier, and emit Behavioral-IR state-graph fragments (CLAPP-022).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@clapp/core": "workspace:*",
+    "@clapp/evidence": "workspace:*",
+    "@clapp/journey": "workspace:*"
+  },
+  "devDependencies": {
+    "@clapp/observe": "workspace:*",
+    "@clapp/store": "workspace:*"
+  }
+}
