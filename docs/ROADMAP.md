@@ -23,12 +23,12 @@ CLAPP
 │   ├── ✅ evidence manifest + provenance (@clapp/evidence — bundle + rootHash + 11 tamper codes)
 │   └── ✅ journey recording/replay (@clapp/journey — b01 corpus + 4 seeded journeys + sandbox proof)
 │
-├── ⬜ P2 Behavioral Model
-│   ├── ⬜ Behavioral IR
-│   ├── ⬜ state/transition extraction
-│   ├── ⬜ API contract extraction
-│   ├── ⬜ autonomous exploration
-│   └── ⬜ journey DSL
+├── ✅ P2 Behavioral Model
+│   ├── ✅ Behavioral IR (@clapp/ir — contract v0.1 canonical owner, validator, canonical serialize, diff, builder; CLAPP-020)
+│   ├── ✅ state/transition extraction (@clapp/extract — evidence→IR pipeline; CLAPP-021)
+│   ├── ✅ API contract extraction (@clapp/extract — api operations from network evidence; CLAPP-021)
+│   ├── ✅ autonomous exploration (@clapp/explore — deterministic budgeted walks, action-level evidence, IR emission; CLAPP-022)
+│   └── ✅ journey DSL (@clapp/journey — action/journey contract + recorder/replayer vocabulary; delivered at P1, frozen with the P1 surface)
 │
 ├── ⬜ P3 Web Synthesis
 │   ├── ⬜ architecture planner
