@@ -14,13 +14,14 @@ CLAPP
 │   ├── ✅ sandbox + execution contract (CLAPP-003, merged cc5aa94)
 │   └── 🟡 worker orchestration contract (dispatch via replay verified; repo-side contract pending)
 │
-├── ⬜ P1 Web Observation
-│   ├── ⬜ Playwright runner
-│   ├── ⬜ CDP adapter
-│   ├── ⬜ UI/accessibility capture
-│   ├── ⬜ network/WebSocket capture
-│   ├── ⬜ storage/service-worker evidence
-│   └── ⬜ evidence manifest + provenance
+├── ✅ P1 Web Observation
+│   ├── ✅ Playwright runner (@clapp/observe — ObservationRunner + PageDriver, e2e green in chromium)
+│   ├── ✅ CDP adapter (playwright-session CDP attach; browser-log channel)
+│   ├── ✅ UI/accessibility capture (DOM serializer + role table + a11y semantics)
+│   ├── ✅ network/WebSocket capture (request/response/failure + WS frames)
+│   ├── ✅ storage/service-worker evidence (ls/ss/cookies/SW/caches/IDB inventories)
+│   ├── ✅ evidence manifest + provenance (@clapp/evidence — bundle + rootHash + 11 tamper codes)
+│   └── ✅ journey recording/replay (@clapp/journey — b01 corpus + 4 seeded journeys + sandbox proof)
 │
 ├── ⬜ P2 Behavioral Model
 │   ├── ⬜ Behavioral IR

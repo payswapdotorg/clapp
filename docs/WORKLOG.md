@@ -95,3 +95,89 @@ Each entry should include:
 - newly discovered risks
 - ADRs added/changed
 - next unblocked work
+
+## 2026-09-25 — Phase 1 integrated: web observation engine (re-dispatched wave)
+
+Wave/phase: P1 Web Observation (CLAPP-010, CLAPP-011, CLAPP-012), three
+parallel workers. (Full re-dispatch: the original 2026-09-24 P1 sessions and
+their staged sandboxes were reaped server-side before delivery transit; the
+wave restarted from NOT_STARTED on the frozen Phase-0 base per the
+sandbox-reset doctrine — nothing was lost that had reached origin.)
+
+Integrated commits:
+- 350f9eb — base (Phase-0, frozen contracts).
+- dbb45e7 — CLAPP-011 (W2): packages/evidence — RecordingSession over the
+  frozen RunStore/ArtifactStore implementing the canonical EvidenceRecorder
+  port; EvidenceBundle manifest + canonicalJson + rootHash; verify() with
+  the fixed 11-code tamper set; saveBundle/loadBundle; 117 tests.
+- bd1046e (2 commits) — CLAPP-012 (W3): packages/journey — canonical
+  journey-contract.ts; validateJourney with path-qualified errors; recorder
+  state machine; DOM ActionApplier on an in-package minidom/a11y shim;
+  replayJourney; b01 fixture corpus (6 pages, zero external refs) + stdlib
+  fixture server; 4 seeded journeys; never-skipped sandbox-execution proof;
+  bonus Playwright applier (green in real chromium); 141 tests.
+- 12298ba — CLAPP-010 (W1): packages/observe — ObservationRunner over a
+  PageDriver port (Playwright-backed); capture channels (DOM+roles,
+  screenshots, console/runtime, network req/resp/failure, WS frames,
+  storage inventories, SW registrations, static inventory) through
+  SessionCore (prune/redact/canonical-check/bounded batching) into the
+  EvidenceRecorder port; launchServerInSandbox under the frozen
+  SandboxExecutor with duration-budget reaper; 135 tests incl. real e2e.
+- 5da2d68, 4686200, 7c151a1 — tech-lead integration merges (bun.lock
+  regenerated at the 012 and 010 seams; conflict-free elsewhere).
+
+Tests: station battery on the integrated tree AND on a fresh clean
+checkout (identical): bun install 230 packages; bun run typecheck 0
+errors; bun run lint 0 errors; bun test 485 pass / 0 fail / 1885 expect()
+calls across 38 files — exact reconciliation with the three worker
+reports (92+117+141+135 tests; 293+365+576+651 expects). 010's browser
+e2e suites executed in this environment's cached chromium (not skipped).
+
+Acceptance status:
+- CLAPP-010 (authorized test app yields a complete observation session;
+  records immutable, hashed, redacted, deterministic) — PASS.
+- CLAPP-011 (evidence bundle written, hashed, retrieved, replayed;
+  tamper-evident with fixed codes) — PASS.
+- CLAPP-012 (journeys record → validate → replay against the b01 corpus
+  inside an isolated execution profile) — PASS.
+
+Interface freezes (tech-lead decision, effective now):
+- Capture contract v0: packages/evidence/src/capture-contract.ts —
+  CANONICAL (byte-identical mirror verified in @clapp/observe). Changes
+  require an ADR.
+- Journey contract v0: packages/journey/src/journey-contract.ts —
+  CANONICAL (byte-identical mirror verified in @clapp/observe). Changes
+  require an ADR.
+- @clapp/evidence public surface (RecordingSession, EvidenceBundle,
+  buildBundle, loadRunFromStores, verify, saveBundle, loadBundle,
+  TamperCode union, TAMPER_CODES, canonicalJson/Bytes) — FROZEN
+  (tamper codes are extend-only, never rename).
+- @clapp/journey public surface (validateJourney, createRecorder,
+  ActionApplier, replayers, fixture-server launcher) — FROZEN.
+- @clapp/observe public surface (ObservationRunner, PageDriver,
+  createPlaywrightDriverFactory, launchServerInSandbox, SessionCore,
+  capture-contract mirror) — FROZEN.
+
+Newly discovered risks:
+- Worker-chat + workspace reaping after long idle: the platform reaped
+  ALL CLAPP chats and workspaces between sessions — delivery transit
+  must be harvest-on-render, and origin pushes must not wait for the
+  next session.
+- Transcript renderer collapses long-message middles ("Show full
+  message"); report completeness must be judged after the expander
+  sweep, never on a raw innerText window.
+- bun.lock conflicts are structural at wave merges (each parallel
+  worker regenerates it) — resolution by bun install regeneration is
+  the standing procedure.
+
+ADRs added/changed: none required. Two worker design choices recorded
+for later ADR consideration: (a) @clapp/journey's own minidom shim
+(zero-dep, network-deny-safe) vs a DOM-lib dependency; (b) @clapp/observe
+carrying the journey-contract mirror for action-step typing (severable
+surface if the lead later decouples).
+
+Next unblocked work: P2 behavioral model wave — CLAPP-020 (Behavioral IR,
+W2, depends on 011), CLAPP-021 (evidence-to-IR extraction, W2),
+CLAPP-022 (exploration policy, W1, depends on 012+020); then CLAPP-013
+(web observation integration gate — tech lead) once the P2 contracts are
+declared.
