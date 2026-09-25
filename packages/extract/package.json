@@ -1,0 +1,24 @@
+{
+  "name": "@clapp/extract",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "CLAPP evidence-to-IR extraction (CLAPP-021): turns a sealed EvidenceBundle plus the artifact bytes behind it into a Behavioral IR model (v0.1) whose every inferred element carries honest provenance citing the bundle's refs.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p .",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@clapp/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@clapp/evidence": "workspace:*",
+    "@clapp/journey": "workspace:*",
+    "@clapp/observe": "workspace:*",
+    "@clapp/sandbox": "workspace:*",
+    "@clapp/store": "workspace:*",
+    "playwright": "1.63.0"
+  }
+}
