@@ -1,0 +1,31 @@
+/* CLAPP-010 fixture styles */
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0 auto;
+  max-width: 640px;
+  padding: 16px;
+  color: #1a1a1a;
+}
+h1 {
+  color: #2f2f2f;
+  font-size: 1.4rem;
+}
+button {
+  padding: 8px 12px;
+  margin: 4px;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background: #f4f4f4;
+  cursor: pointer;
+}
+input {
+  padding: 6px;
+  margin-left: 8px;
+  border: 1px solid #999;
+  border-radius: 4px;
+}
+footer {
+  margin-top: 24px;
+  font-size: 0.8rem;
+  color: #777;
+}

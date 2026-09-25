@@ -1,0 +1,8 @@
+{
+  "name": "CLAPP Observation Fixture",
+  "short_name": "clapp-fx",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2f2f2f"
+}
