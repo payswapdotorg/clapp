@@ -296,3 +296,141 @@ package-aware codegen, backend/mock generation, generated test suite) —
 the behavioral models, evidence bundles, and replay-verified journeys it
 consumes are now frozen at P2; P4's paired-runner/differential work is
 unblocked in dependency order after P3.
+
+## 2026-09-25 — Phase 3 integrated: web synthesis (parallel wave + three cross-package gates)
+
+Wave mechanics: three parallel workers dispatched onto the platform
+(CLAPP-030 plan / CLAPP-031 codegen / CLAPP-032 gentests), all against
+origin/main 61f9c2a (P2 closeout) with a shared verbatim
+synthesis-contract declaration: 030 = CANONICAL owner; 031/032 =
+byte-identical mirror carriers. The platform generation gate was CLOSED
+for ~5h (turn-creation rejected account-wide; 7 dead 030 landings
+user-msg-only) — the assault doctrine + the lesson-69 roll re-admitted
+the queued session at 20:29 and 030+032+031 landed, generated, and were
+auto-harvested through the p3_watch/p3_harvest chain (v1.2
+assistant-scoped DOM done-detection: the literal completion marker inside
+the last chat-assistant container, fresh-tab confirmed).
+
+Per-worker TL review (harvest → bundle verify → own battery → merge):
+- 030 (packages/plan, 2ce8d1d → merge 85c4b68): report complete+exact;
+  bundle single-commit on 61f9c2a; frozen surfaces zero-diff; canonical
+  contract BYTE-IDENTICAL to the TL declaration; my battery 973/0/10,688.
+  Worker disagreement ACCEPTED: the packet's >=90% assert-visible e2e
+  gate was unreachable from the frozen explore vocabulary (img/
+  contentinfo not actionable); honest ceiling 11/15 (73.3%) with
+  compensating per-target assumption entries — ADR note below.
+- 032 (packages/gentests, 32bf15b → merge 9a27d69): round 1 ONE finding —
+  the worker aligned a provenance separator comment (79->80 cols),
+  breaking mirror byte-identity; require-changes follow-up dispatched
+  into the live session, worker amended in 24 min; round 2 mirror
+  BYTE-IDENTICAL, battery 895/0/10,205.
+- 031 (packages/codegen, 7234b13 → merge a17e754): landed after a
+  zombie-queue void (77 min stuck in the capacity modal; fresh re-land
+  took the assistant turn immediately). Round 1 ONE finding — a 7-line
+  worker-added "MIRROR STATUS" banner prepended above the canonical text
+  (body byte-identical, file-level identity broken; 032 precedent is
+  file-identical); require-changes follow-up, worker amended in ~12 min
+  (pure 7-line deletion, cmp-proven); round 2 battery unchanged
+  905/0/10,367, killer acceptance re-verified.
+
+Merge order was 030 -> 032 -> 031 (031 needed the re-land; 032 merged
+while it queued). bun.lock seam auto-merged clean at 031 (workspace
+entries complete; bun install idempotent after).
+
+P3 integration gates (all three PASSED):
+- GATE A (031x032 — the integration gate): the shared golden plan
+  (packages/gentests/src/golden-plan.ts — the b01-shaped fixture, 6
+  routes, 2 api endpoints, 1 mock, port 46230) is fed to BOTH
+  generators: generateApp (031, 9 files) + generateTestSuite (032, 13
+  tests: 7 route + 2 api + 4 acceptance, seeded journey records
+  supplied); the generated app's server is started; the generated suite
+  runs against it: 13 pass / 0 fail / 144 expect() across 3 files.
+  Placement note: the generated suite must be materialized INSIDE a
+  workspace package (packages/gentests/.gate-suite in the gate run) so
+  its '@clapp/journey' import resolves — the repo-root node_modules does
+  not hoist workspace symlinks (bun per-package resolution).
+- GATE B (030 e2e honest gate): @clapp/plan's own e2e (9 pass / 0 fail /
+  128 expect()) pins the achievable seeded-target gate: >=11 of 15
+  (73.3%) resolved, every unresolved target carrying exactly one
+  compensating assumption entry (the packet's >=90% was unreachable from
+  the frozen explore vocabulary — accepted honest ceiling, ADR below).
+- GATE C (contract mirrors): synthesis-contract.ts BYTE-IDENTICAL across
+  all four copies — @clapp/plan canonical, @clapp/codegen mirror,
+  @clapp/gentests mirror, and the TL packet declaration: 10,984 bytes
+  each, sha256 76ebea2b6df6fcc4… (cmp-verified at every seam, both
+  require-changes rounds included).
+
+Acceptance highlights (per worker reports, re-verified at integration):
+- 030: path-qualified validation (343-error corpus honest), canonical
+  serialize round-trips, id-stable plan diff, planner from a validated
+  IR (real-b01-explore e2e), plan stats.
+- 031: golden plan -> golden HTML (every corpus testid/heading/alt/
+  form field); determinism (byte-identical regenerates); THE KILLER
+  ACCEPTANCE — all 4 seeded b01 journeys replay CLEAN via
+  createDomApplier against the generated app's running server (9/9,
+  10/10, 11/11, 5/5, zero errors, run twice); mock backend (first-mock
+  declaration order, :id segment matching, 405 naming allowed methods,
+  501 naming the endpoint id, 404 unknown); storage bindings (Set-Cookie
+  on writtenOn routes; inline ls/ss scripts with the documented minidom
+  limitation — "P4's paired runner owns storage verification");
+  writeApp idempotent; PORT env + startup JSON line.
+- 032: generation determinism; route/api/acceptance coverage with
+  skipped-when-no-record honesty; generated-code hygiene (strict-clean
+  TS, imports only @clapp/journey + stdlib, no eval); THE KILLER
+  ACCEPTANCE — the generated suite runs green against the conforming
+  server (13/13) and (GATE A) against the real codegen app.
+
+Station battery (number of record, clean checkout, --parallel=1):
+1083 pass / 0 fail / 11,258 expect() across 83 files [36.63s]
+(typecheck 0, lint 0; math: 845 base + 60 codegen + 158 plan+gentests
+tests; expect 10,001 + 366 + 891; files 62 + 7 + 14 — exact
+reconciliation with the per-worker reports; sequential per the P2 flake
+doctrine).
+
+Interface freezes declared (P3):
+- synthesis-contract v0.1: canonical @clapp/plan
+  (packages/plan/src/synthesis-contract.ts); mirrors in @clapp/codegen
+  and @clapp/gentests are byte-identical re-export carriers
+  (file-level identity, 10,984 bytes, sha256 76ebea2b…; the canonical
+  banner names all carriers and IS the mirror-status header — workers
+  must not prepend their own banners, the two require-changes rounds
+  enforced exactly this).
+- @clapp/plan public surface (validate/Detailed, serialize/parse, ids,
+  planSynthesis, diff, stats, adapter info) — FROZEN.
+- @clapp/codegen public surface (generateApp + GenerateOptions,
+  GeneratedApp/GeneratedFile/AppManifest, writeApp, mirror re-export,
+  CODEGEN_ADAPTER_INFO) — FROZEN.
+- @clapp/gentests public surface (generateTestSuite +
+  GenerateTestsOptions, writeSuite, createConformingServer, mirror
+  re-export, GENTESTS_ADAPTER_INFO) — FROZEN.
+
+Newly discovered risks:
+- The platform generation gate can close account-wide for hours (turn
+  creation rejected; user-msg-only landings); the assault doctrine +
+  queue persistence (lesson-69 rolls) recovered all three workers, but
+  wave wall-clock is dominated by gate state, not worker speed.
+- Worker mirror discipline needs the file-level byte-identity rule
+  stated EXPLICITLY in future packets (two of three workers
+  independently added their own banner/alignment — both caught by the
+  integration byte-check, both fixed in <25 min via live-session
+  require-changes follow-ups).
+- The generated-suite import rule: suites must materialize inside a
+  workspace package for '@clapp/journey' resolution (bun per-package
+  node_modules); recorded in GATE A's procedure.
+
+ADRs added/changed: none required (no contract changes). ADR notes
+recorded: (a) 030's honest e2e ceiling 11/15 (73.3%) with compensating
+per-target assumptions — the packet's >=90% gate was unreachable from
+the frozen explore vocabulary (img/contentinfo not actionable); accepted
+as the achievable gate, pinned by the package's own e2e; (b) 031's
+writtenOn interpretation — storage bindings emit on the transitions'
+DESTINATION routes (reconciles the contract's transition ids with the
+packet's "routes named in writtenOn"; documented in src/storage.ts and
+generated READMEs); (c) 031's isolated 308 serving for pageless redirect
+from-routes (beyond the required "no rendered trigger"; documented,
+removable without touching the frozen contract).
+
+Next unblocked work: P4 Differential Verification (paired runner,
+semantic/visual/network/state diffs, autonomous repair loop) — the
+plan/codegen/gentests surfaces it consumes are frozen at P3; the
+diff-contract v0.1 declaration is staged for the wave packets.

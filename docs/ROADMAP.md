@@ -30,14 +30,14 @@ CLAPP
 │   ├── ✅ autonomous exploration (@clapp/explore — deterministic budgeted walks, action-level evidence, IR emission; CLAPP-022)
 │   └── ✅ journey DSL (@clapp/journey — action/journey contract + recorder/replayer vocabulary; delivered at P1, frozen with the P1 surface)
 │
-├── ⬜ P3 Web Synthesis
-│   ├── ⬜ architecture planner
-│   ├── ⬜ package-aware codegen
-│   ├── ⬜ backend/mock generation
-│   └── ⬜ generated test suite
+├── ✅ P3 Web Synthesis
+│   ├── ✅ architecture planner (@clapp/plan — synthesis-contract v0.1 canonical owner; CLAPP-030)
+│   ├── ✅ package-aware codegen (@clapp/codegen; CLAPP-031)
+│   ├── ✅ backend/mock generation (@clapp/codegen mock backend; CLAPP-031)
+│   └── ✅ generated test suite (@clapp/gentests; CLAPP-032)
 │
-├── ⬜ P4 Differential Verification
-│   ├── ⬜ paired runner
+├── 🟡 P4 Differential Verification (wave launching)
+│   ├── 🟡 paired runner
 │   ├── ⬜ semantic diff
 │   ├── ⬜ visual diff
 │   ├── ⬜ network diff
