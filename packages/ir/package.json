@@ -1,0 +1,16 @@
+{
+  "name": "@clapp/ir",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "CLAPP Behavioral IR (CLAPP-020): canonical owner of the ir-contract v0.1 — structural validation with path-qualified errors, deterministic canonical serialization, id-stable model diff, a referentially-sound builder, model stats, and adapter honesty summaries.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p .",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@clapp/core": "workspace:*"
+  }
+}

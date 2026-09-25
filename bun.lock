@@ -24,6 +24,13 @@
         "@clapp/store": "workspace:*",
       },
     },
+    "packages/ir": {
+      "name": "@clapp/ir",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+      },
+    },
     "packages/journey": {
       "name": "@clapp/journey",
       "version": "0.1.0",
@@ -62,6 +69,8 @@
     "@clapp/core": ["@clapp/core@workspace:packages/core"],
 
     "@clapp/evidence": ["@clapp/evidence@workspace:packages/evidence"],
+
+    "@clapp/ir": ["@clapp/ir@workspace:packages/ir"],
 
     "@clapp/journey": ["@clapp/journey@workspace:packages/journey"],
 
