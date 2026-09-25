@@ -24,6 +24,21 @@
         "@clapp/store": "workspace:*",
       },
     },
+    "packages/extract": {
+      "name": "@clapp/extract",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+      },
+      "devDependencies": {
+        "@clapp/evidence": "workspace:*",
+        "@clapp/journey": "workspace:*",
+        "@clapp/observe": "workspace:*",
+        "@clapp/sandbox": "workspace:*",
+        "@clapp/store": "workspace:*",
+        "playwright": "1.63.0",
+      },
+    },
     "packages/ir": {
       "name": "@clapp/ir",
       "version": "0.1.0",
@@ -69,6 +84,8 @@
     "@clapp/core": ["@clapp/core@workspace:packages/core"],
 
     "@clapp/evidence": ["@clapp/evidence@workspace:packages/evidence"],
+
+    "@clapp/extract": ["@clapp/extract@workspace:packages/extract"],
 
     "@clapp/ir": ["@clapp/ir@workspace:packages/ir"],
 
