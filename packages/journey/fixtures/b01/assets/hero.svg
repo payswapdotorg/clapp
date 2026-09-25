@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 280" role="img" aria-label="Nimbus Notes hero illustration">
+  <title>Nimbus Notes hero illustration: note cards drifting among calm clouds</title>
+  <rect width="480" height="280" fill="#eef4f3"/>
+  <g fill="#ffffff" stroke="#d3e0de" stroke-width="2">
+    <ellipse cx="110" cy="70" rx="58" ry="22"/>
+    <ellipse cx="150" cy="58" rx="40" ry="18"/>
+    <ellipse cx="375" cy="52" rx="50" ry="19"/>
+    <ellipse cx="408" cy="62" rx="34" ry="14"/>
+    <ellipse cx="70" cy="220" rx="52" ry="20"/>
+    <ellipse cx="416" cy="232" rx="58" ry="22"/>
+  </g>
+  <g stroke="#1f2933" stroke-width="3" stroke-linecap="round">
+    <path d="M188 120c-10 8-10 24 0 32"/>
+    <path d="M292 120c10 8 10 24 0 32"/>
+    <path d="M206 196c18 14 50 14 68 0"/>
+  </g>
+  <g stroke="#1f2933" stroke-width="2.5" stroke-linecap="round" fill="#f7f5f0">
+    <rect x="150" y="96" width="86" height="60" rx="8" fill="#ffffff"/>
+    <rect x="252" y="88" width="86" height="60" rx="8" fill="#ffffff"/>
+    <rect x="200" y="160" width="86" height="60" rx="8" fill="#ffffff"/>
+  </g>
+  <g stroke="#9fb3b0" stroke-width="3" stroke-linecap="round">
+    <line x1="162" y1="112" x2="222" y2="112"/>
+    <line x1="162" y1="124" x2="210" y2="124"/>
+    <line x1="162" y1="136" x2="196" y2="136"/>
+    <line x1="264" y1="104" x2="324" y2="104"/>
+    <line x1="264" y1="116" x2="306" y2="116"/>
+    <line x1="264" y1="128" x2="292" y2="128"/>
+    <line x1="212" y1="176" x2="272" y2="176"/>
+    <line x1="212" y1="188" x2="258" y2="188"/>
+    <line x1="212" y1="200" x2="240" y2="200"/>
+  </g>
+  <circle cx="236" cy="66" r="10" fill="none" stroke="#b45309" stroke-width="3"/>
+  <path d="M232 66l3 3 5-6" fill="none" stroke="#b45309" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

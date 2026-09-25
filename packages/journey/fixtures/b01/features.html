@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Features — Nimbus Notes</title>
+  <meta name="description" content="Fast capture, smart linking, calm collaboration, offline first: the four Nimbus Notes capabilities.">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <a class="logo-link" href="/" aria-label="Nimbus Notes home" data-testid="logo-link">
+      <img class="logo" src="assets/logo.svg" alt="Nimbus Notes logo" width="40" height="40">
+      <span class="logo-word">Nimbus Notes</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" data-testid="nav-toggle">
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
+    </button>
+    <nav class="main-nav" aria-label="Main">
+      <a href="/" data-testid="nav-home">Home</a>
+      <a href="features.html" data-testid="nav-features">Features</a>
+      <a href="pricing.html" data-testid="nav-pricing">Pricing</a>
+      <a href="contact.html" data-testid="nav-contact">Contact</a>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <h1 data-testid="features-heading">Everything you need to stay organized</h1>
+    <p class="lead">Four capabilities, no sprawling admin console. Each one earns its place.</p>
+
+    <section class="feature" id="fast-capture">
+      <h2>Fast capture</h2>
+      <svg class="feature-icon" viewBox="0 0 48 48" width="48" height="48" aria-hidden="true" focusable="false">
+        <rect x="8" y="10" width="32" height="28" rx="4" fill="none" stroke="#0f766e" stroke-width="3"/>
+        <line x1="14" y1="20" x2="34" y2="20" stroke="#0f766e" stroke-width="3" stroke-linecap="round"/>
+        <line x1="14" y1="28" x2="28" y2="28" stroke="#0f766e" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <p>A new note is one keystroke away, from anywhere in the app. Titles are optional; everything is searchable the moment it exists.</p>
+      <ul>
+        <li>Instant note creation with a single shortcut</li>
+        <li>Optional titles — first line becomes the title when you want one</li>
+        <li>Everything indexed as you type</li>
+      </ul>
+    </section>
+
+    <section class="feature" id="smart-linking">
+      <h2>Smart linking</h2>
+      <svg class="feature-icon" viewBox="0 0 48 48" width="48" height="48" aria-hidden="true" focusable="false">
+        <circle cx="16" cy="24" r="8" fill="none" stroke="#b45309" stroke-width="3"/>
+        <circle cx="32" cy="24" r="8" fill="none" stroke="#b45309" stroke-width="3"/>
+      </svg>
+      <p>Notes mention each other with plain links. Backlinks assemble themselves, and the graph view stays readable even at a thousand notes.</p>
+      <ul>
+        <li>Plain-text mentions that resolve to notes</li>
+        <li>Automatic backlinks on every note</li>
+        <li>A graph you can actually read</li>
+      </ul>
+    </section>
+
+    <section class="feature" id="calm-collaboration">
+      <h2>Calm collaboration</h2>
+      <svg class="feature-icon" viewBox="0 0 48 48" width="48" height="48" aria-hidden="true" focusable="false">
+        <circle cx="18" cy="18" r="7" fill="none" stroke="#0f766e" stroke-width="3"/>
+        <circle cx="32" cy="20" r="5" fill="none" stroke="#0f766e" stroke-width="3"/>
+        <path d="M8 38c2-6 7-9 10-9s8 3 10 9" fill="none" stroke="#0f766e" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <p>Share a space, mention a teammate, move on. Nimbus shows you what changed since you last looked — not an infinite activity feed.</p>
+      <ul>
+        <li>Spaces with simple invite links</li>
+        <li>Mentions that arrive as a short daily digest</li>
+        <li>Per-note read markers</li>
+      </ul>
+    </section>
+
+    <section class="feature" id="offline-first">
+      <h2>Offline first</h2>
+      <svg class="feature-icon" viewBox="0 0 48 48" width="48" height="48" aria-hidden="true" focusable="false">
+        <path d="M10 26a14 14 0 0 1 28 0" fill="none" stroke="#b45309" stroke-width="3" stroke-linecap="round"/>
+        <rect x="8" y="26" width="32" height="12" rx="4" fill="none" stroke="#b45309" stroke-width="3"/>
+        <line x1="20" y1="32" x2="28" y2="32" stroke="#b45309" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <p>The local copy is the source of truth. Sync happens in the background and reconciles quietly when you reconnect.</p>
+      <ul>
+        <li>Full read and write access offline</li>
+        <li>Conflict-free merges for plain notes</li>
+        <li>Sync status you can see at a glance</li>
+      </ul>
+    </section>
+
+    <blockquote class="quote">
+      <p>Nimbus replaced three tools on day one, and nobody on the team raised their voice about it.</p>
+      <cite>Priya S., operations lead at a nine-person studio</cite>
+    </blockquote>
+
+    <p class="cta-row"><a class="button" href="contact.html" data-testid="features-cta">Talk to us</a></p>
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Footer">
+      <a href="/">Home</a>
+      <a href="features.html">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <form class="newsletter-form" action="newsletter-success.html" method="get">
+      <h2>Stay in the loop</h2>
+      <label for="newsletter-email">Email address</label>
+      <input id="newsletter-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" data-testid="newsletter-email" required>
+      <button type="submit" data-testid="newsletter-submit">Subscribe</button>
+    </form>
+    <p class="copyright"><small>&copy; <span data-year="2026">2026</span> Nimbus Notes. A CLAPP b01 benchmark fixture.</small></p>
+  </footer>
+</body>
+</html>

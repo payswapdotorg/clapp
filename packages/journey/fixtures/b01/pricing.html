@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pricing — Nimbus Notes</title>
+  <meta name="description" content="Simple, honest pricing for Nimbus Notes: Starter free forever, Team and Studio for growing workspaces.">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <a class="logo-link" href="/" aria-label="Nimbus Notes home" data-testid="logo-link">
+      <img class="logo" src="assets/logo.svg" alt="Nimbus Notes logo" width="40" height="40">
+      <span class="logo-word">Nimbus Notes</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" data-testid="nav-toggle">
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
+    </button>
+    <nav class="main-nav" aria-label="Main">
+      <a href="/" data-testid="nav-home">Home</a>
+      <a href="features.html" data-testid="nav-features">Features</a>
+      <a href="pricing.html" data-testid="nav-pricing">Pricing</a>
+      <a href="contact.html" data-testid="nav-contact">Contact</a>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <h1 data-testid="pricing-heading">Simple, honest pricing</h1>
+    <p class="lead">Every plan includes the full feature set. You only pay for team size and support depth.</p>
+
+    <section class="plans" aria-label="Plans">
+      <article class="plan">
+        <h2>Starter</h2>
+        <p class="price">$0 <small>/ forever</small></p>
+        <ul>
+          <li>One workspace</li>
+          <li>Unlimited notes</li>
+          <li>Community support</li>
+        </ul>
+        <a class="button button-secondary" href="contact.html" data-testid="plan-starter-cta">Choose Starter</a>
+      </article>
+
+      <article class="plan plan-featured">
+        <h2>Team</h2>
+        <p class="price">$8 <small>/ user / month</small></p>
+        <ul>
+          <li>Shared spaces</li>
+          <li>Mentions and digests</li>
+          <li>Email support</li>
+        </ul>
+        <a class="button" href="contact.html" data-testid="plan-team-cta">Choose Team</a>
+      </article>
+
+      <article class="plan">
+        <h2>Studio</h2>
+        <p class="price">$15 <small>/ user / month</small></p>
+        <ul>
+          <li>Everything in Team</li>
+          <li>SAML sign-in</li>
+          <li>Priority support</li>
+        </ul>
+        <a class="button button-secondary" href="contact.html" data-testid="plan-studio-cta">Choose Studio</a>
+      </article>
+    </section>
+
+    <section class="faq">
+      <h2>Frequently asked questions</h2>
+      <h3>Is there really a free plan?</h3>
+      <p>Yes — Starter is free forever, with no note limits and no expiring trial.</p>
+      <h3>Can I export my notes?</h3>
+      <p>Always. Every note exports as plain text, and whole workspaces export as a single archive.</p>
+      <h3>What happens offline?</h3>
+      <p>Everything keeps working. Sync resumes when you reconnect, and plain notes merge without conflicts.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Footer">
+      <a href="/">Home</a>
+      <a href="features.html">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <form class="newsletter-form" action="newsletter-success.html" method="get">
+      <h2>Stay in the loop</h2>
+      <label for="newsletter-email">Email address</label>
+      <input id="newsletter-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" data-testid="newsletter-email" required>
+      <button type="submit" data-testid="newsletter-submit">Subscribe</button>
+    </form>
+    <p class="copyright"><small>&copy; <span data-year="2026">2026</span> Nimbus Notes. A CLAPP b01 benchmark fixture.</small></p>
+  </footer>
+</body>
+</html>

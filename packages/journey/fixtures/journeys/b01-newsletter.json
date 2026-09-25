@@ -1,0 +1,12 @@
+{
+  "id": "journey_05441478-5197-4c92-b553-b66ea11b84c3",
+  "name": "B01 newsletter subscribe via Enter",
+  "targetId": "bench/b01-static",
+  "actions": [
+    { "type": "navigate", "url": "/" },
+    { "type": "fill", "target": { "role": "textbox", "name": "Email address" }, "value": "subscriber@example.org" },
+    { "type": "press", "key": "Enter" },
+    { "type": "assert-visible", "target": { "testId": "newsletter-success" } },
+    { "type": "wait", "ms": 10 }
+  ]
+}

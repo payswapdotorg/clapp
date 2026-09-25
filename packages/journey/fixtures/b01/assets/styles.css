@@ -1,0 +1,399 @@
+/* CLAPP-012 — b01 fixture stylesheet.
+   Self-contained: system fonts only; no external imports or asset
+   references of any kind (enforced by corpus tests). */
+
+:root {
+  --ink: #1f2933;
+  --ink-soft: #52606d;
+  --paper: #f7f5f0;
+  --card: #ffffff;
+  --line: #e4e0d5;
+  --accent: #0f766e;
+  --accent-ink: #ffffff;
+  --accent-soft: #ccfbf1;
+  --amber: #b45309;
+  --amber-soft: #fef3c7;
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(31, 41, 51, 0.08), 0 4px 14px rgba(31, 41, 51, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.6;
+}
+
+/* Accessibility: keyboard focus + skip link. */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: 0.5rem 1rem;
+  z-index: 10;
+}
+
+.skip-link:focus {
+  left: 0.5rem;
+  top: 0.5rem;
+}
+
+/* Header + navigation. */
+.site-header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.logo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.logo-word {
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+}
+
+.main-nav {
+  display: flex;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+.main-nav a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+}
+
+.main-nav a:hover,
+.main-nav a:focus-visible {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.nav-toggle {
+  display: none;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 6px;
+  padding: 0.45rem 0.55rem;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.nav-toggle-bar {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--ink);
+  margin: 4px 0;
+  border-radius: 2px;
+}
+
+/* Layout. */
+main {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+h1 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1.15;
+  margin: 0 0 0.75rem;
+}
+
+h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.75rem;
+}
+
+h3 {
+  font-size: 1.05rem;
+  margin: 0 0 0.5rem;
+}
+
+.lead {
+  font-size: 1.1rem;
+  color: var(--ink-soft);
+  max-width: 40rem;
+}
+
+/* Hero. */
+.hero {
+  text-align: center;
+  padding: 2.5rem 0 1.5rem;
+}
+
+.hero-art {
+  max-width: 100%;
+  height: auto;
+  margin: 1.25rem auto 0;
+  display: block;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+/* Buttons. */
+.button {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--accent-ink);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: 2px solid var(--accent);
+  border-radius: 999px;
+}
+
+.button:hover,
+.button:focus-visible {
+  background: #0b5d57;
+}
+
+.button-secondary {
+  background: var(--card);
+  color: var(--accent);
+}
+
+.button-secondary:hover,
+.button-secondary:focus-visible {
+  background: var(--accent-soft);
+}
+
+/* Card grids (responsive by construction). */
+.teaser,
+.plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.card,
+.plan {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+.plan-featured {
+  border-color: var(--accent);
+  border-width: 2px;
+}
+
+.plan .price {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0.25rem 0 0.75rem;
+}
+
+.plan .price small {
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+
+.plan ul,
+.feature ul {
+  padding-left: 1.1rem;
+  color: var(--ink-soft);
+}
+
+.plan .button {
+  margin-top: 0.75rem;
+}
+
+/* Features. */
+.feature {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin-top: 1.25rem;
+}
+
+.feature-icon {
+  float: right;
+  margin-left: 1rem;
+}
+
+.quote {
+  margin: 2.5rem 0 0;
+  padding: 1rem 1.5rem;
+  border-left: 4px solid var(--amber);
+  background: var(--amber-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--ink);
+}
+
+.quote p {
+  margin: 0 0 0.5rem;
+  font-style: italic;
+}
+
+.cta-row {
+  margin-top: 2rem;
+}
+
+/* Forms. */
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  width: 100%;
+  max-width: 28rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--ink);
+}
+
+textarea {
+  resize: vertical;
+}
+
+.contact-form {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  max-width: 34rem;
+}
+
+.contact-aside {
+  max-width: 34rem;
+  margin-top: 2rem;
+  color: var(--ink-soft);
+}
+
+.success {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+/* Footer. */
+.site-footer {
+  margin-top: 3rem;
+  border-top: 1px solid var(--line);
+  background: var(--card);
+  padding: 2rem 1.25rem;
+}
+
+.site-footer nav {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.site-footer nav a {
+  color: var(--ink-soft);
+}
+
+.newsletter-form {
+  max-width: 24rem;
+  margin: 1.5rem auto 0;
+  text-align: left;
+}
+
+.newsletter-form h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.5rem;
+}
+
+.newsletter-form button {
+  font: inherit;
+  font-weight: 600;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.newsletter-form button:hover,
+.newsletter-form button:focus-visible {
+  background: #0b5d57;
+}
+
+.copyright {
+  text-align: center;
+  color: var(--ink-soft);
+  margin: 1.5rem 0 0;
+}
+
+/* Responsive navigation: below 720px the header nav collapses behind a
+   toggle button (progressively enhanced by assets/app.js). */
+@media (max-width: 719px) {
+  .nav-toggle {
+    display: block;
+  }
+
+  .main-nav {
+    display: none;
+    flex-basis: 100%;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .site-header.nav-open .main-nav {
+    display: flex;
+  }
+
+  .hero-art {
+    max-width: 20rem;
+  }
+}
+
+@media (min-width: 720px) {
+  main {
+    padding-top: 3rem;
+  }
+}

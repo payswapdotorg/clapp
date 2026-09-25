@@ -1,0 +1,7 @@
+{
+  // Standalone typecheck for @clapp/journey (bunx tsc --noEmit -p tsconfig.json).
+  // The root program covers all packages; this exists so the package
+  // compiles on its own, per the monorepo contract.
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*.ts"]
+}

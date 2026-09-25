@@ -1,0 +1,16 @@
+{
+  "id": "journey_693afe48-c999-4e31-8328-ec1bd92d9780",
+  "name": "B01 contact form round-trip",
+  "targetId": "bench/b01-static",
+  "actions": [
+    { "type": "navigate", "url": "/contact.html" },
+    { "type": "assert-visible", "target": { "role": "heading", "name": "We'd love to hear from you" } },
+    { "type": "fill", "target": { "role": "textbox", "name": "Your name" }, "value": "Ada Lovelace" },
+    { "type": "fill", "target": { "testId": "contact-email" }, "value": "ada@example.net" },
+    { "type": "fill", "target": { "testId": "contact-message" }, "value": "Hello from the b01 corpus." },
+    { "type": "click", "target": { "role": "button", "name": "Send message" } },
+    { "type": "assert-visible", "target": { "testId": "contact-success" } },
+    { "type": "click", "target": { "role": "link", "name": "Back to home" } },
+    { "type": "assert-visible", "target": { "role": "heading", "name": "Capture every idea, calmly" } }
+  ]
+}
