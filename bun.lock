@@ -12,6 +12,16 @@
         "typescript-eslint": "^8",
       },
     },
+    "packages/codegen": {
+      "name": "@clapp/codegen",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+      },
+      "devDependencies": {
+        "@clapp/journey": "workspace:*",
+      },
+    },
     "packages/core": {
       "name": "@clapp/core",
       "version": "0.1.0",
@@ -116,6 +126,8 @@
     },
   },
   "packages": {
+    "@clapp/codegen": ["@clapp/codegen@workspace:packages/codegen"],
+
     "@clapp/core": ["@clapp/core@workspace:packages/core"],
 
     "@clapp/evidence": ["@clapp/evidence@workspace:packages/evidence"],
