@@ -24,6 +24,19 @@
         "@clapp/store": "workspace:*",
       },
     },
+    "packages/explore": {
+      "name": "@clapp/explore",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+        "@clapp/evidence": "workspace:*",
+        "@clapp/journey": "workspace:*",
+      },
+      "devDependencies": {
+        "@clapp/observe": "workspace:*",
+        "@clapp/store": "workspace:*",
+      },
+    },
     "packages/extract": {
       "name": "@clapp/extract",
       "version": "0.1.0",
@@ -84,6 +97,8 @@
     "@clapp/core": ["@clapp/core@workspace:packages/core"],
 
     "@clapp/evidence": ["@clapp/evidence@workspace:packages/evidence"],
+
+    "@clapp/explore": ["@clapp/explore@workspace:packages/explore"],
 
     "@clapp/extract": ["@clapp/extract@workspace:packages/extract"],
 
