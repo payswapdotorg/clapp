@@ -1,0 +1,8 @@
+{
+  // Standalone typecheck for @clapp/plan (bunx tsc --noEmit -p tsconfig.json).
+  // The root program covers packages/*/src/** (frozen root tsconfig), so this
+  // per-package program is the same rigor the sibling packages get; tests live
+  // under src/ so the ROOT program typechecks them too.
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*.ts"]
+}

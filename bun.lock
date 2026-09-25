@@ -78,6 +78,20 @@
         "playwright": "1.63.0",
       },
     },
+    "packages/plan": {
+      "name": "@clapp/plan",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+        "@clapp/ir": "workspace:*",
+        "@clapp/journey": "workspace:*",
+      },
+      "devDependencies": {
+        "@clapp/evidence": "workspace:*",
+        "@clapp/explore": "workspace:*",
+        "@clapp/store": "workspace:*",
+      },
+    },
     "packages/sandbox": {
       "name": "@clapp/sandbox",
       "version": "0.1.0",
@@ -107,6 +121,8 @@
     "@clapp/journey": ["@clapp/journey@workspace:packages/journey"],
 
     "@clapp/observe": ["@clapp/observe@workspace:packages/observe"],
+
+    "@clapp/plan": ["@clapp/plan@workspace:packages/plan"],
 
     "@clapp/sandbox": ["@clapp/sandbox@workspace:packages/sandbox"],
 

@@ -1,0 +1,22 @@
+{
+  "name": "@clapp/plan",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "CLAPP architecture planner (CLAPP-030): canonical owner of the synthesis-contract v0.1 — derives a validated SynthesisPlan from a validated Behavioral IR model (routes/pages/elements/forms/navigation/storage/api/mocks/acceptance), with path-qualified validation, canonical serialization, id-stable diff, and plan stats.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@clapp/core": "workspace:*",
+    "@clapp/ir": "workspace:*",
+    "@clapp/journey": "workspace:*"
+  },
+  "devDependencies": {
+    "@clapp/evidence": "workspace:*",
+    "@clapp/explore": "workspace:*",
+    "@clapp/store": "workspace:*"
+  }
+}
