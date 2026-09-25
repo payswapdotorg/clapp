@@ -1,0 +1,4 @@
+# Generated-suite scratch directories written by this package's own tests
+# (writeSuite targets for the self-verification suites). Always cleaned up
+# by the tests; listed here so a crashed run never stages leftovers.
+.suite-*/

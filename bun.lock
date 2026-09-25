@@ -52,6 +52,14 @@
         "playwright": "1.63.0",
       },
     },
+    "packages/gentests": {
+      "name": "@clapp/gentests",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+        "@clapp/journey": "workspace:*",
+      },
+    },
     "packages/ir": {
       "name": "@clapp/ir",
       "version": "0.1.0",
@@ -115,6 +123,8 @@
     "@clapp/explore": ["@clapp/explore@workspace:packages/explore"],
 
     "@clapp/extract": ["@clapp/extract@workspace:packages/extract"],
+
+    "@clapp/gentests": ["@clapp/gentests@workspace:packages/gentests"],
 
     "@clapp/ir": ["@clapp/ir@workspace:packages/ir"],
 
