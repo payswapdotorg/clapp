@@ -8,6 +8,7 @@
     ".": "./src/index.ts"
   },
   "devDependencies": {
-    "@clapp/sandbox": "workspace:*"
+    "@clapp/sandbox": "workspace:*",
+    "playwright-core": "^1.63.0"
   }
 }

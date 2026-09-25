@@ -12,7 +12,8 @@ ADR.
 Zero runtime dependencies: the DOM action applier is built on an in-package
 minimal HTML document model (`src/minidom.ts`), so the whole package — and
 the corpus it serves — stays self-contained inside a network-deny execution
-profile.
+profile. (`playwright-core` is a devDependency for the browser-gated bonus
+path only; the runtime loads it lazily and never requires it.)
 
 ## Usage demo
 
@@ -45,6 +46,7 @@ await server.close();
 | `src/minidom.ts` | Dependency-free HTML parser + document model (the "own minimal DOM shim"). |
 | `src/a11y.ts` | Implicit-role table and simplified accessible-name computation for selector resolution. |
 | `src/replayer.ts` | `createDomApplier()` (default, always-available ActionApplier), `replayJourney()` orchestration, machine-readable `JourneyReplayError`. |
+| `src/replayer-playwright.ts` | `createPlaywrightApplier()` — browser-backed ActionApplier (playwright-core devDependency, loaded lazily; tests skipIf-gated on browser availability). |
 | `src/fixtures/server.ts` | b01 fixture HTTP server (node:http stdlib only) + `waitForFixtureServer` ready-poll helper + CLI mode. |
 | `src/fixtures/proof.ts` | Sandbox-proof harness: runs INSIDE an execution profile — serves the corpus, replays every seeded journey, prints a JSON verdict. |
 | `src/ids.ts` | `newJourneyId()` — `"journey_" + uuid v4`. |
@@ -117,10 +119,15 @@ honest v0 enforcement flags (`networkEnforced: false`).
   `@clapp/sandbox` contract); egress control lands with the runner
   integration (CLAPP-040). The corpus itself is verified to contain zero
   external references, and proof traffic is loopback-only.
-- **Playwright applier**: not shipped in this environment (no browser
-  binaries available); the DOM applier is the always-available default the
-  contract requires. A Playwright `ActionApplier` is a natural follow-up —
-  the `ActionApplier` port is the only seam needed.
+- **Playwright applier**: shipped and exercised in this environment (cached
+  chromium + `playwright-core` devDependency). It is the bonus parity path,
+  NOT a guarantee: its tests `skipIf` no browser can be launched, and the
+  package's runtime never requires playwright (lazy dynamic import). Its
+  selector mapping is an approximation of the DOM applier's (testId >
+  role+name > name; extra selector fields are not ANDed) and error mapping
+  is best-effort (strict violations → `target-ambiguous`, resolution
+  timeouts → `target-not-found`). The DOM applier plus the sandbox proof
+  remain the contract's always-run coverage.
 - **Fixture server**: GET/HEAD only, no TLS, no caching, single root,
   loopback bind by default; suitable as a benchmark fixture, not a
   production frontend host.
@@ -137,5 +144,7 @@ sequencing/determinism, minidom parser contract, DOM applier behavior
 resolution, ambiguity, visibility, error codes), the fixture server
 (content types, 404/traversal, CLI child + ready-poll, timeout), corpus
 hygiene (inventory, parse, zero external refs, link integrity, seeded
-journey validation + testId cross-check + real-server smoke replay), and
-the never-skipped sandbox-execution proof.
+journey validation + testId cross-check + real-server smoke replay), the
+never-skipped sandbox-execution proof, and — when a browser is available —
+the Playwright applier replaying every seeded journey in a real browser
+(skipIf-gated; the battery never depends on it).

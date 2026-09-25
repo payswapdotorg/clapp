@@ -63,6 +63,14 @@ export type {
   ReplaySummary,
 } from './replayer';
 
+// Browser-backed applier (playwright-core is a devDependency and is loaded
+// lazily — importing this entry point never requires a browser at runtime).
+export { createPlaywrightApplier } from './replayer-playwright';
+export type {
+  PlaywrightApplier,
+  PlaywrightApplierOptions,
+} from './replayer-playwright';
+
 export {
   resolveFixtureRoot,
   resolveSeededJourneysDir,
