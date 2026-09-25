@@ -1,0 +1,17 @@
+{
+  "name": "@clapp/evidence",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "CLAPP evidence manifest & recording session: canonical capture recording, tamper-evident EvidenceBundle manifests, verification with a fixed tamper-code set, and bundle persistence.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p .",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@clapp/core": "workspace:*",
+    "@clapp/store": "workspace:*"
+  }
+}
