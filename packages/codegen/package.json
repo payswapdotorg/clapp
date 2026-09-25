@@ -1,0 +1,19 @@
+{
+  "name": "@clapp/codegen",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CLAPP package-aware codegen: renders a SynthesisPlan (synthesis-contract v0.1 mirror; canonical owner @clapp/plan) into a complete, runnable, zero-dependency candidate web app — server-rendered HTML pages plus a mock backend (CLAPP-031).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@clapp/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@clapp/journey": "workspace:*"
+  }
+}
