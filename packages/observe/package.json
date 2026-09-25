@@ -1,0 +1,17 @@
+{
+  "name": "@clapp/observe",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CLAPP browser runner: runs an authorized web app under observation and funnels every capture channel (DOM, semantics, screenshots, runtime, network, WebSocket, storage, service workers, static assets) through the EvidenceRecorder port as typed, redacted, provenance-ready CaptureRecords.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@clapp/core": "workspace:*",
+    "@clapp/sandbox": "workspace:*"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}

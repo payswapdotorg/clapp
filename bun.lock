@@ -32,6 +32,17 @@
         "playwright-core": "^1.63.0",
       },
     },
+    "packages/observe": {
+      "name": "@clapp/observe",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+        "@clapp/sandbox": "workspace:*",
+      },
+      "devDependencies": {
+        "playwright": "1.63.0",
+      },
+    },
     "packages/sandbox": {
       "name": "@clapp/sandbox",
       "version": "0.1.0",
@@ -53,6 +64,8 @@
     "@clapp/evidence": ["@clapp/evidence@workspace:packages/evidence"],
 
     "@clapp/journey": ["@clapp/journey@workspace:packages/journey"],
+
+    "@clapp/observe": ["@clapp/observe@workspace:packages/observe"],
 
     "@clapp/sandbox": ["@clapp/sandbox@workspace:packages/sandbox"],
 
@@ -233,6 +246,8 @@
     "path-key": ["path-key@3.1.1", "", {}, "sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q=="],
 
     "picomatch": ["picomatch@4.0.7", "", {}, "sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA=="],
+
+    "playwright": ["playwright@1.63.0", "", { "dependencies": { "playwright-core": "1.63.0" }, "bin": { "playwright": "cli.js" } }, "sha512-+7ziBLidS4NaNCdt57SUDT+wYmmd5fmiQejUic/kb+YsYSCPyOOE9sebzMjNmQrsnNpDJqd4WHvV/8lfKfUDUg=="],
 
     "playwright-core": ["playwright-core@1.63.0", "", { "bin": { "playwright-core": "cli.js" } }, "sha512-rYCsBF/M5HjUch52bbtVONEFjv6Xu8sm8h72dNlR5bzIE1fvC/bxgspzkjSfU+MweEMmPM8KJebG6nnyxo5mCg=="],
 

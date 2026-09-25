@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CLAPP Observation Fixture</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/logo.svg">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>CLAPP Observation Fixture</h1>
+  </header>
+  <main>
+    <p id="status">ready</p>
+    <button id="load-data" data-testid="load-data" type="button">Load data</button>
+    <button id="open-ws" data-testid="open-ws" type="button">Open socket</button>
+    <button id="save-storage" data-testid="save-storage" type="button">Save storage</button>
+    <label for="note">Note</label>
+    <input id="note" data-testid="note-input" type="text" placeholder="type a note" value="">
+    <img src="/logo.svg" alt="fixture logo">
+    <ul>
+      <li>alpha</li>
+      <li>beta</li>
+    </ul>
+  </main>
+  <footer>fixture footer</footer>
+</body>
+</html>
