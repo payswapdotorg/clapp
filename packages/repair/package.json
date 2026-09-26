@@ -1,0 +1,21 @@
+{
+  "name": "@clapp/repair",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CLAPP autonomous repair loop (CLAPP-042): consumes diff-contract v0.1 MIRROR-shaped DiffReports (canonical owner @clapp/diff, CLAPP-040 — never the diff packages themselves), clusters critical/major findings into scoped RepairDirectives, applies bounded evidence-driven edits (text-restore / attribute-restore / mock-restore) to the candidate app's files as git commits with hard scope enforcement, and iterates against a re-run oracle within a max-iterations budget — the loop never reads the SynthesisPlan.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@clapp/core": "workspace:*",
+    "@clapp/journey": "workspace:*"
+  },
+  "devDependencies": {
+    "@clapp/codegen": "workspace:*",
+    "@clapp/plan": "workspace:*"
+  }
+}

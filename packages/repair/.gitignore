@@ -1,0 +1,4 @@
+# Candidate-tree scratch directories written by this package's own tests
+# (materialized generated apps + their git repos). Always cleaned up by the
+# tests; listed here so a crashed run never stages leftovers.
+.candidates-*/
