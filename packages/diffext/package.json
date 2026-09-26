@@ -1,0 +1,23 @@
+{
+  "name": "@clapp/diffext",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CLAPP extended diff dimensions (CLAPP-041): the 'visual' dimension (screenshot pairs, structural + pixel comparison via a zero-dep PNG codec) and the 'network' dimension (captured traffic vs the plan's api/mock spec), producing DiffFinding records per the differential verification contract v0.1 mirror.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@clapp/core": "workspace:*",
+    "@clapp/journey": "workspace:*",
+    "@clapp/observe": "workspace:*",
+    "@clapp/plan": "workspace:*"
+  },
+  "devDependencies": {
+    "@clapp/codegen": "workspace:*",
+    "playwright-core": "^1.63.0"
+  }
+}
