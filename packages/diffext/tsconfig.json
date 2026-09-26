@@ -1,0 +1,9 @@
+{
+  // Standalone typecheck for @clapp/diffext (bunx tsc --noEmit -p tsconfig.json).
+  // The root program covers packages/*/src/** only (frozen root tsconfig), so
+  // this per-package program additionally covers the colocated test battery in
+  // test/ and the TS golden-plan fixture in fixtures/ — the same convention as
+  // @clapp/codegen (see its tsconfig.json note).
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*.ts", "test/**/*.ts", "fixtures/**/*.ts"]
+}

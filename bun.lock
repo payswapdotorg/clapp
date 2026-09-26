@@ -26,6 +26,20 @@
       "name": "@clapp/core",
       "version": "0.1.0",
     },
+    "packages/diffext": {
+      "name": "@clapp/diffext",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+        "@clapp/journey": "workspace:*",
+        "@clapp/observe": "workspace:*",
+        "@clapp/plan": "workspace:*",
+      },
+      "devDependencies": {
+        "@clapp/codegen": "workspace:*",
+        "playwright-core": "^1.63.0",
+      },
+    },
     "packages/evidence": {
       "name": "@clapp/evidence",
       "version": "0.1.0",
@@ -129,6 +143,8 @@
     "@clapp/codegen": ["@clapp/codegen@workspace:packages/codegen"],
 
     "@clapp/core": ["@clapp/core@workspace:packages/core"],
+
+    "@clapp/diffext": ["@clapp/diffext@workspace:packages/diffext"],
 
     "@clapp/evidence": ["@clapp/evidence@workspace:packages/evidence"],
 
