@@ -110,6 +110,18 @@
         "@clapp/store": "workspace:*",
       },
     },
+    "packages/repair": {
+      "name": "@clapp/repair",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+        "@clapp/journey": "workspace:*",
+      },
+      "devDependencies": {
+        "@clapp/codegen": "workspace:*",
+        "@clapp/plan": "workspace:*",
+      },
+    },
     "packages/sandbox": {
       "name": "@clapp/sandbox",
       "version": "0.1.0",
@@ -145,6 +157,8 @@
     "@clapp/observe": ["@clapp/observe@workspace:packages/observe"],
 
     "@clapp/plan": ["@clapp/plan@workspace:packages/plan"],
+
+    "@clapp/repair": ["@clapp/repair@workspace:packages/repair"],
 
     "@clapp/sandbox": ["@clapp/sandbox@workspace:packages/sandbox"],
 
