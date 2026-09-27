@@ -36,13 +36,13 @@ CLAPP
 │   ├── ✅ backend/mock generation (@clapp/codegen mock backend; CLAPP-031)
 │   └── ✅ generated test suite (@clapp/gentests; CLAPP-032)
 │
-├── 🟡 P4 Differential Verification (wave launching)
-│   ├── 🟡 paired runner
-│   ├── ⬜ semantic diff
-│   ├── ⬜ visual diff
-│   ├── ⬜ network diff
-│   ├── ⬜ state/storage diff
-│   └── ⬜ autonomous repair loop
+├── ✅ P4 Differential Verification
+│   ├── ✅ paired runner (@clapp/diff — runPair/diff/report spine, dom + playwright drivers; CLAPP-040)
+│   ├── ✅ semantic diff (@clapp/diff semantic dimension; CLAPP-040)
+│   ├── ✅ visual diff (@clapp/diffext; CLAPP-041)
+│   ├── ✅ network diff (@clapp/diffext; CLAPP-041)
+│   ├── ✅ state/storage diff (@clapp/diff state dimension; CLAPP-040)
+│   └── ✅ autonomous repair loop (@clapp/repair; CLAPP-042)
 │
 ├── ⬜ P5 Package Library
 │   ├── ⬜ package schema

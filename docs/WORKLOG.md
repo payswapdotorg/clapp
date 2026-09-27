@@ -434,3 +434,86 @@ Next unblocked work: P4 Differential Verification (paired runner,
 semantic/visual/network/state diffs, autonomous repair loop) — the
 plan/codegen/gentests surfaces it consumes are frozen at P3; the
 diff-contract v0.1 declaration is staged for the wave packets.
+
+## 2026-09-27 — Phase 4 integrated: differential verification (assault wave + four cross-package gates)
+
+Wave: CLAPP-040 (paired differential runner + semantic/state diff,
+@clapp/diff), CLAPP-041 (visual + network diff dimensions, @clapp/diffext),
+CLAPP-042 (autonomous repair loop, @clapp/repair). 041/042 landed first
+(0554bd0 / 469126a); 040 closed the wave after a re-dispatch
+(255dce8) — the original 040 dispatch was a lesson-181 queued-packet
+reclaim (0 assistant turns in 8.5h across two sandbox resets); the
+prompt was recovered byte-exact from the dead chat's own user message
+and re-dispatched via the agents-tab dispatcher.
+
+Integrated commits: 0554bd0 (041), 469126a (042), 255dce8 (040, final).
+
+Worker outputs (040): packages/diff — 22 files (19 src/test modules +
+README + package.json + tsconfig); 5,682 insertions on declared base
+dc008d22; single-commit branch eb4524d; clean tree at HEAD; delivery
+bundle 742,325 bytes harvested via the workspaces files API
+(ls-tree 300 entries, bundle byte-size matched the declaration).
+
+Tests (sequential battery at the integration station, post-merge):
+1220 pass / 0 fail / 12,417 expect() across 105 files — exact
+reconciliation: base 1083/11,258/83 + 040 adds 40/400/6 (packages/diff)
++ 041 adds 62/510/7 (packages/diffext) + 042 adds 35/249/9
+(packages/repair). typecheck 0, lint 0, bun install clean
+(bun.lock regenerated at the merge result — the only conflict).
+
+Acceptance status — P4 gates:
+- GATE P4-A (paired runner e2e): paired-runner.test.ts 4/0 — golden
+  plan generated + spawned, left = startFixtureServer over the b01
+  corpus, all four seeded journeys complete both sides, zero critical,
+  verdict equivalent; three negative controls (mutated pricing heading
+  ⇒ critical semantic finding with dual-side evidence anchors; dropped
+  asserted data-testid ⇒ critical; dropped non-asserted ⇒ minor catches
+  the silent divergence). GREEN.
+- GATE P4-B (visual + network dimensions through the shared
+  DiffReport): packages/diffext 62/0. GREEN.
+- GATE P4-C (repair convergence): passed pre-reset at 469126a
+  (carried unchanged through the 040 merge). GREEN.
+- GATE P4-D (mirror byte-identity across diff/diffext/repair carriers
+  + TL declaration): all four byte-identical, sha256
+  8716f98d607492b04d78188f064cb8d80034d9a22ef947b60d612943b93746a8
+  (7,541 bytes; the TL packet's verbatim declaration, the 040
+  canonical, and both mirrors — verified post-merge at HEAD). GREEN.
+
+Interface freezes declared (P4):
+- diff-contract v0.1: canonical @clapp/diff
+  (packages/diff/src/diff-contract.ts); mirrors in @clapp/diffext and
+  @clapp/repair are byte-identical re-export carriers (file-level
+  identity, 7,541 bytes, sha256 8716f98d…).
+- @clapp/diff public surface (contract re-export, createPairedRunner +
+  PairedRunnerOptions, serializeDiffReport/parseDiffReport,
+  DIFF_ADAPTER_INFO, id factories, DiffRunnerError/DiffReportError) —
+  FROZEN.
+- @clapp/diffext public surface (visual + network dimensions feeding
+  the shared DiffReport; frozen at its P4 merge) — FROZEN.
+- @clapp/repair public surface (RepairDirective/RepairAttempt/
+  RepairLoopResult loop machinery; frozen at its P4 merge) — FROZEN.
+
+Newly discovered risks:
+- The local sandbox reset cadence (~3–4h, six resets in ~24h) is the
+  dominant wave risk, not worker speed: queued dispatches do not
+  survive (lesson-181 reclaim), and long-open session tabs wedge into
+  frozen renderers that mimic death — the stall discriminator is a
+  FRESH tab on the same /c/<uuid> (lesson 159 arbitration), never the
+  stale tab's DOM. The zero-touch recovery kit (durable JWT + prompt
+  recovery from the dead chat + dispatcher-only re-dispatch) closed
+  the loop.
+- Detached local daemons must be launched via double-fork
+  (dfork_launch.py) — setsid/nohup launches are reaped at the tool
+  call boundary.
+- The workspaces files API ls-tree truncates at ~300 visible entries;
+  explicit-path harvest is the bypass.
+
+ADRs added/changed: none required. ADR note recorded: the packet's
+abridged EvidenceKind excerpt differed from the frozen @clapp/core v0
+vocabulary; per the packet's own "repo is truth" rule the repo's kinds
+were used — the canonical contract only imports EvidenceRef, so there
+is no byte-identity impact.
+
+Next unblocked work: P5 Package Library (package schema, registry,
+extraction, retrieval, compatibility graph, promotion/replay gates) —
+the diff/repair surfaces it consumes are frozen at P4.
