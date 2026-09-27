@@ -1,0 +1,24 @@
+{
+  "name": "@clapp/diff",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CLAPP paired differential runner + semantic/state diff dimensions; CANONICAL OWNER of the Differential Verification contract v0.1 (CLAPP-040).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@clapp/core": "workspace:*",
+    "@clapp/journey": "workspace:*",
+    "@clapp/observe": "workspace:*",
+    "@clapp/plan": "workspace:*"
+  },
+  "devDependencies": {
+    "@clapp/codegen": "workspace:*",
+    "@clapp/evidence": "workspace:*",
+    "playwright-core": "^1.63.0"
+  }
+}
