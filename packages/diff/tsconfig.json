@@ -1,0 +1,9 @@
+{
+  // Standalone typecheck for @clapp/diff (bunx tsc --noEmit -p tsconfig.json).
+  // The root program covers packages/*/src/** (frozen root tsconfig), which
+  // already includes this package's colocated test battery in src/ — this
+  // per-package program exists for the same standalone-rigor parity as the
+  // sibling packages (it typechecks exactly the same file set).
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*.ts"]
+}
