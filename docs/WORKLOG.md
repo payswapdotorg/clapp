@@ -776,3 +776,54 @@ Next unblocked work: CLAPP-054 — Promotion gate (Owner: TECH LEAD;
 depends on 053, now landed). The TL implements the promotion machinery
 itself: candidate → verified/replayed promotion decisions over the
 landed extraction + replay evidence, per LEARNING_AND_LIBRARY §5/§8.
+
+## 2026-10-02 — Phase 5 lane 5 integrated: the promotion gate (CLAPP-054, the tech lead's lane)
+
+Wave/phase: P5 Package Library closing lane. Per WORK_ITEMS ("CLAPP-054 —
+Promotion gate, Owner: tech lead"), this lane was implemented DIRECTLY by
+the tech lead (the integration authority — promotion is never a worker's
+call; the module is that rejection machinery, executable).
+
+Integrated commits:
+- `feat(library): CLAPP-054 promotion gate — candidate-to-replayed
+  promotion over green landed evidence (chain-intact replay, digests
+  recomputed at promotion time, benchmark reference carried, manifest
+  immutable)`
+- `integrate: merge CLAPP-054 packages/library promotion gate` (--no-ff)
+- (docs commit) — ROADMAP ✅ + this record.
+
+Delivered surface (src/promotion.ts 261 lines + test/promotion.test.ts
+368 lines + the index/imports/README sanctioned extensions):
+- PROMOTION_VERSION '0.1'; promoteCandidate(candidate, evidence, options)
+  fail-closed over: the candidate (frozen manifest validator + stage
+  'candidate' ONLY, refusal naming the observed stage), the options
+  (caller-injected RFC3339 promotedAt — never a clock), the evidence
+  (outcome 'replayed'; replayVersion === REPLAY_VERSION; packageId ===
+  the manifest's minted id; provenanceCheck.matches === true — the gate
+  WEIGHS the replay's chain disclosure and REFUSES a moved chain;
+  benchmarkRef present), and the DIGESTS: manifestSha256 RECOMPUTED AT
+  PROMOTION TIME (sha256Hex(canonicalJson(manifest)) — recorded digests
+  compared, never trusted) against both the replay's digest and the
+  candidate's recorded extractionContext digest (no drift anywhere).
+- The promotion record: a NEW stage document ('replayed' — v0.1's only
+  promotion; 'stable'/'preferred' arrive with later evidence classes via
+  contract bumps), manifest carried VERBATIM (immutable — benchmark stays
+  null; nothing lifted into a manifest), promotionContext { promotedBy
+  'CLAPP-054', promotedAt, evidenceDigest (content-addressed over the
+  replay record), benchmarkRef carried verbatim }.
+- Eight named tests, all green: determinism; fail-closed with named
+  errors; candidate-stage-only; the green-record axes (outcome, version,
+  packageId, digest); the moved-chain refusal; the drift refusal; the
+  verbatim-manifest new-stage-document proof; the caller-injected
+  timestamp proof (different promotedAt values → ONLY that field differs).
+
+Acceptance (measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1260 pass / 0 fail / 12,893 expect() / 112 files** (42.94s)
+  — exactly baseline 1252 + 8.
+- Frozen surfaces byte-identical; package.json byte-identical.
+
+P5 WORK_ITEMS status: all five items landed (050, 051, 052, 053, 054).
+ROADMAP P5: 5/6 checkboxes ✅; "registry" ⬜ has NO WORK_ITEMS entry —
+the tech lead declares CLAPP-055 (Package registry, Owner W2 per the
+handoff ownership list) to close P5 completely before opening P6.
