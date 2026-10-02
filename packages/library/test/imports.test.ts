@@ -53,12 +53,13 @@ function sourceImports(source: string): Array<{ clause: string; specifier: strin
 describe('the frozen-contract import discipline', () => {
   test('the package imports only frozen contracts — no cross-implementation import', () => {
     const files = listTsFiles(SRC_ROOT).sort();
-    // the seven modules of the delivered surface
+    // the eight modules of the delivered surface
     expect(files.map((file) => file.slice(PACKAGE_ROOT.length + 1))).toEqual([
       'src/compat-graph.ts',
       'src/extract.ts',
       'src/index.ts',
       'src/package-contract.ts',
+      'src/promotion.ts',
       'src/record.ts',
       'src/replay-benchmark.ts',
       'src/retrieval.ts',

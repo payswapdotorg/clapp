@@ -82,3 +82,13 @@ export type {
 // ---- the package replay benchmark (CLAPP-053 — P5 lane 4) ------------------------
 export { REPLAY_VERSION, replayCandidate } from './replay-benchmark';
 export type { ReplayPorts, ReplayBenchmarkRecord, ReplayResult } from './replay-benchmark';
+
+// ---- the promotion gate (CLAPP-054 — the tech lead's lane) -------------------------
+export { PROMOTED_BY, PROMOTION_VERSION, promoteCandidate } from './promotion';
+export type {
+  PackagePromotionRecord,
+  PromotionEvidence,
+  PromotionOptions,
+  PromotionResult,
+  PromotedStage,
+} from './promotion';

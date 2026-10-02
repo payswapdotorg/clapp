@@ -469,3 +469,32 @@ here).
   reported, no silent trust), and the loud-harness boundary (a throwing
   `recomputeParity` rejects with the thrown error itself — never a
   synthetic `'malformed'` record).
+
+## Promotion gate (CLAPP-054)
+
+P5's closing lane — owned and implemented by the **tech lead** (the
+integration authority): promotion is never a worker's call, and this module
+is that rejection machinery, executable. `promoteCandidate(candidate,
+evidence, options)` mints a `PackagePromotionRecord` — a NEW stage document
+(`'replayed'`, v0.1's only promotion) — ONLY when every landed evidence
+class is green:
+
+| condition | source |
+| --- | --- |
+| the candidate is a valid candidate-stage record | the frozen manifest validator + stage `'candidate'` |
+| the replay record is green | outcome `'replayed'`, `replayVersion` matching `REPLAY_VERSION`, `packageId` matching the manifest's minted id |
+| the digests agree | `manifestSha256` recomputed AT PROMOTION TIME (`sha256Hex(canonicalJson(manifest))`) — compared against the replay's digest AND the candidate's recorded `extractionContext.manifestSha256` (no drift anywhere) |
+| the evidence chain is intact | `provenanceCheck.matches === true` — the replay module DISCLOSES a moved chain without flipping its outcome; the promotion gate WEIGHS that disclosure and REFUSES |
+| a benchmark reference exists | the green replay's measured `benchmarkRef`, carried verbatim |
+
+The manifest is **immutable** (the worker-handoff acceptance rule): the
+promotion record carries it VERBATIM; no field is rewritten (`benchmark`
+stays exactly as extracted — lifting a reference INTO a manifest is a
+separate, future, tech-lead-gated operation). `promotedAt` is
+caller-injected RFC3339 (validated; the gate never reads a clock); the
+evidence digest is content-addressed over the replay record. §5's later
+stages (`'stable'`, `'preferred'`) arrive with later evidence classes via
+contract version bumps — never by quietly widening this gate. Every
+refusal is a collected, named error with its observed value (results,
+never exceptions); a malformed input class is a refusal, and nothing about
+the inputs is ever mutated.
