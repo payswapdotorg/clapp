@@ -50,7 +50,7 @@ CLAPP
 │   ├── ✅ extraction (fail-closed unverified-candidate gate over the frozen P4 ports — @clapp/library; CLAPP-050)
 │   ├── ✅ retrieval (ranked candidates over measured manifest signals, rq_ query digest — @clapp/library; CLAPP-052)
 │   ├── ✅ compatibility graph (deterministic pairwise verdicts, cgraph_ content-addressed identity — @clapp/library; CLAPP-051)
-│   └── ⬜ promotion/replay gates
+│   └── 🟡 promotion/replay gates (replay benchmark landed — measured durations, benchmark references — @clapp/library; CLAPP-053. Promotion gate = CLAPP-054, the tech lead's lane)
 │
 ├── ⬜ P6 Continuous Learning
 │   ├── ⬜ failure memory

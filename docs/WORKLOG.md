@@ -715,3 +715,64 @@ Notable decisions:
 
 Next unblocked work: CLAPP-053 — Package replay benchmark (Owner W3;
 depends on 051+052, both landed).
+
+## 2026-10-02 — Phase 5 lane 4 integrated: package replay benchmark (CLAPP-053)
+
+Wave/phase: P5 Package Library (CLAPP-053), worker lane clapp-053b
+(Worker 3 — Synthesis, Verification, and Repair). The lane-1 dispatch
+(clapp-053a) was VOIDED after its raw-API prime kick left a zombie
+turn that swallowed every send for 50+ minutes; lane 2 (053b) executed
+clean after the recovery chain (short-response prime kick -> tab reset ->
+sandbox-slot release -> capacity assault -> agent turn live).
+
+Integrated commits:
+- 1da5515 — CLAPP-053 (W3): `feat(library): CLAPP-053 package replay
+  benchmark — extraction-consistent fail-closed gate over recomputed
+  parity, measured durations via injectable clock, benchmark references`
+- (merge) — `integrate: merge CLAPP-053 packages/library replay-benchmark`
+- (docs commit) — ROADMAP 🟡 + this record.
+
+Delivered surface (6 files / +1,108 / −6 — the deletions are the
+sanctioned CLAPP-052-convention sentence refreshes):
+- `src/replay-benchmark.ts` (426 lines) — REPLAY_VERSION '0.1';
+  replayCandidate(candidate, ports): fail-closed candidate validation
+  (manifest via the frozen validator; stage must be 'candidate'; ports
+  must be callable objects — ALL errors collected, never an exception);
+  the REPLAY GATE — the same three conditions as the extractor's
+  unverified-candidate gate, same order, over the RECOMPUTED parity
+  (verdict 'equivalent' → critical 0 → converged); durationMs MEASURED
+  from the injected clock (t1−t0, never Date.now()); manifestSha256
+  recomputed at replay time and drift DISCLOSED; provenanceCheck compares
+  recorded vs recomputed diff report ids (matches:false disclosed, never
+  outcome-flipping); benchmarkRef minted ONLY on 'replayed'
+  (`replay:0.1:<id>:<version>:ok:<durationMs>ms:attempts:1` — a REFERENCE
+  with the measured duration, never a bare number; null on failure); a
+  THROWING port propagates loudly (never swallowed into a synthetic
+  'malformed').
+- `test/replay-benchmark.test.ts` (335) + `test/fixtures/replay-parity.ts`
+  (213) — the 8 named tests (determinism, fail-closed, the three killer
+  gate parities, measured duration + reference format, provenance
+  disclosure, injected-clock deltas, digest drift disclosure, loud
+  harness failure).
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1252 pass / 0 fail / 12,847 expect() / 111 files** (42.87s)
+  — exactly baseline 1244 + 8 (worker measured the same twice).
+- Frozen surfaces byte-identical; package.json byte-identical.
+- Bundle verified (head 1da5515; requires base ecf01a9; ancestor clean).
+- The worker's disclosure VERIFIED by the Lead: a per-package `tsc -p .`
+  condition shows 22 errors in lane-2/3 test files AT THE BASE commit
+  (pre-existing, not introduced; the mandated root battery — which covers
+  src only — is clean). Recorded as a known limitation for a future
+  housekeeping lane.
+
+Interface freezes landed (binding):
+- REPLAY_VERSION '0.1' + ReplayPorts {recomputeParity, now} +
+  ReplayBenchmarkRecord + the benchmarkRef format — canonical owner
+  @clapp/library (replay-benchmark.ts).
+
+Next unblocked work: CLAPP-054 — Promotion gate (Owner: TECH LEAD;
+depends on 053, now landed). The TL implements the promotion machinery
+itself: candidate → verified/replayed promotion decisions over the
+landed extraction + replay evidence, per LEARNING_AND_LIBRARY §5/§8.
