@@ -5,9 +5,10 @@ validator, canonical serialization, content-addressed `mintPackageId`) and
 the **package extractor** over the frozen P4 synthesis/parity ports —
 fail-closed `unverified-candidate` gate, deterministic, honest counting.
 
-**Out of scope (later lanes):** registry, retrieval, promotion/replay gates
-(CLAPP-052/054 — see `docs/ROADMAP.md` P5). The compatibility graph landed
-(CLAPP-051, `buildCompatGraph`).
+**Out of scope (later lanes):** registry, promotion/replay gates
+(CLAPP-054 — see `docs/ROADMAP.md` P5). The compatibility graph landed
+(CLAPP-051, `buildCompatGraph`); the package retrieval landed
+(CLAPP-052, `retrievePackages`).
 
 **Non-degeneracy rule (binding):** the extractor consumes contract-shaped
 DATA only. `@clapp/plan`, `@clapp/codegen`, `@clapp/diff` and
@@ -140,8 +141,8 @@ injectable id factory is needed; the hash function behind
 ## Honest limitations
 
 - One candidate per verified extraction (the whole app). Finer-grained
-  packages, the registry, retrieval, compatibility and promotion are
-  later lanes (CLAPP-051/052/054).
+  packages, the registry and promotion are later lanes (CLAPP-054);
+  the compatibility graph (CLAPP-051) and retrieval (CLAPP-052) have landed.
 - `canonicalPackageJson` throws `CanonicalJsonError` on
   non-canonicalizable manifests (the observe discipline — loud, not
   silently mangled); `extractPackages` catches it and reports
@@ -232,3 +233,117 @@ semantics arrive with a future contract version.
   graph is valid and content-addressed), and content-addressed identity
   (any input change moves the digest; unchanged pair-edges stay
   byte-stable).
+
+## Retrieval (CLAPP-052)
+
+P5 lane 3: `retrievePackages(manifests, query)` — the **deterministic,
+honest ranked-candidate retrieval** over `PackageManifest` v0.1 entries,
+shaped by `docs/LEARNING_AND_LIBRARY.md` §6 (the multi-signal retrieval
+list, v0.1-shaped). One new module, `src/retrieval.ts`; runtime imports are
+exactly `@clapp/core` (`sha256Hex`), `@clapp/observe` (`canonicalJson`) and
+the local frozen `./package-contract` (same package — retrieval imports no
+contract owner, and needs nothing from `./compat-graph` at runtime: v0.1
+retrieval signals are all single-manifest facts).
+
+### The retrieval contract (v0.1)
+
+`RETRIEVAL_VERSION` is `'0.1'`. A `RetrievalQuery` is
+`{ target, requiredCapabilities, optionalCapabilities?, purposeHint?,
+maxResults? }` — unknown fields are a fail-closed typo guard (a mistyped
+field name must never silently degrade the query). A manifest is a
+CANDIDATE only when it passes the **candidacy gate**:
+
+- `targetMatch` — `query.target` is among `manifest.supportedTargets`
+  (the single-manifest reduction of the compat-graph target gate: a
+  manifest not supporting the query target is never a candidate);
+- `requiredCoverage === 1` — EVERY required capability is measured
+  present. Partial coverage is NOT candidacy: excluded, never ranked.
+
+The gate carries no dependency-compatibility check — the frozen v0.1
+formula has no dependency signal, so nothing here can contradict the
+graph's runtime-conflict rule. Every signal is MEASURED from the manifest:
+
+| signal | derivation (all measured) |
+| --- | --- |
+| `targetMatch` | membership of `query.target` in `manifest.supportedTargets` |
+| `requiredCoverage` | matched / required, over SET intersection — `1` when none required |
+| `optionalCoverage` | matched / optional, over SET intersection — `0` when none requested (weighting, never gating) |
+| `similarity` | Jaccard token overlap between `purposeHint` and `manifest.purpose` — the DOCUMENTED LEXICAL PLACEHOLDER, not semantic (embeddings are a later lane; nothing semantic is simulated) |
+| `parityHistory` | `manifest.evidence.length` — the raw measured list length |
+| `repairCost` | `manifest.failureModes.length` — the raw measured list length |
+| `recencyRank` | 0-based rank over ALL considered manifests by `generatedAt` DESC (RFC3339 lexical compare), id ASC tie-break |
+
+### The frozen composite (v0.1)
+
+```
+score = 40 * requiredCoverage
+      + 15 * optionalCoverage
+      + 15 * similarity
+      + 10 * min(parityHistory, 5) / 5
+      -  6 * min(repairCost, 5) / 5
+      +  6 * (1 / (1 + recencyRank))
+```
+
+The weights are FROZEN — re-weighting is a contract version bump, never a
+quiet tune. Ranking is score DESCENDING with a deterministic id-ASCENDING
+tie-break; `maxResults` (a positive integer) truncates AFTER ranking, and
+the truncation is reported in the result reasons (`truncated to k of n
+ranked candidates by maxResults k`) — never silently. `considered` /
+`excluded` count gate facts only (truncation is not exclusion). The caps
+(`min(…, 5)`) live in the formula alone: the components always report the
+RAW measured lengths, and the candidate reasons say so.
+
+### Fail-closed validation
+
+`retrievePackages` never throws for bad input: a non-array manifest list,
+ANY invalid manifest entry (the frozen `validatePackageManifest`, every
+error prefixed with its index), a duplicate minted id (the graph lane's
+discipline — ranking one package twice would be dishonest counting), or an
+invalid query (missing/empty `target`, non-array capability lists,
+non-positive-integer `maxResults`, an unknown field) returns
+`{ ok: false, errors }` with every error collected and NAMED. An EMPTY
+corpus with a valid query is a legal, honest retrieval: zero candidates,
+`considered 0`, still digested and reasoned.
+
+### The id proposal (`rq_`)
+
+`queryDigest = 'rq_' + sha256Hex(canonicalJson(normalizedQuery))` — the
+normalized query omits absent optional fields (never nulls) and
+canonicalizes capability arrays (sorted, deduped — array order is caller
+presentation, not query semantics, so `['form','route']` and
+`['route','form']` mint the SAME digest). The `'rq_'` prefix is this
+packet's frozen proposal (the same id discipline as `pkg_` / `cgraph_`);
+changing it changes every minted query digest and requires a contract
+version bump.
+
+### Retrieval determinism discipline
+
+Same manifests (ANY input order) + same query → deep-equal result (proven
+by `test/retrieval.test.ts`): no clock, no randomness, no network, no
+filesystem reads; the module never mutates its inputs; every derived list
+is sorted and deduped; reasons are canonical (sorted, deduped) with every
+number measured from the actual data. Honest limitation: `generatedAt`
+comparison is LEXICAL over the RFC3339 text — correct for same-offset
+(e.g. all-UTC `Z`) timestamps, which is the shape the extractor emits and
+the corpus discipline keeps; a mixed-offset ordering refinement arrives
+with a future contract wave, never a silent reinterpretation.
+
+### Retrieval tests
+
+- `test/retrieval.test.ts` — eight named tests: determinism (identical
+  inputs, any manifest input order, canonical digests, change
+  sensitivity), fail-closed malformed manifests + queries (never an
+  exception, all errors named, the unknown-field typo guard, duplicate
+  ids), the candidacy gate (target mismatch + partial coverage excluded
+  honestly with measured per-exclusion reasons; the empty required set),
+  the frozen composite (every signal recomputed INDEPENDENTLY from the
+  fixture facts and fed through the formula — bit-exact — with a real
+  score TIE broken by id ASC), the lexical similarity placeholder (exact
+  Jaccard values; token-set semantics — word order contributes nothing;
+  semantically adjacent text with zero token overlap scores 0), parity
+  history + repair cost (raw measured lengths; the caps live in the
+  formula only), optional capabilities + maxResults (weighting never
+  gating; truncation applied after ranking and reported honestly),
+  satisfiability (every required capability set satisfiable from the
+  fixture corpus or reported empty with reasons — including the empty
+  corpus).

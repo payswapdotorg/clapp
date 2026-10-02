@@ -8,9 +8,9 @@
  * frozen P4 synthesis/parity ports — fail-closed unverified-candidate
  * gate, deterministic, honest counting.
  *
- * The package compatibility graph landed with CLAPP-051. Registry,
- * retrieval and promotion/replay gates are LATER lanes (CLAPP-052/054) —
- * NOT in this package.
+ * The package compatibility graph landed with CLAPP-051; the package
+ * retrieval landed with CLAPP-052. Registry and promotion/replay gates are
+ * LATER lanes (CLAPP-054) — NOT in this package.
  *
  * Quick start:
  *
@@ -67,3 +67,13 @@ export type {
   CompatGraphResult,
   CompatibilityVerdict,
 } from './compat-graph';
+
+// ---- the package retrieval (CLAPP-052 — P5 lane 3) --------------------------------
+export { RETRIEVAL_VERSION, retrievePackages } from './retrieval';
+export type {
+  RetrievalQuery,
+  RetrievalResult,
+  RetrieveResult,
+  ScoredCandidate,
+  RetrievalScoreComponents,
+} from './retrieval';
