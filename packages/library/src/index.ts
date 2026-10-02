@@ -8,8 +8,9 @@
  * frozen P4 synthesis/parity ports — fail-closed unverified-candidate
  * gate, deterministic, honest counting.
  *
- * Registry, retrieval, the compatibility graph and promotion/replay gates
- * are LATER lanes (CLAPP-051/052/054) — NOT in this package.
+ * The package compatibility graph landed with CLAPP-051. Registry,
+ * retrieval and promotion/replay gates are LATER lanes (CLAPP-052/054) —
+ * NOT in this package.
  *
  * Quick start:
  *

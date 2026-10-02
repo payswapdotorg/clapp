@@ -5,8 +5,9 @@ validator, canonical serialization, content-addressed `mintPackageId`) and
 the **package extractor** over the frozen P4 synthesis/parity ports —
 fail-closed `unverified-candidate` gate, deterministic, honest counting.
 
-**Out of scope (later lanes):** registry, retrieval, compatibility graph,
-promotion/replay gates (CLAPP-051/052/054 — see `docs/ROADMAP.md` P5).
+**Out of scope (later lanes):** registry, retrieval, promotion/replay gates
+(CLAPP-052/054 — see `docs/ROADMAP.md` P5). The compatibility graph landed
+(CLAPP-051, `buildCompatGraph`).
 
 **Non-degeneracy rule (binding):** the extractor consumes contract-shaped
 DATA only. `@clapp/plan`, `@clapp/codegen`, `@clapp/diff` and
