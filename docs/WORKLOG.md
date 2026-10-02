@@ -586,3 +586,60 @@ Notable decisions (ADR-grade, recorded for later lanes):
 
 Next unblocked work: P5 continues with CLAPP-051 — Package compatibility
 graph (Owner: W2; depends on 050, now landed).
+
+## 2026-10-02 — Phase 5 lane 2 integrated: package compatibility graph (CLAPP-051)
+
+Wave/phase: P5 Package Library (CLAPP-051), single worker lane clapp-051a
+(Worker 2 — Behavioral Model and Package Learning).
+
+Integrated commits:
+- 08a3138 — CLAPP-051 (W2): `feat(library): CLAPP-051 package compatibility
+  graph — deterministic pairwise verdicts, content-addressed graph identity`
+- 10ee55d — `integrate: merge CLAPP-051 packages/library compat-graph` (--no-ff)
+- (docs commit) — lead-side header alignment (index.ts + README: the graph is
+  no longer "a later lane" — the honest gap the worker's delivery report
+  flagged for the lead, untouchable under the worker's append-only rules) +
+  ROADMAP ✅ + this record.
+
+Delivered surface (6 files / 759 insertions / 1 deletion — the one deletion is
+the imports.test.ts count-comment word "four"→"five"):
+- `src/compat-graph.ts` (302 lines) — GRAPH_VERSION '0.1';
+  CompatNode/CompatEdge/CompatGraph; buildCompatGraph fail-closed (every
+  entry passes the frozen validatePackageManifest; duplicate minted ids
+  rejected; ALL errors collected with index+field names — results, never
+  exceptions); pairwise verdict semantics: 'unrelated' (target gate — no
+  shared supported target), 'conflict' (both name a runtime executable and
+  they differ — alternative runtimes never compose in v0.1), 'compatible'
+  (measured overlap); canonical edge order (left = smaller id, edges sorted);
+  graphSha256 = 'cgraph_' + sha256Hex(canonicalJson({graphVersion, nodes,
+  edges})) — content-addressed, input-order independent; empty input legal.
+- `test/compat-graph.test.ts` (293) + `test/fixtures/compat-manifests.ts` (74)
+  — the eight named tests incl. determinism across input permutations and
+  independent recomputation of measured overlap.
+- `src/index.ts` (+10, append-only) — graph exports appended.
+- `test/imports.test.ts` (+2/-1) — file-list EXTENDED to cover
+  src/compat-graph.ts (the frozen import discipline now covers 5 modules).
+
+Acceptance (Lead-side, measured at the merge + alignment):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1236 pass / 0 fail / 12,589 expect() / 109 files** (baseline
+  1228/0/12,520/108 at c07536c — delta exactly +8).
+- `package.json` byte-identical (no new deps — runtime imports are exactly
+  @clapp/core + @clapp/observe + local ./package-contract); frozen files
+  (package-contract.ts, extract.ts, record.ts) untouched.
+- Bundle verified (head 08a3138; requires base c07536c — the CLAPP-050
+  integration HEAD; ancestor check clean).
+
+Interface freezes landed (binding):
+- GRAPH_VERSION '0.1' + the cgraph_ prefix proposal + CompatNode/CompatEdge/
+  CompatGraph + CompatGraphResult — canonical owner @clapp/library
+  (compat-graph.ts).
+
+Notable decisions:
+- sharedCapabilities is reported on 'unrelated' edges too (a measured fact,
+  never a compatibility claim — never zeroed to match the verdict).
+- v0.1 compares the leading dependency entry (manifests carry at most one);
+  multi-entry semantics arrive with a future contract version.
+
+Next unblocked work: CLAPP-052 — Package retrieval (Owner W1; depends on 051,
+now landed).

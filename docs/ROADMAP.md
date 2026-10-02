@@ -49,7 +49,7 @@ CLAPP
 │   ├── ⬜ registry
 │   ├── ✅ extraction (fail-closed unverified-candidate gate over the frozen P4 ports — @clapp/library; CLAPP-050)
 │   ├── ⬜ retrieval
-│   ├── ⬜ compatibility graph
+│   ├── ✅ compatibility graph (deterministic pairwise verdicts, cgraph_ content-addressed identity — @clapp/library; CLAPP-051)
 │   └── ⬜ promotion/replay gates
 │
 ├── ⬜ P6 Continuous Learning
