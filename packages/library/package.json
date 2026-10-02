@@ -1,0 +1,23 @@
+{
+  "name": "@clapp/library",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CLAPP package library (CLAPP-050): the PackageManifest v0.1 contract (validator, canonical serialization, content-addressed mintPackageId) and the package extractor over the frozen P4 synthesis/parity ports — fail-closed unverified-candidate gate, deterministic, honest counting. Registry/retrieval/promotion are later lanes.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@clapp/core": "workspace:*",
+    "@clapp/observe": "workspace:*"
+  },
+  "devDependencies": {
+    "@clapp/plan": "workspace:*",
+    "@clapp/codegen": "workspace:*",
+    "@clapp/diff": "workspace:*",
+    "@clapp/repair": "workspace:*"
+  }
+}
