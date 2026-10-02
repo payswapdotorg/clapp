@@ -153,3 +153,81 @@ injectable id factory is needed; the hash function behind
 - `failureModes` references finding ids as recorded by the repair
   attempts; the extractor does not re-verify the resolutions (the
   parity verdict + convergence already carry that guarantee).
+
+## Compatibility graph (CLAPP-051)
+
+P5 lane 2: `buildCompatGraph(manifests)` — the **deterministic,
+content-addressed pairwise-compatibility graph** over `PackageManifest`
+v0.1 entries. This is the structural substrate the future retrieval lane
+(CLAPP-052) consumes for its target-compatibility +
+dependency-compatibility signals (docs/LEARNING_AND_LIBRARY.md §6). One
+new module, `src/compat-graph.ts`; runtime imports are exactly
+`@clapp/core` (`sha256Hex`), `@clapp/observe` (`canonicalJson`) and the
+local frozen `./package-contract` (same package — the graph imports no
+contract owner at all).
+
+### The graph contract (v0.1)
+
+`GRAPH_VERSION` is `'0.1'`. Every VALIDATED input manifest becomes one
+`CompatNode` (`id`, `version`, `category`, `capabilities`,
+`supportedTargets`, `dependencies` — the compatibility-relevant manifest
+facts, verbatim). EVERY unordered pair of nodes becomes exactly one
+`CompatEdge`:
+
+| verdict | when | why |
+| --- | --- | --- |
+| `'unrelated'` | the pair shares NO supported target | the target gate — target-disjoint packages never compose; the reason names both target sets |
+| `'conflict'` | both name a runtime executable and the executables differ | alternative runtimes never compose in v0.1 (`bun` vs `node`, …); the reason names both runtimes |
+| `'compatible'` | everything else | shared targets + no runtime clash; the reasons name the measured overlaps |
+
+Every edge carries the MEASURED intersections — `sharedTargets` and
+`sharedCapabilities` (sorted sets; the capability overlap is reported even
+on `'unrelated'` edges: a measured fact, never a compatibility claim) —
+and `reasons`: honest, deterministic strings that name the facts, with
+overlap counts measured from the actual intersections, never asserted.
+`left` is ALWAYS the lexicographically smaller id, `right` the larger,
+regardless of input order; edges are sorted canonically (by `left`, then
+`right`); `reasons` are sorted and deduped.
+
+### Fail-closed validation
+
+`buildCompatGraph` never throws for bad input. Every entry must pass the
+frozen `validatePackageManifest` (runtime import from
+`./package-contract` — same package); duplicate minted ids are an error
+(`duplicate package id <id> at indexes <i> and <j>`). ALL errors are
+collected — each names the offending index and field — into
+`{ ok: false, errors }`. An EMPTY input is a valid, honest graph: zero
+nodes, zero edges, still content-addressed.
+
+### The id proposal (`cgraph_`)
+
+`graphSha256 = 'cgraph_' + sha256Hex(canonicalJson({ graphVersion,
+nodes, edges }))` — the digest field itself is EXCLUDED from the minting
+input (the same discipline as `pkg_` / `mintPackageId`: ids are minted
+FROM the serialization). Identical manifests in ANY input order mint the
+identical `graphSha256` (nodes and edges are sorted canonically before
+hashing — the input order never leaks). The `'cgraph_'` prefix is this
+packet's frozen proposal; changing it changes every minted graph id and
+requires a graph contract version bump.
+
+### Compatibility-graph determinism discipline
+
+Same manifests (any input order) → byte-identical canonical graph and
+`graphSha256` (proven by `test/compat-graph.test.ts`): no clock, no
+randomness, no network, no filesystem reads; every ordering is sorted;
+the module never mutates its inputs (pure derivation — node arrays are
+copied, never aliased). v0.1 dependency semantics: manifests carry at
+most one dependency entry (the start command's leading executable), so
+the conflict rule compares the leading entries; multi-entry dependency
+semantics arrive with a future contract version.
+
+### Compatibility-graph tests
+
+- `test/compat-graph.test.ts` — eight named tests: determinism across
+  input permutations (byte-identical canonical records), fail-closed
+  malformed + duplicate-id handling (never an exception, all errors
+  collected), the three verdict semantics with measured overlaps, the
+  canonical edge structure (every unordered pair exactly once; the empty
+  graph is valid and content-addressed), and content-addressed identity
+  (any input change moves the digest; unchanged pair-edges stay
+  byte-stable).

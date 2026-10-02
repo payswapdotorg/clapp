@@ -56,3 +56,13 @@ export type { PackageCandidate, PackageStage } from './record';
 // ---- the extractor ----------------------------------------------------------------
 export { extractPackages } from './extract';
 export type { ExtractionPorts, ExtractionResult, ExtractOptions } from './extract';
+
+// ---- the package compatibility graph (CLAPP-051 — P5 lane 2) ----------------------
+export { GRAPH_VERSION, buildCompatGraph } from './compat-graph';
+export type {
+  CompatGraph,
+  CompatEdge,
+  CompatNode,
+  CompatGraphResult,
+  CompatibilityVerdict,
+} from './compat-graph';
