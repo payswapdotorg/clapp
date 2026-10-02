@@ -517,3 +517,72 @@ is no byte-identity impact.
 Next unblocked work: P5 Package Library (package schema, registry,
 extraction, retrieval, compatibility graph, promotion/replay gates) —
 the diff/repair surfaces it consumes are frozen at P4.
+
+## 2026-10-02 — Phase 5 lane 1 integrated: package schema + extraction (CLAPP-050)
+
+Wave/phase: P5 Package Library (CLAPP-050), single worker lane clapp-050a
+(Worker 2 — Behavioral Model and Package Learning, the package schema owner).
+
+Integrated commits:
+- 82ceb25 — CLAPP-050 (W2): `feat(library): CLAPP-050 package extraction —
+  manifest v0.1 contract, fail-closed extractor, candidate record`
+- f325531 — `chore(library): regenerate bun.lock — @clapp/library workspace
+  registration (TL integration step)` (new-package entries only, 16 lines)
+- 9964397 — `integrate: merge CLAPP-050 packages/library` (--no-ff)
+
+Delivered surface (NEW package `@clapp/library`, 11 files / 2,210 lines,
+100% under `packages/library/`, zero root-file changes):
+- `src/package-contract.ts` — PackageManifest v0.1 (the LEARNING_AND_LIBRARY
+  §4 field list, TypeScript-shaped) + fail-closed validator (collects every
+  field error; rejects wrong versions, unsorted canonical order, non-RFC3339
+  shapes with REAL calendar validation — Date.parse rollover rejected) +
+  canonicalPackageJson (id-excluded) + content-addressed mintPackageId
+  (`pkg_` + sha256, frozen prefix proposal).
+- `src/extract.ts` — extractPackages over the frozen P4 structural ports
+  {plan, app, parity: {report, repair}}; THE UNVERIFIED-CANDIDATE GATE
+  (§8 contamination guard): mint ONLY when verdict === 'equivalent' AND
+  counts.critical === 0 AND repair.converged === true — checked in that
+  order, every refusal a result (never an exception); deterministic
+  (caller-injected generatedAt/version; sorted canonical orderings); honest
+  derivation (named capabilities, null benchmark, honest counting,
+  evidence from the parity report only); self-validates the minted manifest
+  before packaging.
+- `src/record.ts` — PackageCandidate document (§5 stage: 'candidate' ONLY;
+  versions immutable; EXTRACTED_BY = 'CLAPP-050').
+- `src/index.ts` — public surface (contract + record + extractor).
+- 8 named tests across package-contract/extract/imports + a 514-line golden
+  fixture; `test/imports.test.ts` pins the import discipline (runtime deps
+  exactly @clapp/core + @clapp/observe; @clapp/plan, @clapp/codegen,
+  @clapp/diff, @clapp/repair import-type ONLY).
+
+Interface freezes landed (binding, bump only via a tech-lead declaration):
+- PackageManifest v0.1 + PACKAGE_VERSION '0.1' + PACKAGE_ID_PATTERN
+  `^pkg_[0-9a-f]{64}$` — canonical owner `@clapp/library` (package-contract).
+- ExtractionPorts {plan, app, parity{report, repair}} + ExtractOptions
+  {generatedAt, version} + ExtractionResult {packages, gate, reason}.
+- PackageStage 'candidate' (promotion vocabulary extends in CLAPP-054).
+
+Acceptance (Lead-side, measured at merge 9964397):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1228 pass / 0 fail / 12,520 expect() / 108 files / 44.79s**
+  (baseline at 25d1c47: 1220/0/12,417/105 — delta exactly +8, all in
+  packages/library).
+- `git diff --stat` base→merge: 12 files (11 package files + bun.lock),
+  2,226 insertions; lock diff new-package entries only.
+- Bundle verified (`git bundle verify` clean; required base 25d1c47 = the
+  P4 closure HEAD; single delivery commit 82ceb25, clean tree at HEAD).
+- Worker self-found bugs (import-path off-by-one; Date.parse rollover) were
+  fixed and re-verified before delivery — reported honestly in DELIVERY.md.
+
+Notable decisions (ADR-grade, recorded for later lanes):
+- RFC3339 validation does real calendar checking (Date.parse accepts
+  rollover dates like 2026-02-30) — generalized as a house rule for every
+  future date-shaped contract field.
+- The manifest's plan/app provenance digests hash canonicalJson of the
+  ACTUAL port objects (content-addressed, never asserted).
+- `candidateBaseSha` is honestly null when repair never fired; failureModes
+  derive from resolvedFindingIds; benchmark is null in v0.1 (a benchmark is
+  a reference, never a fabricated number).
+
+Next unblocked work: P5 continues with CLAPP-051 — Package compatibility
+graph (Owner: W2; depends on 050, now landed).

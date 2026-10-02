@@ -44,10 +44,10 @@ CLAPP
 │   ├── ✅ state/storage diff (@clapp/diff state dimension; CLAPP-040)
 │   └── ✅ autonomous repair loop (@clapp/repair; CLAPP-042)
 │
-├── ⬜ P5 Package Library
-│   ├── ⬜ package schema
+├── 🟡 P5 Package Library
+│   ├── ✅ package schema (manifest v0.1, validator, canonical serialization, content-addressed ids — @clapp/library; CLAPP-050)
 │   ├── ⬜ registry
-│   ├── ⬜ extraction
+│   ├── ✅ extraction (fail-closed unverified-candidate gate over the frozen P4 ports — @clapp/library; CLAPP-050)
 │   ├── ⬜ retrieval
 │   ├── ⬜ compatibility graph
 │   └── ⬜ promotion/replay gates
