@@ -9,8 +9,9 @@
  * gate, deterministic, honest counting.
  *
  * The package compatibility graph landed with CLAPP-051; the package
- * retrieval landed with CLAPP-052. Registry and promotion/replay gates are
- * LATER lanes (CLAPP-054) — NOT in this package.
+ * retrieval landed with CLAPP-052; the package replay benchmark landed
+ * with CLAPP-053. Registry and the promotion gate are LATER lanes
+ * (CLAPP-054) — NOT in this package.
  *
  * Quick start:
  *
@@ -77,3 +78,7 @@ export type {
   ScoredCandidate,
   RetrievalScoreComponents,
 } from './retrieval';
+
+// ---- the package replay benchmark (CLAPP-053 — P5 lane 4) ------------------------
+export { REPLAY_VERSION, replayCandidate } from './replay-benchmark';
+export type { ReplayPorts, ReplayBenchmarkRecord, ReplayResult } from './replay-benchmark';
