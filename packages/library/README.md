@@ -5,11 +5,13 @@ validator, canonical serialization, content-addressed `mintPackageId`) and
 the **package extractor** over the frozen P4 synthesis/parity ports —
 fail-closed `unverified-candidate` gate, deterministic, honest counting.
 
-**Out of scope (later lanes):** registry and the promotion gate
-(CLAPP-054 — see `docs/ROADMAP.md` P5). The compatibility graph landed
-(CLAPP-051, `buildCompatGraph`); the package retrieval landed
-(CLAPP-052, `retrievePackages`); the replay benchmark landed
-(CLAPP-053, `replayCandidate`).
+**Out of scope (later lanes):** registry persistence (a later,
+tech-lead-declared lane — see `docs/ROADMAP.md` P5). The compatibility
+graph landed (CLAPP-051, `buildCompatGraph`); the package retrieval
+landed (CLAPP-052, `retrievePackages`); the replay benchmark landed
+(CLAPP-053, `replayCandidate`); the promotion gate landed (CLAPP-054,
+`promoteCandidate`); the in-memory package registry landed (CLAPP-055,
+`createRegistry`).
 
 **Non-degeneracy rule (binding):** the extractor consumes contract-shaped
 DATA only. `@clapp/plan`, `@clapp/codegen`, `@clapp/diff` and
@@ -142,9 +144,10 @@ injectable id factory is needed; the hash function behind
 ## Honest limitations
 
 - One candidate per verified extraction (the whole app). Finer-grained
-  packages, the registry and promotion are later lanes (CLAPP-054);
-  the compatibility graph (CLAPP-051), retrieval (CLAPP-052) and the
-  replay benchmark (CLAPP-053) have landed.
+  packages and registry persistence are later lanes; the compatibility
+  graph (CLAPP-051), retrieval (CLAPP-052), the replay benchmark
+  (CLAPP-053), the promotion gate (CLAPP-054) and the in-memory registry
+  (CLAPP-055) have landed.
 - `canonicalPackageJson` throws `CanonicalJsonError` on
   non-canonicalizable manifests (the observe discipline — loud, not
   silently mangled); `extractPackages` catches it and reports
@@ -498,3 +501,65 @@ contract version bumps — never by quietly widening this gate. Every
 refusal is a collected, named error with its observed value (results,
 never exceptions); a malformed input class is a refusal, and nothing about
 the inputs is ever mutated.
+
+## Registry (CLAPP-055)
+
+The W2 registry lane — the last open P5 checkbox. `createRegistry()`
+(`src/registry.ts`, `REGISTRY_VERSION '0.1'`) builds an **empty, in-memory,
+deterministic, fail-closed** store of package records at their CURRENT
+stage, and nothing else: every admitted package becomes one
+`RegistryRecord` — `{ manifest, stage, registeredAt, registeredBy }`.
+
+### The admission gate (fail-closed — the §8 contamination guard)
+
+`register(input, options)` admits exactly two shapes, both validated before
+anything is stored:
+
+| admission shape | requirements | `registeredBy` source |
+| --- | --- | --- |
+| candidate-shaped | an object whose `manifest` passes the frozen `validatePackageManifest`; `stage`, when present, must be `'candidate'` | `extractionContext.extractedBy` |
+| promotion-shaped | a `PackagePromotionRecord` — `promotionVersion === PROMOTION_VERSION`, `manifest` passing the frozen validator, `stage === 'replayed'`, `promotionContext.promotedAt` RFC3339 | `promotionContext.promotedBy` |
+
+`options` is `{ registeredAt }` — an RFC3339 timestamp **caller-injected**
+per registration: the registry never reads a clock (there is no clock to
+read). Every rejection is a collected, field-named error in a
+`{ ok: false, errors }` result — results, never exceptions — and a rejected
+admission stores nothing.
+
+### Immutability (the worker-handoff acceptance rule)
+
+The `(manifest.id, manifest.version)` pair is the registry key. A pair
+already present is refused with a named error carrying the existing stage —
+versions are immutable, the registry never overwrites, and two different
+versions of the same id are legal siblings. The stored manifest is kept
+VERBATIM (the caller's own object, never rewritten); `register` and `get`
+return the stored record itself (the caller holds an alias to the manifest
+by construction — that is what verbatim storage means), while `list`
+returns deep copies so no mutation channel is added through a listing.
+
+### Queries
+
+`get(id, version)` returns the record, or `null` for non-string arguments
+and misses — a query is never an error. `list({ stage })` returns records
+in canonical `(id, version)` order, filtered by exact stage match.
+`size()` / `entries()` report the measured count.
+
+### The snapshot digest (`creg_`)
+
+`snapshot()` returns `'creg_' + sha256Hex(canonicalJson({ registryVersion,
+records }))` over the records in canonical order — the `creg_` prefix is
+this lane's frozen proposal in the `pkg_` / `cgraph_` / `rq_` prefix
+discipline. Identical contents produce identical snapshots, any admission
+moves the digest, and the input order of registrations never leaks into it
+(records are canonically sorted before hashing). The empty registry has a
+valid, stable snapshot of its own.
+
+### Registry determinism discipline
+
+No clock, no randomness, no network, no filesystem. The same set of
+registrations produces the same snapshot in any order; two registries
+built from identical inputs and options are indistinguishable through the
+public surface. In-memory v0.1 — **persistence is a later,
+tech-lead-declared lane**; promotion decisions stay test-gated and are
+never the registry's call (the registry never promotes or demotes a
+stage).

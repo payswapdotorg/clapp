@@ -10,8 +10,9 @@
  *
  * The package compatibility graph landed with CLAPP-051; the package
  * retrieval landed with CLAPP-052; the package replay benchmark landed
- * with CLAPP-053. Registry and the promotion gate are LATER lanes
- * (CLAPP-054) — NOT in this package.
+ * with CLAPP-053; the promotion gate landed with CLAPP-054; the package
+ * registry landed with CLAPP-055 (in-memory v0.1 — registry persistence
+ * is a LATER, tech-lead-declared lane, NOT in this package).
  *
  * Quick start:
  *
@@ -92,3 +93,7 @@ export type {
   PromotionResult,
   PromotedStage,
 } from './promotion';
+
+// ---- the package registry (CLAPP-055 — the W2 registry lane; closes P5) -------------
+export { REGISTRY_VERSION, createRegistry } from './registry';
+export type { PackageRegistry, RegistryRecord, RegistryResult } from './registry';
