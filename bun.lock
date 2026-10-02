@@ -114,6 +114,20 @@
         "playwright-core": "^1.63.0",
       },
     },
+    "packages/library": {
+      "name": "@clapp/library",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+        "@clapp/observe": "workspace:*",
+      },
+      "devDependencies": {
+        "@clapp/codegen": "workspace:*",
+        "@clapp/diff": "workspace:*",
+        "@clapp/plan": "workspace:*",
+        "@clapp/repair": "workspace:*",
+      },
+    },
     "packages/observe": {
       "name": "@clapp/observe",
       "version": "0.1.0",
@@ -186,6 +200,8 @@
     "@clapp/ir": ["@clapp/ir@workspace:packages/ir"],
 
     "@clapp/journey": ["@clapp/journey@workspace:packages/journey"],
+
+    "@clapp/library": ["@clapp/library@workspace:packages/library"],
 
     "@clapp/observe": ["@clapp/observe@workspace:packages/observe"],
 
