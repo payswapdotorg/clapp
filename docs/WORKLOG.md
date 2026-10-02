@@ -643,3 +643,75 @@ Notable decisions:
 
 Next unblocked work: CLAPP-052 — Package retrieval (Owner W1; depends on 051,
 now landed).
+
+## 2026-10-02 — Phase 5 lane 3 integrated: package retrieval (CLAPP-052)
+
+Wave/phase: P5 Package Library (CLAPP-052), worker lane clapp-052a
+(Worker 1 — Observation and Platform Adapters, assigned retrieval per
+WORK_ITEMS).
+
+Integrated commits:
+- 39b636e — CLAPP-052 (W1): `feat(library): CLAPP-052 package retrieval —
+  deterministic ranked candidates over manifest-derived signals,
+  fail-closed query validation`
+- 8baf7a2 — `integrate: merge CLAPP-052 packages/library retrieval` (--no-ff)
+- (docs commit) — ROADMAP ✅ + this record.
+
+Delivered surface (6 files / +1,513 / −9):
+- `src/retrieval.ts` (561 lines) — RETRIEVAL_VERSION '0.1';
+  retrievePackages(manifests, query); fail-closed validation (every manifest
+  via the frozen validator; duplicate ids; query vocabulary with an
+  unknown-field TYPO GUARD — a mistyped field name fails closed, never
+  silently degrades); CANDIDACY GATE: targetMatch AND requiredCoverage === 1
+  (partial coverage excluded, never ranked — the single-manifest reduction
+  of the compat-graph target gate); the 7 measured signals (Jaccard lexical
+  similarity as the DOCUMENTED placeholder for semantic similarity; parity
+  history = evidence length; repair cost = failureModes length; recency rank
+  by generatedAt DESC, id ASC ties); the FROZEN composite
+  40·cov + 15·opt + 15·sim + 10·min(parity,5)/5 − 6·min(repair,5)/5 +
+  6/(1+rank); score DESC / id ASC ranking; maxResults truncation AFTER
+  ranking; rq_ content-addressed query digest over the normalized query.
+- `test/retrieval.test.ts` (626) + `test/fixtures/retrieval-manifests.ts`
+  (191) — the 8 named tests with an independent oracle recomputing every
+  signal through the frozen formula (bit-exact, incl. a real score tie
+  broken by id ASC).
+- `src/index.ts` (+16 incl. a header alignment sentence), `README.md`
+  (+117 appended / −9 alignment: the "out of scope" sentences now name only
+  registry + promotion), `test/imports.test.ts` (+2/−1: six-module file
+  list).
+
+Review notes (Lead):
+- The worker performed the header/"out-of-scope" alignment edits itself
+  (technically beyond the packet's append-only README rule; exactly the
+  edits the Lead made for CLAPP-051, disclosed in the delivery report,
+  content accurate) — ACCEPTED, recorded as a standing convention: doc
+  alignment sentences may be refreshed by the delivering worker when their
+  lane lands, with disclosure.
+- Baseline honesty: the worker's sandbox showed rotating e2e/sandbox-class
+  flakes (CLAPP-021/CLAPP-012 — pass in isolation, documented 2-CPU
+  concurrency-budget class); the worker diagnosed openly, changed nothing,
+  and disclosed. The Lead-side battery at the same base ran clean
+  1236/0 — and at the work branch AND merge: **1244 / 0 / 12,781 / 110
+  files** — exactly baseline + 8, twice at the worker, twice at the Lead.
+
+Acceptance (Lead-side, measured at the merge 8baf7a2):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — 1244 pass / 0 fail / 12,781 expect() / 110 files (44.25s).
+- Frozen surfaces byte-identical (package-contract, compat-graph, extract,
+  record, package.json, tsconfig, root configs, docs, CI).
+- Bundle verified (head 39b636e; requires base 802fcaf; ancestor clean).
+
+Interface freezes landed (binding):
+- RETRIEVAL_VERSION '0.1' + RetrievalQuery vocabulary + the frozen
+  composite weights + the rq_ prefix — canonical owner @clapp/library
+  (retrieval.ts).
+
+Notable decisions:
+- v0.1 retrieval carries NO dependency-compatibility term (so it cannot
+  contradict the compat-graph runtime-conflict rule); dependency-aware
+  ranking arrives with a future contract version.
+- The similarity signal is the documented lexical placeholder — nothing
+  semantic is simulated; embeddings are a later lane.
+
+Next unblocked work: CLAPP-053 — Package replay benchmark (Owner W3;
+depends on 051+052, both landed).

@@ -48,7 +48,7 @@ CLAPP
 │   ├── ✅ package schema (manifest v0.1, validator, canonical serialization, content-addressed ids — @clapp/library; CLAPP-050)
 │   ├── ⬜ registry
 │   ├── ✅ extraction (fail-closed unverified-candidate gate over the frozen P4 ports — @clapp/library; CLAPP-050)
-│   ├── ⬜ retrieval
+│   ├── ✅ retrieval (ranked candidates over measured manifest signals, rq_ query digest — @clapp/library; CLAPP-052)
 │   ├── ✅ compatibility graph (deterministic pairwise verdicts, cgraph_ content-addressed identity — @clapp/library; CLAPP-051)
 │   └── ⬜ promotion/replay gates
 │
