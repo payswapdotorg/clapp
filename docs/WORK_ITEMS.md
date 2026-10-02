@@ -158,6 +158,10 @@ Depends on: 051,052
 ### CLAPP-054 — Promotion gate
 Owner: tech lead
 Depends on: 053
+
+### CLAPP-055 — Package registry
+Owner: W2
+Depends on: 054
 Acceptance:
 - a package extracted from one app can be independently reused and verified in another.
 
