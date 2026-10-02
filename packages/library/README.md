@@ -5,10 +5,11 @@ validator, canonical serialization, content-addressed `mintPackageId`) and
 the **package extractor** over the frozen P4 synthesis/parity ports —
 fail-closed `unverified-candidate` gate, deterministic, honest counting.
 
-**Out of scope (later lanes):** registry, promotion/replay gates
+**Out of scope (later lanes):** registry and the promotion gate
 (CLAPP-054 — see `docs/ROADMAP.md` P5). The compatibility graph landed
 (CLAPP-051, `buildCompatGraph`); the package retrieval landed
-(CLAPP-052, `retrievePackages`).
+(CLAPP-052, `retrievePackages`); the replay benchmark landed
+(CLAPP-053, `replayCandidate`).
 
 **Non-degeneracy rule (binding):** the extractor consumes contract-shaped
 DATA only. `@clapp/plan`, `@clapp/codegen`, `@clapp/diff` and
@@ -142,7 +143,8 @@ injectable id factory is needed; the hash function behind
 
 - One candidate per verified extraction (the whole app). Finer-grained
   packages, the registry and promotion are later lanes (CLAPP-054);
-  the compatibility graph (CLAPP-051) and retrieval (CLAPP-052) have landed.
+  the compatibility graph (CLAPP-051), retrieval (CLAPP-052) and the
+  replay benchmark (CLAPP-053) have landed.
 - `canonicalPackageJson` throws `CanonicalJsonError` on
   non-canonicalizable manifests (the observe discipline — loud, not
   silently mangled); `extractPackages` catches it and reports
@@ -347,3 +349,123 @@ with a future contract wave, never a silent reinterpretation.
   satisfiability (every required capability set satisfiable from the
   fixture corpus or reported empty with reasons — including the empty
   corpus).
+
+## Replay benchmark (CLAPP-053)
+
+P5 lane 4: `replayCandidate(candidate, ports)` — the **honest, measured
+replay benchmark** that re-verifies a packaged candidate and produces the
+evidence the promotion gate (CLAPP-054 — the tech lead's lane) will
+consume. Replay NEVER promotes: the record documents what was replayed,
+the candidate's manifest is read and never rewritten, and no stage is
+minted here. One new module, `src/replay-benchmark.ts`; runtime imports
+are exactly `@clapp/core` (`sha256Hex`), `@clapp/observe`
+(`canonicalJson`) and the local frozen `./package-contract` (the manifest
+validator) — `@clapp/diff` and `@clapp/repair` are devDependency
+TYPE-ONLY imports (the established discipline, pinned by
+`test/imports.test.ts`).
+
+### The replay contract (v0.1)
+
+`REPLAY_VERSION` is `'0.1'`. The candidate input is a
+`PackageCandidate`-shaped object, validated fail-closed FIRST (results,
+never exceptions, ALL errors collected): `manifest` must pass the frozen
+`validatePackageManifest`; `stage`, when present, must be `'candidate'`
+(replay accepts candidate-stage records ONLY — anything else is an error
+naming the observed value; promotion is CLAPP-054's lane);
+`extractionContext.manifestSha256`, when present, must be 64 lowercase
+hex chars. The PORTS must be an object with callable `recomputeParity`
+and `now` — a non-function is an error naming the field.
+
+### The replay gate (fail-closed, extraction-consistent)
+
+`t0 = ports.now()` → `await ports.recomputeParity(manifest)` →
+`t1 = ports.now()`; `durationMs = t1 − t0` is MEASURED from the injected
+clock — the module never reads a wall clock, and every duration in the
+record (and in the benchmark reference) is this measured delta, never an
+assertion. The gate then asserts the SAME three conditions as the
+extractor's unverified-candidate gate (CLAPP-050), in the same order,
+over the RECOMPUTED parity:
+
+- `recomputed.report.verdict === 'equivalent'`
+- `recomputed.report.counts.critical === 0`
+- `recomputed.repair.converged === true`
+
+ALL three hold → outcome `'replayed'`. ANY fails → outcome `'diverged'`
+with reasons naming the failed condition AND its observed value (the
+extractor's refusal discipline — the conditions are checked
+independently, so a lying verdict cannot sneak a critical-laden replay
+past the count check). A malformed `recomputeParity` return (not an
+object, missing report/repair, non-finite critical count) is outcome
+`'malformed'` with field-naming reasons — the replay never guesses and
+never throws for these.
+
+### Provenance is compared, not trusted
+
+`provenanceCheck` records `manifest.provenance.diffReportId` (as
+recorded) against the RECOMPUTED `report.id`, with the measured
+`matches` boolean. A moved evidence chain (`matches === false`) is
+DISCLOSED in reasons ("…the evidence chain moved") but does NOT flip
+the outcome — the gate is over the recomputed conditions (what replay
+re-proved); the provenance comparison is an honest disclosure the
+promotion gate (CLAPP-054) will weigh. The record's `manifestSha256` is
+likewise RECOMPUTED at replay time (`sha256Hex(canonicalJson(manifest))`
+— WITH the id, the record-digest discipline) and any drift from the
+candidate's recorded `extractionContext.manifestSha256` is disclosed in
+reasons — recorded digests are never silently trusted.
+
+### The benchmark REFERENCE (never a bare number)
+
+On outcome `'replayed'` ONLY:
+
+```
+replay:0.1:<manifest.id>:<manifest.version>:ok:<durationMs>ms:attempts:1
+```
+
+The duration inside the reference is the MEASURED value; `attempts` is
+v0.1's honest count of recomputes (exactly 1 — the single
+`recomputeParity` invocation in the code path). On
+`'diverged'`/`'malformed'` the reference is `null` — no reference is
+minted from a failed replay. The manifest's `benchmark` field stays
+`string | null` by contract: the promotion gate (054) decides later
+whether to lift a reference into a manifest; nothing here fabricates a
+score.
+
+### The loud-harness boundary
+
+An exception THROWN by a port (`recomputeParity` or `now`) propagates
+loudly — `replayCandidate` REJECTS with that error. A broken harness is
+the caller's failure, never swallowed and never converted into a
+synthetic `'malformed'` record. Symmetrically, a clock returning
+non-numeric values is a harness contract violation — `ReplayPorts.now`
+is typed `() => number`; the measured delta is reported exactly as
+computed, never sanitized into a plausible number.
+
+### Replay-benchmark determinism discipline
+
+Same candidate + same ports → deep-equal record (proven by
+`test/replay-benchmark.test.ts`): no clock, no randomness, no network,
+no filesystem reads — every measured number enters through the ports;
+reasons are sorted and deduped; the module never mutates its inputs
+(the candidate is read, never rewritten — stage is NEVER promoted
+here).
+
+### Replay-benchmark tests
+
+- `test/replay-benchmark.test.ts` — eight named tests: determinism
+  under injected ports (identical inputs → identical records AND
+  identical benchmark references; inputs never mutated), fail-closed
+  malformed candidates AND ports (never an exception, every error
+  naming its field — non-object candidate, frozen-validator failure,
+  stage `'verified'`, ports missing `now`), the extraction-consistent
+  gate (three killer recomputed parities, each reason naming the failed
+  condition and its observed value), the honest successful record
+  (measured duration — the test recomputes the expected clock delta
+  independently — and the benchmark REFERENCE in its exact format: a
+  string, never a bare number), the provenance comparison (a moved
+  evidence chain disclosed without flipping the outcome, the reason
+  naming both ids), the measured-clock discipline (a known sequence →
+  the exact delta, embedded consistently in the reference), the
+  recomputed manifest digest with honest drift disclosure (both digests
+  reported, no silent trust), and the loud-harness boundary (a throwing
+  `recomputeParity` rejects with the thrown error itself — never a
+  synthetic `'malformed'` record).
