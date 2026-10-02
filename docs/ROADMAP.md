@@ -44,9 +44,9 @@ CLAPP
 │   ├── ✅ state/storage diff (@clapp/diff state dimension; CLAPP-040)
 │   └── ✅ autonomous repair loop (@clapp/repair; CLAPP-042)
 │
-├── 🟡 P5 Package Library
+├── ✅ P5 Package Library
 │   ├── ✅ package schema (manifest v0.1, validator, canonical serialization, content-addressed ids — @clapp/library; CLAPP-050)
-│   ├── ⬜ registry
+│   ├── ✅ registry (in-memory fail-closed store, immutable (id,version) keys, creg_ snapshots — @clapp/library; CLAPP-055)
 │   ├── ✅ extraction (fail-closed unverified-candidate gate over the frozen P4 ports — @clapp/library; CLAPP-050)
 │   ├── ✅ retrieval (ranked candidates over measured manifest signals, rq_ query digest — @clapp/library; CLAPP-052)
 │   ├── ✅ compatibility graph (deterministic pairwise verdicts, cgraph_ content-addressed identity — @clapp/library; CLAPP-051)

@@ -827,3 +827,58 @@ P5 WORK_ITEMS status: all five items landed (050, 051, 052, 053, 054).
 ROADMAP P5: 5/6 checkboxes ✅; "registry" ⬜ has NO WORK_ITEMS entry —
 the tech lead declares CLAPP-055 (Package registry, Owner W2 per the
 handoff ownership list) to close P5 completely before opening P6.
+
+## 2026-10-02 — PHASE 5 COMPLETE: package registry integrated (CLAPP-055)
+
+Wave/phase: P5 Package Library closing lane (CLAPP-055, declared by the
+tech lead after 054 — "registry" had no WORK_ITEMS entry), worker lane
+clapp-055a (Worker 2 — the registry owner per WORKER_HANDOFFS).
+
+Integrated commits:
+- 4e52761 — CLAPP-055 (W2): `feat(library): CLAPP-055 package registry —
+  fail-closed in-memory store over the landed stages, immutable
+  (id, version) keys, content-addressed snapshots` (single commit; the
+  delivery report's intermediate sha 9f3c71e was pre-amend — the bundle is
+  the truth, verified against the report's diff stat + battery)
+- (merge) — `integrate: merge CLAPP-055 packages/library registry` (--no-ff)
+- (docs commit) — ROADMAP P5 ✅ + this record.
+
+Delivered surface (6 files / +881 / −11 — the deletions are the sanctioned
+052-convention sentence refreshes):
+- `src/registry.ts` (379 lines) — REGISTRY_VERSION '0.1'; createRegistry()
+  → PackageRegistry: register (fail-closed admission over BOTH landed
+  shapes — candidate-shaped (frozen validator + stage 'candidate') and
+  promotion-shaped (PROMOTION_VERSION match + stage 'replayed' + RFC3339
+  promotedAt); registeredAt CALLER-injected; registeredBy from the input's
+  own identity fields), the IMMUTABILITY RULE ((id, version) insert-only;
+  duplicate refusal names the existing stage; sibling versions legal), get
+  (honest null for wrong types/misses), list (canonical (id, version)
+  order, DEEP COPIES — the sealed mutation channel; register/get return
+  the stored verbatim alias by construction), size/entries (measured),
+  snapshot ('creg_' + sha256Hex(canonicalJson({registryVersion, records
+  sorted})) — input-order independent, empty registry valid).
+- `test/registry.test.ts` (303) + `test/fixtures/registry-fixtures.ts`
+  (117) — the 8 named tests; promotion fixtures built the HONEST way (real
+  replayCandidate + real promoteCandidate).
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1268 pass / 0 fail / 113 files** (43.39s) — exactly
+  baseline 1260 + 8 (the worker measured 1268/0 twice on its box; the
+  expect() count varies by ±4 between runs — parameterized counting —
+  pass/fail/file counts exact).
+- package.json + the seven frozen modules byte-identical.
+- Bundle verified (head 4e52761; requires base 6a32e1c; ancestor clean).
+
+## PHASE 5 CLOSED — all six P5 checkboxes ✅ (050, 051, 052, 053, 054, 055)
+
+The @clapp/library package now carries the complete Package Library
+v0.1: manifest contract + extraction (050), compatibility graph (051),
+retrieval (052), replay benchmark (053), promotion gate (054, the TL's
+lane), registry (055) — 9 modules, ~4,000 lines of library code, 48 named
+tests, every interface frozen with content-addressed identities
+(pkg_/cgraph_/rq_/creg_ + evidence/provenance digests).
+
+Next: P6 — Continuous Learning (CLAPP-060 failure memory, Owner W3,
+depends 044 ✅; 061 repair pattern mining W2; 062 archetype classifier W1;
+then 063/064 composition planning + improvement benchmarks).
