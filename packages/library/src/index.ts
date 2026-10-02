@@ -1,0 +1,58 @@
+/**
+ * @clapp/library — public API (CLAPP-050).
+ *
+ * The CLAPP Package Library's FIRST lane (P5, the first two roadmap
+ * checkboxes: "package schema" + "extraction"): the PackageManifest v0.1
+ * contract (fail-closed validator, canonical serialization,
+ * content-addressed mintPackageId) and the package extractor over the
+ * frozen P4 synthesis/parity ports — fail-closed unverified-candidate
+ * gate, deterministic, honest counting.
+ *
+ * Registry, retrieval, the compatibility graph and promotion/replay gates
+ * are LATER lanes (CLAPP-051/052/054) — NOT in this package.
+ *
+ * Quick start:
+ *
+ *   import { extractPackages, validatePackageManifest } from '@clapp/library';
+ *
+ *   const result = await extractPackages(
+ *     { plan, app, parity: { report, repair } },
+ *     { generatedAt: '2026-10-02T12:00:00Z', version: '1.0.0' },
+ *   );
+ *   // result.gate === 'verified'             ⇔ verdict 'equivalent' + 0 critical + repair converged
+ *   // result.gate === 'unverified-candidate' ⇔ the fail-closed §8 gate refused to package
+ *   // result.gate === 'malformed'            ⇔ a port violated its frozen contract shape
+ *   // result.packages — zero or one PackageCandidate (stage 'candidate'), counted honestly
+ *
+ * Sibling packages must import `@clapp/library` and never reach into
+ * deeper paths. The extractor consumes contract-shaped DATA: @clapp/plan,
+ * @clapp/codegen, @clapp/diff and @clapp/repair are devDependencies
+ * imported for TYPES ONLY (pinned by test/imports.test.ts); the runtime
+ * dependencies are exactly @clapp/core and @clapp/observe.
+ */
+
+// ---- the package contract v0.1 (canonical owner: this package) ------------------
+export {
+  PACKAGE_ID_PATTERN,
+  PACKAGE_VERSION,
+  canonicalPackageJson,
+  mintPackageId,
+  validatePackageManifest,
+} from './package-contract';
+export type {
+  PackageIdHashFn,
+  PackageManifest,
+  PackageProvenance,
+  PackageValidationResult,
+} from './package-contract';
+
+// ---- the frozen @clapp/core v0 evidence vocabulary the manifest's evidence uses --
+export type { EvidenceRef } from '@clapp/core';
+
+// ---- the candidate record (§5 stage 'candidate' — extraction mints ONLY candidates) --
+export { EXTRACTED_BY } from './record';
+export type { PackageCandidate, PackageStage } from './record';
+
+// ---- the extractor ----------------------------------------------------------------
+export { extractPackages } from './extract';
+export type { ExtractionPorts, ExtractionResult, ExtractOptions } from './extract';
