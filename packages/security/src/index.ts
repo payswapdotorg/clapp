@@ -46,3 +46,8 @@ export type {
   AuthorizationStatement,
   BoundaryResult,
 } from './authorization';
+
+// ---- secret redaction (CLAPP-071 — the P7 second lane) -------------------------------
+
+export { REDACTION_VERSION, classifyFieldName, redactSensitiveFields } from './redaction';
+export type { RedactionEntry, RedactionReport, RedactionResult, SensitiveKind } from './redaction';
