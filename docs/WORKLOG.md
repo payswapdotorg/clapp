@@ -1795,3 +1795,44 @@ with the marker is.
 
 Next unblocked work: CLAPP-086 — adaptive exploration budgets
 (Owner W1; the tiers this lane tags are what 086 spends).
+
+## 2026-10-03 — Phase 9 lane 2 integrated: adaptive exploration budgets (CLAPP-086)
+
+The factory's second component — CLAPP-085's tier tags become caps.
+
+Delivery chain (Worker 1, chat cec14dc7, ~25 min execution incl. the
+capacity fight):
+- 8c64453 — CLAPP-086 (W1): `feat(factory): CLAPP-086 adaptive
+  exploration budgets — the frozen tier table + the fail-closed ledger
+  (refusal never consumes)` (5 files, +1,236: the new module + tests +
+  fixtures + the additive index re-exports + the 085 file-list pin
+  grown to the living three-file list, pin stays exact).
+- (merge) — `integrate: merge CLAPP-086 factory exploration budgets`
+  (--no-ff). No lock change (the package was registered by 085).
+
+Components:
+- `src/exploration-budgets.ts` — TIER_CAPS (the frozen v0.1 table:
+  minimal 40/8/3, standard 120/20/5, extended 400/50/8 over the
+  explore policy's axes maxSteps/maxScreens/maxActionsPerScreen),
+  resolveExplorationBudget (fail-closed over the factory's own
+  TargetClassification; caps a FRESH copy; classificationId carried
+  VERBATIM — the provenance binding), createBudgetLedger +
+  ledger.spend (the CLAPP-075 accounting law: measured accounting, the
+  over-budget refusal that NEVER consumes, the caps a law — remaining
+  never negative, zero-spend-at-zero a valid no-op, the axes
+  independent).
+- `test/exploration-budgets.test.ts` — the 8 named tests.
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1413 pass / 0 fail / 14,745 expect() / 132 files**
+  (45-46s) — exactly baseline 1405 + 8 (the worker measured the same).
+- bun.lock unchanged. Owned surface strict (the one existing-file
+  touch is the 085 pin growing to the living list — additive, exact).
+
+Interface freezes landed (binding):
+- EXPLORATION_BUDGET_VERSION '0.1' + TIER_CAPS (the frozen tier table)
+  — canonical owner @clapp/factory.
+
+Next unblocked work: CLAPP-087 — package-graph synthesis (Owner W1;
+the resolved budgets are what synthesis spends against).

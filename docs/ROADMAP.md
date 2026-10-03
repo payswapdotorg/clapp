@@ -75,7 +75,7 @@ CLAPP
 │
 └── 🟡 P9 Autonomous App Factory
     ├── ✅ target classification (the P8 platforms + learn archetypes bound into the fail-closed entry contract, tcls_ content-addressed ids, the honest-agreement law — @clapp/factory; CLAPP-085)
-    ├── ⬜ adaptive exploration budgets
+    ├── ✅ adaptive exploration budgets (the frozen tier table + the fail-closed ledger — refusal never consumes, caps a fresh copy, measured accounting — @clapp/factory; CLAPP-086)
     ├── ⬜ package-graph synthesis
     ├── ⬜ multi-pass repair
     └── ⬜ human release gate
