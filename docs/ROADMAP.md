@@ -59,8 +59,8 @@ CLAPP
 │   ├── ✅ composition planning (greedy rank-ordered selection over the frozen retrieval + compat verdicts, comp_ plans — @clapp/learn; CLAPP-063)
 │   └── ✅ improvement benchmarks (the acceptance harness: measured plan deltas over ordered snapshots, honest verdict cascade, bench_ reports — @clapp/learn; CLAPP-064, the tech lead's lane)
 │
-├── ⬜ P7 Production Hardening
-│   ├── ⬜ auth/session boundary
+├── 🟡 P7 Production Hardening
+│   ├── ✅ auth/session boundary (the §1 five-kind statement capture, per-target observation gate, authz_ sessions — @clapp/security; CLAPP-070)
 │   ├── ⬜ tenancy
 │   ├── ⬜ resource budgets
 │   ├── ⬜ secrets/redaction

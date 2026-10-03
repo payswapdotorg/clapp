@@ -1165,3 +1165,54 @@ measures).
 
 Next: P7 — Production Hardening (auth/session boundary, tenancy, resource
 budgets, secrets/redaction, auditability — per the WORK_ITEMS P7 section).
+
+## 2026-10-03 — Phase 7 lane 1 integrated: authorized-session boundary (CLAPP-070)
+
+Wave/phase: P7 Production Hardening (opener), worker lane clapp-070a
+(Worker 1 — the observation-pipeline owner the boundary gates). NEW
+package `@clapp/security`.
+
+Integrated commits:
+- 0f0f056 — CLAPP-070 (W1): `feat(security): CLAPP-070 authorized-session
+  boundary — the §1 statement capture, per-target observation gate, authz_
+  content-addressed sessions`
+- (lock) — `chore(security): regenerate bun.lock — @clapp/security
+  workspace registration` (+10 lines, new-package entries only)
+- (merge) — `integrate: merge CLAPP-070 packages/security authorization
+  boundary` (--no-ff)
+- (docs commit) — ROADMAP P7 🟡 + this record.
+
+Delivered surface (7 files / +1,016 / −0 — all under packages/security/):
+- `src/authorization.ts` (442 lines) — AUTHZ_VERSION '0.1' + the frozen
+  five-kind §1 vocabulary (owned | licensed-open-source |
+  explicit-permission | interop-testing | research-benchmark);
+  createAuthorizedSession: fail-closed statement admission (kind in the
+  vocabulary, non-empty target/owner/grant, calendar-valid RFC3339
+  grantedAt; ALL errors named; statements stored VERBATIM by value);
+  sessions carry scopes EXACTLY ['observe'] (v0.1 — observation only;
+  later scopes via contract bump) and authz_ content-addressed ids;
+  assertObservationAuthorized: the per-target boundary (refusal is the
+  DEFAULT — a wrong authzVersion, malformed id, non-['observe'] scopes,
+  mismatched target, or any malformed shape refuses with the defect
+  named; a statement for app A never authorizes app B, both named).
+- `test/authorization.test.ts` (257) + fixtures (89) — the 8 named tests.
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1316 pass / 0 fail / 13,470 expect() / 119 files** (65.25s)
+  — exactly baseline 1308 + 8 (the worker measured the same; its baseline
+  run was clean).
+- bun.lock diff: new-package entries only. Owned surface strict.
+
+Interface freezes landed (binding):
+- AUTHZ_VERSION '0.1' + the five-kind vocabulary + AuthorizationStatement/
+  Session + the authz_ prefix + the observation-only scope — canonical
+  owner @clapp/security (authorization.ts).
+
+Notable decisions (disclosed by the worker):
+- Statements stored VERBATIM by value (extra keys ride along and honestly
+  move the id — never normalized).
+- The boundary validates the authz_ id's SHAPE, not its hash consistency
+  (the boundary is synchronous/pure by contract — documented).
+
+Next unblocked work: CLAPP-071 — Secret redaction (Owner W2).
