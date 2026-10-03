@@ -64,7 +64,7 @@ CLAPP
 │   ├── ✅ tenancy (the §6 five-domain separation, tenant zones, the publish-leak guard, iso_ snapshots — @clapp/security; CLAPP-072)
 │   ├── ⬜ resource budgets
 │   ├── ✅ secrets/redaction (the §3 six-class vocabulary, visible non-reversible markers, redct_ provenance — @clapp/security; CLAPP-071)
-│   └── ⬜ auditability
+│   └── ✅ auditability (the append-only seven-kind trail + the cancellation state machine, audit_/atrail_ identities — @clapp/security; CLAPP-073)
 │
 ├── ⬜ P8 Native Adapters
 │   ├── ⬜ Android

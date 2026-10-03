@@ -1301,3 +1301,53 @@ Interface freezes landed (binding):
   canonical owner @clapp/security (isolation.ts).
 
 Next unblocked work: CLAPP-073 — Audit/cancellation/resume (Owner W3).
+
+## 2026-10-03 — Phase 7 lane 4 integrated: audit/cancellation/resume (CLAPP-073)
+
+Wave/phase: P7 Production Hardening lane 4, worker lane clapp-073a
+(Worker 3 — assigned per WORK_ITEMS).
+
+Integrated commits:
+- 0a39500 — CLAPP-073 (W3): `feat(security): CLAPP-073 audit/cancellation/
+  resume — the append-only seven-kind trail, content-addressed events,
+  the honest cancellation state machine with measured counts`
+- (merge) — `integrate: merge CLAPP-073 packages/security audit` (--no-ff)
+- (docs commit) — ROADMAP ✅ + this record.
+
+Delivered surface (6 files / +1,730 / −1):
+- `src/audit.ts` (843 lines) — AUDIT_VERSION '0.1'; the seven-kind
+  vocabulary (session-admitted | observation-refused | redaction-applied |
+  zone-write | zone-refused | operation-cancelled | operation-resumed);
+  createAuditTrail(): record (fail-closed: kind/actor/subject/facts/
+  recordedAt ALL named; events APPEND-ONLY, immutable, content-addressed
+  'audit_' over the event minus id — the same content at a different
+  recordedAt is a distinct event; the identical event is the duplicate
+  refusal); list (canonical id order, defensively copied);
+  countsByKind (measured); snapshot 'atrail_' (content-addressed,
+  input-order independent, the empty trail valid); the CANCELLATION STATE
+  MACHINE — registerOperation (caller-supplied operationId, duplicates
+  refused) / cancel (running→cancelled; a resumed operation can be
+  re-cancelled; cancellationCount MEASURED) / resume (only
+  cancelled→resumed; illegal transitions refused with named reasons);
+  every cancel/resume writes its audit event TOGETHER with the state
+  change (subject = operationId, facts = measured counts). Caller-
+  injected timestamps everywhere; no clock/randomness/network/filesystem.
+- `test/audit.test.ts` (561) + fixtures (133) + the imports file-list
+  extension.
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1341 pass / 0 fail / 13,948 expect() / 123 files** (65.35s)
+  — exactly baseline 1333 + 8 (the worker measured the same twice, zero
+  flakes).
+- package.json/tsconfig/bun.lock byte-identical. Owned surface strict.
+
+Interface freezes landed (binding):
+- AUDIT_VERSION '0.1' + the seven-kind vocabulary + AuditEvent/AuditTrail/
+  CancellableOperation + the audit_/atrail_ prefixes — canonical owner
+  @clapp/security (audit.ts).
+
+Next unblocked work: CLAPP-074 — Production readiness gate (Owner: TECH
+LEAD; depends on 070-073, ALL landed). The TL implements it directly: the
+readiness gate that weighs the four landed security surfaces and issues
+the honest production verdict.
