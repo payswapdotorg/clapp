@@ -986,3 +986,60 @@ Notable decisions:
 
 Next unblocked work: CLAPP-062 — Archetype classifier (Owner W1; depends on
 020 + 050, both landed).
+
+## 2026-10-03 — Phase 6 lane 3 integrated: archetype classifier (CLAPP-062)
+
+Wave/phase: P6 Continuous Learning lane 3, worker lane clapp-062a
+(Worker 1 — assigned per WORK_ITEMS).
+
+Integrated commits:
+- cb1f18e — CLAPP-062 (W1): `feat(learn): CLAPP-062 archetype classifier —
+  the frozen five-rule table over manifest facts, measured evidence,
+  tags-not-partition, arch_ content-addressed classifications`
+- (lock) — `chore(learn): regenerate bun.lock — @clapp/library type-only
+  devDependency registration` (+1 line)
+- (merge) — `integrate: merge CLAPP-062 packages/learn archetypes` (--no-ff)
+- (docs commit) — ROADMAP ✅ + this record.
+
+Delivered surface (7 files / +894 / −3):
+- `src/archetypes.ts` (433 lines) — ARCHETYPE_VERSION + TABLE_VERSION
+  '0.1'; classifyManifest(manifest, options): fail-closed local admission
+  shape (id/version/capabilities/interface well-formed; classifiedAt
+  RFC3339 calendar-valid); THE FROZEN FIVE-RULE TABLE in canonical order:
+  api-backed-app (capability 'api-mock' OR '/api/'-prefixed interface),
+  form-driven-app ('form'), persistent-app ('storage:*'),
+  navigable-app ('route' AND 'navigation'), static-content-app (empty
+  capabilities — a measured absence); TAGS-NOT-PARTITION (multiple matches
+  land in table order); 'unclassified' honest (non-empty capabilities
+  satisfying no rule, the unclaimed capabilities named); arch_
+  content-addressed classification ids; measured evidence only.
+- `test/archetypes.test.ts` (275) + fixture appends (+50) — the 8 named
+  tests; the import-discipline assertion extended at its actual location
+  (failure-memory.test.ts) with the contract set gaining @clapp/library.
+- @clapp/library joined as TYPE-ONLY devDependency (the PackageManifest
+  type source; lock regenerated at integration, +1 line).
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1292 pass / 0 fail / 13,156 expect() / 116 files** (67.18s)
+  — exactly baseline 1284 + 8 (the worker's baseline run disclosed the
+  documented CLAPP-010 e2e flake — isolated 1/0; its final full battery
+  ran clean 1292/0).
+- tsconfig.json byte-identical; frozen learn modules untouched.
+
+Interface freezes landed (binding):
+- ARCHETYPE_VERSION + ARCHETYPE_TABLE_VERSION '0.1' + the five-rule table +
+  ArchetypeMatch/ArchetypeClassification + the arch_ prefix — canonical
+  owner @clapp/learn (archetypes.ts).
+
+Notable decisions:
+- ADDITIVE `reasons: string[]` on ArchetypeClassification (the packet's
+  §3.1 field list had nowhere to carry the unclassified reason its own
+  test 7 requires — resolved per the 061 precedent: the packet's tests are
+  the tiebreaker; every §3.1 field kept exact name/type/semantics;
+  disclosed by the worker in module header, README, DELIVERY.md).
+- The import-discipline assertion's in-body contract-set comment updated
+  to name @clapp/library (leaving it stale would misdocument the change).
+
+Next unblocked work: CLAPP-063 — Composition planner (Owner W2; depends on
+051 + 062, both landed).
