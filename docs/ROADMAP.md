@@ -52,12 +52,12 @@ CLAPP
 │   ├── ✅ compatibility graph (deterministic pairwise verdicts, cgraph_ content-addressed identity — @clapp/library; CLAPP-051)
 │   └── ✅ promotion/replay gates (replay benchmark CLAPP-053 + promotion gate CLAPP-054, the tech lead's lane — candidate→replayed over chain-intact green evidence — @clapp/library)
 │
-├── 🟡 P6 Continuous Learning
+├── ✅ P6 Continuous Learning
 │   ├── ✅ failure memory (fail-closed event store over the frozen diff/repair vocabulary, fail_/fmem_ identities — @clapp/learn; CLAPP-060)
 │   ├── ✅ repair pattern mining (signature grouping, measured support, three-status cascade, rpat_ candidates — @clapp/learn; CLAPP-061)
 │   ├── ✅ archetype detection (the frozen five-rule table over manifest facts, arch_ classifications — @clapp/learn; CLAPP-062)
 │   ├── ✅ composition planning (greedy rank-ordered selection over the frozen retrieval + compat verdicts, comp_ plans — @clapp/learn; CLAPP-063)
-│   └── ⬜ improvement benchmarks
+│   └── ✅ improvement benchmarks (the acceptance harness: measured plan deltas over ordered snapshots, honest verdict cascade, bench_ reports — @clapp/learn; CLAPP-064, the tech lead's lane)
 │
 ├── ⬜ P7 Production Hardening
 │   ├── ⬜ auth/session boundary

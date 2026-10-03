@@ -1104,3 +1104,64 @@ Next unblocked work: CLAPP-064 — Improvement benchmark (Owner: TECH
 LEAD; depends on 061+063, both landed). The TL implements it directly:
 the measured benchmark evidence that repeated learning reduces
 build/repair work (the P6 acceptance gate).
+
+## 2026-10-03 — PHASE 6 COMPLETE: the improvement benchmark (CLAPP-064, the tech lead's lane)
+
+Wave/phase: P6 Continuous Learning closing lane. Per WORK_ITEMS ("CLAPP-064
+— Improvement benchmark, Owner: tech lead, Depends on: 061,063"), this lane
+was implemented DIRECTLY by the tech lead.
+
+Integrated commits:
+- `feat(learn): CLAPP-064 improvement benchmark — the P6 acceptance
+  harness (repeated families over ordered library snapshots through the
+  frozen composition machinery, measured deltas, honest verdict cascade,
+  bench_ content-addressed reports)`
+- (merge) — `integrate: merge CLAPP-064 packages/learn
+  improvement-benchmark` (--no-ff)
+- (docs commit) — ROADMAP P6 ✅ + this record.
+
+Delivered surface (src/improvement.ts + test/improvement.test.ts + the
+index/import-discipline/README sanctioned extensions):
+- BENCHMARK_VERSION '0.1'; runImprovementBenchmark(family, options):
+  a family = fixed retrieval queries × ORDERED library snapshots; every
+  query × snapshot planned through the FROZEN planComposition (corpus/
+  query failures carried VERBATIM — the frozen modules are the
+  authorities); per-snapshot aggregates MEASURED (totalSelected/
+  totalExcluded/totalConsidered/meanSelectedScore); consecutive-pair
+  deltas (measured, signed, per-query selected trails); the verdict
+  cascade: 'improvement-detected' (totalSelected non-decreasing, one
+  strict increase, no query regression) / 'regression' (a named query's
+  selected count decreased) / 'no-improvement' (incl. the honest
+  nothing-measured case); bench_ content-addressed report ids;
+  benchmarkedAt caller-injected RFC3339 (calendar-valid; a different
+  timestamp moves the id, the measured facts stay byte-identical — the
+  clock-free proof).
+- Eight named tests, all green: determinism; fail-closed (incl. the
+  verbatim frozen-error carries with query/snapshot identity); the
+  aggregates recomputed independently from the frozen plans; the
+  growth→improvement case; the regression case (named); the flat
+  no-improvement case; the legal single-snapshot/zero-query families;
+  the content-addressing + clock-free proof.
+- Local house helpers (the 060..063 precedent) — the runtime dependency
+  set unchanged (@clapp/core + @clapp/observe + @clapp/library).
+
+Acceptance (measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems (after the
+  TL's own two unused-var fixes — caught by the battery, self-disclosed).
+- `bun test` — **1308 pass / 0 fail / 13,311 expect() / 118 files** (43.64s)
+  — exactly baseline 1300 + 8.
+- tsconfig/package.json byte-identical; frozen modules untouched.
+
+## PHASE 6 CLOSED — all five P6 checkboxes ✅ (060, 061, 062, 063, 064)
+
+The @clapp/learn package now carries the complete Continuous Learning
+v0.1: failure memory (060), repair pattern mining (061), archetype
+detection (062), composition planning (063), the improvement-benchmark
+harness (064) — 6 modules, ~2,900 lines, 48 named tests, every interface
+frozen with content-addressed identities (fail_/fmem_/rpat_/arch_/comp_/
+bench_), and the P6 acceptance gate now EXECUTABLE (the harness; the
+demonstration campaign with real corpora is future work the harness
+measures).
+
+Next: P7 — Production Hardening (auth/session boundary, tenancy, resource
+budgets, secrets/redaction, auditability — per the WORK_ITEMS P7 section).
