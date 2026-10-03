@@ -1,0 +1,10 @@
+{
+  // Standalone typecheck for @clapp/macos (bunx tsc --noEmit -p tsconfig.json).
+  // The root program covers packages/*/src/** only (frozen root tsconfig), so
+  // this per-package program additionally covers the test battery in test/
+  // and the fixture modules in test/fixtures/ — the same rigor the sibling
+  // packages (@clapp/android, @clapp/linux, @clapp/windows, @clapp/security)
+  // apply for test/-outside-src layouts.
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*.ts", "test/**/*.ts"]
+}
