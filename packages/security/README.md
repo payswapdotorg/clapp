@@ -676,3 +676,121 @@ its id — this lane's frozen prefix proposal); `evaluatedAt` is
 caller-injected (calendar-valid; a different timestamp moves the id, the
 weighed checks stay byte-identical — the clock-free proof). Deterministic:
 same evidence + options → deep-equal report.
+
+## Resource budgets (CLAPP-075)
+
+P7's closing lane — owned by **Worker 1** (Observation and Platform
+Adapters, the worker that owns the sandbox/platform surface the budgets
+govern; per docs/WORK_ITEMS.md "CLAPP-075 — Resource budgets, Owner W1,
+Depends on: 074" — landed). `createBudgetAccount(envelope)` mints the
+§4 sandboxing spine's MEASURABLE core: a fail-closed, in-memory budget
+account over one frozen envelope — the accounting truth a runtime
+reports its enforcement against.
+
+### The contract
+
+`BUDGETS_VERSION` is `'0.1'`. `createBudgetAccount(envelope: unknown)`
+admits a budget envelope fail-closed and returns the live `BudgetAccount`
+(or `{ ok: false, errors }` — results, never exceptions). The account's
+surface:
+
+- `envelope()` — the frozen envelope, VERBATIM (a fresh deep copy per
+  call; extra caller keys ride along, never normalized).
+- `use(usage)` — account one MEASURED usage
+  (`{ axis, amount, usedAt }`) against its axis. Fail-closed
+  validation, then the accounting: within budget →
+  `{ ok: true, remaining }` with the usage RECORDED; over budget →
+  refused, the usage NOT recorded.
+- `remaining()` / `used()` — MEASURED per axis (only axes with recorded
+  charges), fresh values every call, defensive copies.
+- `snapshot()` — `'budget_'` + sha256Hex over the canonical account
+  state (content-addressed).
+
+### The six §4 axes (the frozen vocabulary)
+
+docs/SECURITY_AND_AUTHORIZATION.md §4 requires isolation with filesystem
+boundaries, CPU/memory budgets, process limits, network allowlists/egress
+controls, execution timeouts, and artifact quotas. The frozen v0.1
+budget vocabulary measures exactly that, one positive-integer limit per
+axis:
+
+| axis | envelope field | unit | the §4 requirement |
+|---|---|---|---|
+| `cpu-ms` | `cpuMs` | milliseconds | CPU/memory budgets (the CPU side) |
+| `memory-mb` | `memoryMb` | megabytes | CPU/memory budgets (the memory side) |
+| `process-count` | `processCount` | processes | process limits |
+| `filesystem-bytes` | `filesystemBytes` | bytes | filesystem boundaries + artifact quotas (the quota is the measurable form) |
+| `network-egress-count` | `networkEgressCount` | events | network allowlists/egress controls (the count is the measurable form) |
+| `timeout-ms` | `timeoutMs` | milliseconds | execution timeouts |
+
+### The fail-closed envelope
+
+EVERY axis's limit must be a positive integer — a zero, negative,
+fractional, or missing limit is a named error carrying the observed
+value, and ALL errors are collected (the list sorted and deduped); a
+malformed envelope mints no account. The envelope must moreover be
+canonical-JSON serializable whole (it rides verbatim into every
+snapshot — a value the canonicalizer could never hash is refused at
+admission with a named error). A usage must carry an axis IN the
+six-axis vocabulary (an unknown axis is a named error carrying the
+observed value), a non-negative-integer `amount`, and a calendar-valid
+RFC3339 `usedAt` — all errors collected, nothing recorded on refusal.
+
+### The over-budget refusal law (a refused charge never consumes)
+
+A usage that would carry an axis's recorded total OVER its limit is
+REFUSED with the named exceedance
+(`budget exceeded: <axis> usage <amount> would total <total+amount> over
+the <limit> limit`) and is NOT recorded — a refused charge never
+consumes; the boundary refuses, it never silently overdraws. A usage
+that lands EXACTLY at the limit is allowed (remaining 0 — the next
+usage on that axis refuses).
+
+### The measured-remaining discipline
+
+`remaining` and `used` are MEASURED from the recorded charges — computed
+on every call, never cached, never asserted, never estimated. A usage's
+`amount` is the CALLER's own measurement; the account weighs it, never
+fabricates it. Every handed-out value (`envelope()`, `used()`,
+`remaining()`) is a fresh deep copy — there is no alias channel into the
+account.
+
+### The `budget_` prefix proposal
+
+This lane's frozen proposal in the `pkg_` / `cgraph_` / `rq_` / `creg_` /
+`fail_` / `fmem_` / `rpat_` / `arch_` / `comp_` / `bench_` / `authz_` /
+`redct_` / `iso_` / `audit_` / `atrail_` / `ready_` prefix discipline:
+`budget_` + 64 lowercase hex chars over the canonical account state —
+the contract version, the verbatim envelope, and the recorded charges
+canonically sorted by (axis, usedAt, amount). The sort is the MULTISET
+LAW: the account's observable state is the multiset of accounted
+charges, so the same charges accounted in ANY order produce the
+identical snapshot (the REFUSAL sequence depends on order; the recorded
+state does not). The empty account (no charges) is a valid `budget_`
+digest. Changing the prefix changes every snapshot and requires a
+contract version bump.
+
+### The determinism discipline
+
+No clock — `usedAt` is CALLER-injected and validated (RFC3339,
+calendar-valid; a different timestamp is a distinct charge, the
+clock-free proof). No randomness, no network, no filesystem, no
+module-level mutable state (the closure is the boundary; separate
+accounts share NOTHING). Inputs are never mutated; the envelope is
+stored verbatim by value. Same envelope + same charge multiset (any
+order) → the identical snapshot, `used()`, and `remaining()`.
+
+### Honest scope notes (the v0.1 boundary)
+
+- v0.1 is the budget CONTRACT + the enforcement ACCOUNTING — the
+  measurable, honest core. OS-level enforcement (cgroups, containers,
+  process walls, kernel egress filters) is the deployment runtime's
+  concern, documented as the boundary: the runtime enforces, this
+  account is the accounting truth the runtime reports against.
+- In-memory only; persistence, cross-process coordination, and budget
+  inheritance/merging are later, tech-lead-declared scope. The audit
+  vocabulary's future budget kinds arrive via a contract version bump,
+  never a quiet widening.
+- Runtime dependencies are exactly `@clapp/core` (`sha256Hex`) and
+  `@clapp/observe` (`canonicalJson`); the budget shapes are fully local
+  (no devDependencies in v0.1).
