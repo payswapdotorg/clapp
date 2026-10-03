@@ -1585,3 +1585,55 @@ Interface freezes landed (binding):
 
 Next unblocked work: CLAPP-082 — the Windows adapter (Owner W1; the
 third platform in the frozen sequence).
+
+## 2026-10-03 — Phase 8 lane 3 integrated: the Windows adapter (CLAPP-082)
+
+The P8 third platform, on the proven two-lane pattern (the Linux
+adapter's five-component shape, one platform over).
+
+Delivery chain (Worker 1, chat 1183aa80, ~12 min execution):
+- 3a6d2b9 — CLAPP-082 (W1): `feat(windows): CLAPP-082 Windows adapter —
+  the five platform components as v0.1 contracts, duck-typed host
+  seams, the no-fork law pinned` (14 files, +1,868, all under
+  packages/windows/; bun.lock reverted per the protocol).
+- (lock regen) — +15: the @clapp/windows workspace registration.
+- (merge) — `integrate: merge CLAPP-082 packages/windows adapter`
+  (--no-ff).
+
+Components (the five per WORK_ITEMS P8):
+- `src/environment.ts` — WindowsEnvironment (osBuild, the frozen
+  uia|none uiAccessProvider vocabulary — 'none' is the VALID honest
+  no-provider descriptor; its observation refusal is the UIA law, not
+  a validator error), the fail-closed validator.
+- `src/observation.ts` — WindowsViewNode (the UIA-tree equivalence:
+  automationId/controlType/name/text; screen-level, the IR stays
+  authoritative), the duck-typed WindowsObservationHost seam,
+  observeWindowsScreen: THE UIA LAW (a 'none' provider refuses with a
+  named error, the host NEVER called), THE BUDGET LAW (over-depth
+  trees refuse), screenDigest = sha256Hex(canonicalJson(tree)) +
+  nodeCount/observedDepth MEASURED, throwing hosts propagate loudly.
+- `src/evidence.ts` — core-shaped EvidenceRef (TYPE-ONLY, never
+  forked), deterministic 'wdev_' + digest-derived ids, EVIDENCE_KINDS
+  from the core's runtime mirror.
+- `src/synthesis-target.ts` — binaryName, sorted/deduped Win32
+  windowClasses, the frozen five-format packaging vocabulary
+  (msi|msix|appx|exe|zip), the fail-closed validator.
+- `src/verification.ts` — the duck-typed runJourney seam,
+  completed/failed MEASURED, failure reasons VERBATIM, no DiffReport
+  ever constructed (the diff boundary documented).
+- `test/windows.test.ts` (406) — the 8 named tests incl. the
+  import-discipline pin (runtime @clapp/core + @clapp/observe only).
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1381 pass / 0 fail / 14,341 expect() / 128 files**
+  (44-47s) — exactly baseline 1373 + 8 (the worker measured the same).
+- bun.lock diff: new-package entries only. Owned surface strict.
+
+Interface freezes landed (binding):
+- WINDOWS_ENVIRONMENT_VERSION/WINDOWS_TARGET_VERSION '0.1' + the
+  uiAccessProvider/packaging vocabularies + the five component
+  contracts + the wdev_ prefix — canonical owner @clapp/windows.
+
+Next unblocked work: CLAPP-083 — the macOS adapter (Owner W1; the
+fourth platform in the frozen sequence).
