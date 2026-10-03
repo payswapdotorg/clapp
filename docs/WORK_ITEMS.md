@@ -229,6 +229,10 @@ Depends on: 081
 Owner: W1
 Depends on: 082
 
+### CLAPP-084 — iOS adapter
+Owner: W1
+Depends on: 083
+
 Each native platform must implement:
 - observation adapter
 - environment descriptor
