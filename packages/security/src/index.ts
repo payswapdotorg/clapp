@@ -61,3 +61,7 @@ export type { DataDomain, IsolatedDatum, IsolationZone, StoreResult, ZoneResult 
 
 export { AUDIT_VERSION, createAuditTrail } from './audit';
 export type { AuditActionKind, AuditEvent, AuditResult, AuditTrail, CancellableOperation } from './audit';
+
+// ---- the production readiness gate (CLAPP-074 — the tech lead's lane) ----------------
+export { EVALUATED_BY, READINESS_VERSION, evaluateReadiness } from './readiness';
+export type { ReadinessCheck, ReadinessEvidence, ReadinessReport, ReadinessResult } from './readiness';

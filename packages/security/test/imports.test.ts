@@ -60,6 +60,7 @@ describe('the frozen-contract import discipline', () => {
       'src/authorization.ts',
       'src/index.ts',
       'src/isolation.ts',
+      'src/readiness.ts',
       'src/redaction.ts',
     ]);
 
