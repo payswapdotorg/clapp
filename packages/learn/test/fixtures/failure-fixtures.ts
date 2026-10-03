@@ -287,3 +287,104 @@ export function manifestShape(spec: ManifestSpec = {}): ManifestAdmission {
     interface: spec.interface ?? [],
   };
 }
+
+// ---- the composition-planner fixtures (CLAPP-063) ----------------------------------
+//
+// The planner consumes FULL PackageManifest v0.1 corpora (the frozen
+// library's admission shape — validatePackageManifest is the authority
+// BOTH the compat graph and the retrieval apply). The builders below mint
+// deliberately-overridable manifest literals with varied capabilities,
+// supportedTargets and dependencies, so the frozen rules produce KNOWN
+// verdicts and rankings without ever asserting them:
+//   - dependencies (the v0.1 discipline: at most one entry, the start
+//     command's leading executable) drive the 'conflict' rule — 'bun' vs
+//     'node' on shared targets is a conflict; equal or absent executables
+//     are compatible;
+//   - supportedTargets drive the 'unrelated' rule (['web'] vs ['node'] is
+//     target-disjoint) and the retrieval's candidacy target gate;
+//   - evidenceCount / failureModeCount / generatedAt are the frozen
+//     composite's levers (parityHistory, repairCost, recency): distinct
+//     evidence counts mint distinct scores (e.g. 5/3/1 → +10/+6/+2), so
+//     the frozen ranking is fully controlled by the fixture.
+//
+// This section is APPENDED below the 060/061/062 exports (a pure addition —
+// the existing exports above are byte-identical). The manifest literals
+// reuse the PackageManifest TYPE-ONLY import hoisted in the 062 section
+// above (@clapp/library — now a RUNTIME dependency of @clapp/learn, pinned
+// for the fixtures as a TYPES-ONLY source by the import-discipline test
+// inside test/failure-memory.test.ts); the frozen contract constants
+// (PACKAGE_VERSION '0.1', the EVIDENCE_KINDS vocabulary) are pinned as
+// literals — the fixtures never import runtime values.
+
+/** Fixed caller-injected planning timestamps (fixtures never read the clock). */
+export const PLANNED_AT_A = '2026-10-03T00:00:00Z';
+export const PLANNED_AT_B = '2026-10-03T01:00:00Z';
+
+/** A 64-lowercase-hex digest literal from a short hex seed (provenance/evidence shapes). */
+function hex64(seed: string): string {
+  return `${seed}${'0'.repeat(64 - seed.length)}`;
+}
+
+/** The composition corpus spec — every lever the frozen rules read. */
+export interface CorpusManifestSpec {
+  /** Short lowercase-hex seed for the minted-shaped package id (packageId above). */
+  idSeed?: string;
+  /** Defaults to '1.0.0' — the manifest's immutable version. */
+  version?: string;
+  /** Defaults to 'application' (the v0.1 extraction category). */
+  category?: string;
+  /** Defaults to the house purpose sentence. */
+  purpose?: string;
+  /** Defaults to ['/'] — sorted + deduped (the canonical order the contract demands). */
+  interface?: string[];
+  /** Defaults to ['route'] — sorted + deduped. */
+  capabilities?: string[];
+  /** Defaults to [] — sorted + deduped. */
+  constraints?: string[];
+  /** The v0.1 discipline: the start command's leading executable, or none. */
+  dependencies?: string[];
+  /** Defaults to ['web'] — sorted + deduped. */
+  supportedTargets?: string[];
+  /** The parity-history lever: how many evidence entries (measured by the retrieval). */
+  evidenceCount?: number;
+  /** The repair-cost lever: how many failure-mode ids. */
+  failureModeCount?: number;
+  /** Defaults to the house generation timestamp (the recency lever; never a clock). */
+  generatedAt?: string;
+}
+
+/** A full PackageManifest v0.1 literal — one corpus entry for the planner. */
+export function corpusManifest(spec: CorpusManifestSpec = {}): PackageManifest {
+  const seed = spec.idSeed ?? 'e5';
+  const evidenceCount = spec.evidenceCount ?? 0;
+  const failureModeCount = spec.failureModeCount ?? 0;
+  return {
+    packageVersion: '0.1', // the frozen PACKAGE_VERSION, pinned as a literal
+    id: packageId(seed),
+    version: spec.version ?? '1.0.0',
+    category: spec.category ?? 'application',
+    purpose: spec.purpose ?? 'A synthesized web application distilled from a verified build.',
+    interface: [...new Set(spec.interface ?? ['/'])].sort(),
+    capabilities: [...new Set(spec.capabilities ?? ['route'])].sort(),
+    constraints: [...new Set(spec.constraints ?? [])].sort(),
+    dependencies: [...(spec.dependencies ?? [])],
+    supportedTargets: [...new Set(spec.supportedTargets ?? ['web'])].sort(),
+    provenance: {
+      planSha256: hex64('aaaa'),
+      appManifestSha256: hex64('bbbb'),
+      diffReportId: 'diffr_fixture000000000000000000000000000',
+      repairConverged: true,
+      candidateBaseSha: null,
+    },
+    evidence: Array.from({ length: evidenceCount }, (_, index) => ({
+      evidenceId: `ev_${seed}_${index}`,
+      kind: 'runtime' as const, // the frozen EVIDENCE_KINDS vocabulary, pinned as a literal
+      sha256: hex64('cccc'),
+    })),
+    tests: [],
+    benchmark: null, // the honesty law: a reference or null — never a fabricated number
+    examples: [],
+    failureModes: Array.from({ length: failureModeCount }, (_, index) => `diff_${seed}_mode_${index}`),
+    generatedAt: spec.generatedAt ?? '2026-10-02T18:00:00Z',
+  };
+}

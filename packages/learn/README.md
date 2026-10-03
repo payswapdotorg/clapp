@@ -370,3 +370,152 @@ classified from partial data.
 (`@clapp/library` — a devDependency — is the classifier's
 `PackageManifest` type source); nothing else. Pinned by the
 import-discipline test inside `test/failure-memory.test.ts`.
+
+## Composition planner (CLAPP-063)
+
+The P6 FOURTH lane (Worker 2 — Behavioral Model and Package Learning, the
+composition-planning owner).
+`docs/LEARNING_AND_LIBRARY.md` §10's target end state's **compose** step:
+*"new app → identify archetype → retrieve 70–95% → **compose** → fill
+target-specific gaps → verify"* (the percentages are aspirational, §10's
+own caveat). The archetype step landed as CLAPP-062, the retrieval as
+CLAPP-052; this module is the compose step's executable seed — the FIRST
+`@clapp/learn` module that consumes the landed library machinery LIVE:
+`retrievePackages` + `buildCompatGraph` are RUNTIME imports, so
+`@clapp/library` is a (production) dependency of this package (the
+import-discipline test's runtime set gains it; the contract set drops it,
+keeping `@clapp/diff` + `@clapp/repair`).
+
+### The contract
+
+```
+planComposition(corpus, query, options): Promise<CompositionResult>
+  ├─ { ok: true, plan: CompositionPlan }
+  └─ { ok: false, errors: string[] }            // fail-closed — results, never exceptions
+
+CompositionPlan:
+  ├─ compositionVersion   // '0.1' (COMPOSITION_VERSION)
+  ├─ id                   // 'comp_' + sha256Hex(canonicalJson(plan minus id))
+  ├─ queryDigest          // the rq_ digest, carried VERBATIM from the retrieval result
+  ├─ selected             // in selection order (greedy rank order)
+  ├─ excluded             // canonical order (id, then version)
+  ├─ considered           // MEASURED — candidates the retrieval ranked
+  ├─ graphEdgeCount       // MEASURED — edges of the induced subgraph over the ranked candidates
+  └─ plannedAt            // RFC3339, caller-injected — the planner never reads a clock
+
+SelectedComponent:  { id, version, score (the frozen composite, verbatim), rank (measured 0-based) }
+ExcludedComponent:  { id, version, reason }     // conflict / unrelated / rank cut — the binding fact named
+```
+
+`options` is `{ plannedAt: string }` (required, RFC3339 calendar-valid) and
+`maxComponents` (when present, a positive integer). `query` is validated
+by the frozen retrieval — its errors carry verbatim. The planner's own
+option errors are collected (ALL of them, each naming its field).
+
+### The pipeline (deterministic; every step delegates to the FROZEN library)
+
+1. **The caller contract** — options validated FIRST (the 060/061/062
+   house pattern: the caller-injected clock first): `plannedAt`
+   RFC3339 calendar-valid (`2026-02-30` refused), `maxComponents` a
+   positive integer when present. The planner's own option errors are
+   collected, never thrown.
+2. **Corpus admission (fail-closed)** — `buildCompatGraph(corpus)`; a
+   non-ok result returns the graph's own errors **verbatim** (the corpus
+   must be a validated manifest list — the graph is the authority). An
+   empty corpus admits legally and flows through.
+3. **Retrieval (the frozen ranking)** — `retrievePackages(corpus, query)`;
+   a non-ok result returns the retrieval's errors **verbatim**. The
+   ranked candidates (score DESC, id ASC — the frozen order) enter
+   selection; `considered` = the candidates array length (measured).
+4. **The compat gate (greedy, rank-ordered)** — the induced subgraph is
+   built via `buildCompatGraph` over the RANKED CANDIDATES' manifests
+   (the frozen edges are the facts). The walk keeps a running SELECTED
+   list; for each candidate in rank order:
+   - **Rank cut first (categorical)**: a candidate whose measured rank is
+     beyond `maxComponents` (rank ≥ maxComponents) is EXCLUDED with the
+     rank-cut reason naming that measured rank — the cap disqualifies the
+     position regardless of verdicts.
+   - Otherwise the pairwise verdict against EVERY already-selected
+     component is READ from the induced graph's edge: **'conflict'** on
+     any pair → EXCLUDE (the reason names both ids and the conflict rule,
+     "runtime conflict with selected …"); else **'unrelated'** on any
+     pair → EXCLUDE (the reason names both ids and the target
+     disjointness, "shares no target with selected … — cannot compose");
+     else **SELECT** (append). The binding pair named is the first in
+     selection order; the conflict check is the cascade's first test.
+   - The FIRST candidate is always selected (no pairs yet — and rank 0 is
+     never rank-cut, `maxComponents` being a positive integer).
+5. **The plan** — selected in selection order, excluded in canonical
+   order (id, then version), the measured facts, the `rq_` queryDigest
+   carried verbatim, `plannedAt` from options, and the `comp_` id minted
+   over the canonical serialization of the plan MINUS its id.
+
+### The binding-verdicts law
+
+The planner re-implements NOTHING: corpus validation, query validation,
+the ranking, the score composite, the verdict vocabulary
+(`'compatible' | 'conflict' | 'unrelated'`), and every pairwise verdict
+are the frozen `@clapp/library`'s. The planner only WALKS the frozen
+ranked order and READS the frozen graph edges; its composition decisions
+are BOUND by the graph's verdicts. (The corpus is validated twice — the
+admission graph, then the induced graph's own admission — the price of
+never re-implementing validation.)
+
+**Honest limitation (disclosed, structural):** the frozen retrieval's
+candidacy gate requires `query.target ∈ manifest.supportedTargets` for
+every ranked candidate (its own header documents the gate as the
+"single-manifest reduction of the compat-graph target gate"), so any two
+ranked candidates always share the query target and the walk's
+`'unrelated'` branch is **defensive completeness** — implemented per the
+work order §3.2, honest in its reason, unreachable through
+`planComposition` in v0.1 (a target-disjoint candidate is excluded by the
+frozen target gate BEFORE ranking — never a plan-level exclusion).
+
+### Prefix proposal (frozen for v0.1)
+
+- `comp_` — plan ids: `'comp_' + 64 lowercase hex chars`
+  (`sha256Hex(canonicalJson(plan minus id))`), THIS lane's proposal in
+  the repo's `pkg_` / `cgraph_` / `rq_` / `creg_` / `fail_` / `fmem_` /
+  `rpat_` / `arch_` content-addressing discipline. Changing it changes
+  every minted id and requires a contract version bump (only via a
+  tech-lead declaration wave).
+
+### Determinism + honesty laws
+
+- **No clock, no randomness, no network, no filesystem.** `plannedAt` is
+  caller-injected (RFC3339 calendar-valid); every other fact enters
+  through the frozen library calls.
+- **Same corpus + query + options → deep-equal plan, identical `comp_`
+  id** — and the plan is CORPUS-INPUT-ORDER independent (the admission
+  graph, the retrieval ranking, the induced subgraph and the canonical
+  excluded order are all order-independent derivations).
+- **The planner never mutates its inputs**; every selected/excluded
+  record is a fresh object; the score is a primitive carried verbatim.
+- **Counts are measured, never asserted** — `considered` counts the
+  ranked candidates array; `graphEdgeCount` counts the induced graph's
+  actual edges; `rank` is the measured position in the frozen ranking.
+- **Fail closed** — results, never exceptions; unreachable-in-practice
+  derivation failures (a ranked candidate missing from the admitted
+  corpus, a missing induced edge, a canonicalization refusal) are NAMED
+  errors, never guesses.
+
+### Proposal, not product (the boundary)
+
+The plan is §10's **compose** step only. Gap-filling ("fill
+target-specific gaps") and verification ("verify") are LATER, OTHER
+machinery (improvement benchmarks — CLAPP-064 — and the synthesis /
+verification lanes own them): the planner neither fills gaps, nor
+generates code, nor verifies parity, nor benchmarks. It proposes a
+deterministic, honest selection with every exclusion reason named.
+
+### Import discipline (this lane's extension)
+
+`src/**` may import `@clapp/core` + `@clapp/observe` + `@clapp/library`
+at RUNTIME (`@clapp/library` is now a production dependency — the
+composition planner calls `retrievePackages` + `buildCompatGraph` live),
+and `@clapp/diff` + `@clapp/repair` for TYPES ONLY; nothing else. The
+fixtures may import the runtime set's members for TYPES ONLY (the frozen
+062 fixtures' `PackageManifest` import stays legal through that rule —
+the licensed consequence of moving `@clapp/library` between the sets; a
+RUNTIME fixture import remains a violation). Pinned by the
+import-discipline test inside `test/failure-memory.test.ts`.

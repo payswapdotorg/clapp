@@ -99,10 +99,10 @@ async function admit(
 // ---- the import-discipline test's machinery (module level, like the library's) ------
 
 /** The frozen contract owners: import-type ONLY (src/** and test/fixtures/**). */
-const CONTRACT_PACKAGES = ['@clapp/diff', '@clapp/library', '@clapp/repair'] as const;
+const CONTRACT_PACKAGES = ['@clapp/diff', '@clapp/repair'] as const;
 
 /** The complete runtime dependency set. */
-const RUNTIME_ALLOWED = new Set(['@clapp/core', '@clapp/observe']);
+const RUNTIME_ALLOWED = new Set(['@clapp/core', '@clapp/library', '@clapp/observe']);
 
 const PACKAGE_ROOT = dirname(import.meta.dir); // packages/learn (one level above test/)
 const SRC_ROOT = join(PACKAGE_ROOT, 'src');
@@ -541,9 +541,10 @@ describe('the failure memory (CLAPP-060)', () => {
 
   test('the package imports only frozen contracts — no cross-implementation import', () => {
     const files = listTsFiles(SRC_ROOT).sort();
-    // the four modules of the delivered surface
+    // the five modules of the delivered surface
     expect(files.map((file) => file.slice(PACKAGE_ROOT.length + 1))).toEqual([
       'src/archetypes.ts',
+      'src/composition.ts',
       'src/failure-memory.ts',
       'src/index.ts',
       'src/repair-patterns.ts',
@@ -555,8 +556,11 @@ describe('the failure memory (CLAPP-060)', () => {
 
     const violations: string[] = [];
 
-    // src/**: @clapp/core + @clapp/observe at RUNTIME; @clapp/diff +
-    // @clapp/repair + @clapp/library for TYPES ONLY; nothing else.
+    // src/**: @clapp/core + @clapp/library + @clapp/observe at RUNTIME
+    // (CLAPP-063: the composition planner consumes the landed library
+    // machinery live — retrievePackages + buildCompatGraph — so
+    // @clapp/library moved from the contract set to the runtime set);
+    // @clapp/diff + @clapp/repair for TYPES ONLY; nothing else.
     for (const file of files) {
       const display = file.slice(PACKAGE_ROOT.length + 1);
       const source = readFileSync(file, 'utf8');
@@ -576,7 +580,7 @@ describe('the failure memory (CLAPP-060)', () => {
         if (specifier.startsWith('@clapp/')) {
           if (!RUNTIME_ALLOWED.has(specifier)) {
             violations.push(
-              `${display}: undeclared workspace dependency ${JSON.stringify(specifier)} — the runtime dependency set is exactly @clapp/core + @clapp/observe`,
+              `${display}: undeclared workspace dependency ${JSON.stringify(specifier)} — the runtime dependency set is exactly @clapp/core + @clapp/library + @clapp/observe`,
             );
           }
           continue;
@@ -591,7 +595,13 @@ describe('the failure memory (CLAPP-060)', () => {
     }
 
     // test/fixtures/**: relative + node: builtins + the frozen contract
-    // owners for TYPES ONLY (the fixtures build contract-shaped literals).
+    // owners AND the runtime dependency set for TYPES ONLY (the fixtures
+    // build contract-shaped literals; the runtime implementations stay
+    // src-only). CLAPP-063: @clapp/library moved from the contract set to
+    // the runtime set, so the 062 fixtures' PackageManifest TYPE-ONLY
+    // import stays legal here through the runtime set's type-only rule —
+    // the licensed consequence of the set move, keeping the fixtures scan
+    // strict (a RUNTIME fixture import is still a violation).
     for (const file of fixtureFiles) {
       const display = file.slice(PACKAGE_ROOT.length + 1);
       const source = readFileSync(file, 'utf8');
@@ -604,6 +614,20 @@ describe('the failure memory (CLAPP-060)', () => {
           if (!clause.startsWith('type')) {
             violations.push(
               `${display}: RUNTIME import of ${contractPackage} (${JSON.stringify(specifier)}) — the fixtures import the contract owners for TYPES ONLY`,
+            );
+          }
+          continue;
+        }
+        if (specifier.startsWith('@clapp/')) {
+          if (RUNTIME_ALLOWED.has(specifier)) {
+            if (!clause.startsWith('type')) {
+              violations.push(
+                `${display}: RUNTIME import of ${JSON.stringify(specifier)} — the fixtures import the workspace packages for TYPES ONLY`,
+              );
+            }
+          } else {
+            violations.push(
+              `${display}: undeclared workspace dependency ${JSON.stringify(specifier)} — the fixtures import only the frozen contract types and the runtime set's types`,
             );
           }
           continue;
