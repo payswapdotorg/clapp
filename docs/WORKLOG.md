@@ -1043,3 +1043,64 @@ Notable decisions:
 
 Next unblocked work: CLAPP-063 — Composition planner (Owner W2; depends on
 051 + 062, both landed).
+
+## 2026-10-03 — Phase 6 lane 4 integrated: composition planner (CLAPP-063)
+
+Wave/phase: P6 Continuous Learning lane 4, worker lane clapp-063a
+(Worker 2 — the composition-planning owner).
+
+Integrated commits:
+- 51a19c3 — CLAPP-063 (W2): `feat(learn): CLAPP-063 composition planner —
+  greedy rank-ordered selection over the frozen retrieval + compat
+  verdicts, comp_ content-addressed plans, measured facts`
+- (lock) — `chore(learn): regenerate bun.lock — @clapp/library moves to
+  runtime dependencies` (1 line)
+- (merge) — `integrate: merge CLAPP-063 packages/learn composition` (--no-ff)
+- (docs commit) — ROADMAP ✅ + this record.
+
+Delivered surface (7 files / +1,263 / −8):
+- `src/composition.ts` (548 lines) — COMPOSITION_VERSION '0.1';
+  planComposition(corpus, query, options): fail-closed corpus admission
+  VIA the frozen buildCompatGraph (errors carried verbatim); the frozen
+  retrieval's ranking (errors carried verbatim; queryDigest rq_ carried);
+  the GREEDY compat walk in frozen rank order (pairwise verdicts READ from
+  the frozen induced subgraph — 'conflict'/'unrelated' exclude with named
+  reasons; rank cut by measured rank); comp_ content-addressed plan ids;
+  measured facts (considered, graphEdgeCount); plannedAt caller-injected.
+  The verdicts BIND: no ranking/validation/verdict re-implementation.
+- `test/composition.test.ts` (429) + fixture appends (+101) — the 8 named
+  tests (verbatim error-carries proven by array equality against the
+  frozen modules' outputs).
+- `package.json`: @clapp/library moved devDependencies → dependencies (the
+  first learn module to consume the library machinery at RUNTIME —
+  retrievePackages + buildCompatGraph). The import-discipline assertion
+  updated accordingly (the runtime set gains @clapp/library; the fixtures
+  scan gains a TYPE-ONLY rule for runtime-set members — the discipline
+  became STRICTER for fixtures: runtime fixture imports are violations).
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1300 pass / 0 fail / 13,260 expect() / 117 files** (61.98s)
+  — exactly baseline 1292 + 8 (the worker's first full run hit the
+  documented CLAPP-021 sandbox flake — isolated clean, disclosed; the
+  final 1300/0 measured).
+- tsconfig byte-identical; frozen modules untouched.
+
+Interface freezes landed (binding):
+- COMPOSITION_VERSION '0.1' + CompositionPlan/SelectedComponent/
+  ExcludedComponent + the comp_ prefix — canonical owner @clapp/learn
+  (composition.ts).
+
+Notable decisions (all disclosed by the worker):
+- The 'unrelated' exclusion branch is structurally UNREACHABLE through
+  planComposition in v0.1 (the frozen retrieval's target gate already
+  requires every ranked candidate to carry the query target — two ranked
+  candidates can never be target-disjoint). The branch is implemented per
+  the packet, test 5 MEASURES the frozen verdict directly, and the
+  unreachability is documented — honest dead-but-specified code.
+- The rank cut is positional (evaluated before the verdicts).
+
+Next unblocked work: CLAPP-064 — Improvement benchmark (Owner: TECH
+LEAD; depends on 061+063, both landed). The TL implements it directly:
+the measured benchmark evidence that repeated learning reduces
+build/repair work (the P6 acceptance gate).
