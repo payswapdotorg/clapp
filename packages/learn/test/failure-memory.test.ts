@@ -541,10 +541,11 @@ describe('the failure memory (CLAPP-060)', () => {
 
   test('the package imports only frozen contracts — no cross-implementation import', () => {
     const files = listTsFiles(SRC_ROOT).sort();
-    // the two modules of the delivered surface
+    // the three modules of the delivered surface
     expect(files.map((file) => file.slice(PACKAGE_ROOT.length + 1))).toEqual([
       'src/failure-memory.ts',
       'src/index.ts',
+      'src/repair-patterns.ts',
     ]);
     const fixtureFiles = listTsFiles(FIXTURES_ROOT).sort();
     expect(fixtureFiles.map((file) => file.slice(PACKAGE_ROOT.length + 1))).toEqual([

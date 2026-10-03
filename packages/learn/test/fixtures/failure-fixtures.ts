@@ -165,3 +165,75 @@ export function failureEvent(spec: FailureEventSpec): FailureEventInput {
     context: spec.context ?? 'paired replay of journey j01, step 0',
   };
 }
+
+// ---- the failure-record literals (CLAPP-061 — the repair-pattern mining fixtures) ----
+//
+// The miner consumes the memory's STORED shape (FailureRecord literals —
+// typically `createFailureMemory().list()`), so the mining tests need
+// record-shaped data. Two channels, both honest:
+// - REAL records: admit failureEvent(...) inputs through a real
+//   createFailureMemory() and mine `memory.list()` (the 060→061 handoff,
+//   exercised in the determinism test);
+// - LITERALS: the builders below — FailureRecord-shaped data over the
+//   frozen vocabulary, for the tests that need precise control over the
+//   measured support (splits, ratios, anchor unions) or deliberately
+//   malformed fields.
+//
+// This section is APPENDED below the 060 exports (a pure addition — the
+// existing exports above are byte-identical). The imports are hoisted
+// top-level ES declarations and live with the section they serve; the
+// runtime constant comes from the frozen store module in-package (the
+// drift-proof pin: the literals carry exactly FAILURE_VERSION).
+
+import { FAILURE_VERSION } from '../../src/failure-memory';
+import type { FailureRecord } from '../../src/failure-memory';
+
+/** A minted-shaped failure-event id from a short lowercase-hex seed. */
+export function failureEventId(idSeed: string): string {
+  return `fail_${idSeed.padEnd(64, '0')}`;
+}
+
+/** The FailureRecord-literal spec (deliberately permissive for the mining tests). */
+export interface FailureRecordSpec {
+  /** Short lowercase-hex seed for the minted-shaped 'fail_' event id. */
+  idSeed: string;
+  /** The finding's id — the per-event anchor (never a grouping key). */
+  findingId: string;
+  /** Defaults to 'semantic' (the frozen vocabulary). */
+  dimension?: DiffDimension;
+  /** Defaults to 'major' (the frozen vocabulary). */
+  severity?: DiffSeverity;
+  /** Defaults to the house divergence sentence. */
+  summary?: string;
+  /** The repair outcome facts; defaults to repairFacts() — resolved, no recorded ids. */
+  repair?: Partial<RepairFacts>;
+  /** Defaults to OBSERVED_AT_A (fixtures never read the clock). */
+  observedAt?: string;
+  /** Defaults to null — the failure predates packaging. */
+  packageRef?: { id: string; version: string } | null;
+  /** Defaults to the house target. */
+  target?: string;
+  /** Defaults to the house context. */
+  context?: string;
+  /** Overridable for the fail-closed tests; defaults to FAILURE_VERSION. */
+  failureVersion?: string;
+}
+
+/** A FailureRecord-shaped literal — the memory's stored event shape, as fixture data. */
+export function failureRecord(spec: FailureRecordSpec): FailureRecord {
+  return {
+    failureVersion: spec.failureVersion ?? FAILURE_VERSION,
+    id: failureEventId(spec.idSeed),
+    packageRef: spec.packageRef ?? null,
+    target: spec.target ?? 'bench/b01-static',
+    context: spec.context ?? 'paired replay of journey j01, step 0',
+    signature: {
+      dimension: spec.dimension ?? 'semantic',
+      severity: spec.severity ?? 'major',
+      findingId: spec.findingId,
+      summary: spec.summary ?? 'The candidate diverges from the observed original.',
+    },
+    repair: repairFacts(spec.repair),
+    observedAt: spec.observedAt ?? OBSERVED_AT_A,
+  };
+}

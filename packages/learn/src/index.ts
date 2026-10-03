@@ -41,3 +41,7 @@
 // ---- the failure memory (CLAPP-060 — the P6 first lane) -----------------------------
 export { FAILURE_VERSION, createFailureMemory } from './failure-memory';
 export type { FailureMemory, FailureRecord, FailureResult } from './failure-memory';
+
+// ---- the repair-pattern miner (CLAPP-061 — the P6 second lane) ----------------------
+export { PATTERN_VERSION, mineRepairPatterns } from './repair-patterns';
+export type { MiningResult, RepairPattern } from './repair-patterns';

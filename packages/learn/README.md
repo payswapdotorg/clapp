@@ -148,3 +148,98 @@ bun run typecheck   # 0 errors (the root program covers packages/*/src)
 bun run lint        # 0 problems
 bun test            # the 8 named tests in test/failure-memory.test.ts
 ```
+
+## Repair pattern mining (CLAPP-061)
+
+The P6 SECOND lane (Worker 2 — the learning-records owner): the
+**DERIVATION** half of the §7 law. The 060 store records failure events
+honestly and mines nothing; the miner derives what the store recorded —
+
+> "A repeated failure should produce a reusable guard, test, or package
+> correction."
+
+— into repair-pattern **CANDIDATES**, minted only from REAL recorded
+evidence (the §8 contamination-guard spirit: nothing is guessed; every
+support number is MEASURED from the events given).
+
+### The contract
+
+```
+mineRepairPatterns(events: unknown): Promise<MiningResult>
+  ├─ { ok: true, patterns: RepairPattern[] }   // zero or more — counted honestly
+  └─ { ok: false, errors: string[] }           // fail-closed — results, never exceptions
+
+RepairPattern:
+  ├─ patternVersion   // '0.1' (PATTERN_VERSION)
+  ├─ id               // 'rpat_' + sha256Hex(canonicalJson(pattern minus id))
+  ├─ signature        // { dimension, severity, summary } — VERBATIM from the events
+  ├─ support          // { total, resolved, generalized } — MEASURED
+  ├─ status           // 'repair-pattern' | 'insufficient-evidence' | 'unresolved-dominant'
+  ├─ anchors          // { resolvedFindingIds } — the resolved union, sorted + deduped
+  └─ reasons          // honest, sorted, deduped; each names a measured fact
+```
+
+### The grouping key
+
+Groups are keyed by the signature TRIPLE — dimension + severity + summary.
+The `findingId` is the per-event ANCHOR, never a key: recurrences across
+finding ids share a signature (a re-run mints fresh finding ids for the
+same divergence — the 060 event-identity rule). Every group yields
+exactly ONE candidate entry, emitted in canonical signature order
+(dimension, then severity, then summary).
+
+### The three statuses (fail-closed, checked in order)
+
+The anchor mints the pattern; the honest resolved/total split rides in
+the measured support:
+
+1. **'repair-pattern'** — `total >= 2` AND at least one event resolved AND
+   the resolved events carry at least one `resolvedFindingId` (the
+   reusable anchor exists). Minted WITH the measured support and the
+   anchor union.
+2. **'insufficient-evidence'** — `total < 2` (a single event never becomes
+   a pattern — no generalization from one example), OR `total >= 2` with
+   `resolved === 0` (recurrence with no repair success anywhere — the
+   recurrence itself is knowledge; 064's benchmarks will weigh it;
+   `anchors.resolvedFindingIds` is `[]`, honestly), OR every event
+   resolved but zero `resolvedFindingIds` recorded anywhere (resolution
+   with nothing reusable to anchor a guard on — the exhaustive closure of
+   the three-status contract; never a guessed pattern).
+3. **'unresolved-dominant'** — `total >= 2` AND `resolved >= 1` AND
+   `resolved < total` AND no `resolvedFindingId` on any resolved event:
+   the repair sometimes works, and the unresolved class dominates the
+   verdict. The reasons name the measured ratio ("3 of 5 events
+   resolved").
+
+### Prefix proposal (frozen for v0.1)
+
+- `rpat_` — pattern ids: `'rpat_' + 64 lowercase hex chars`
+  (`sha256Hex(canonicalJson(pattern minus id))`), THIS lane's proposal in
+  the repo's `pkg_` / `cgraph_` / `rq_` / `creg_` / `fail_` / `fmem_`
+  content-addressing discipline. Changing it changes every minted id and
+  requires a contract version bump (only via a tech-lead declaration
+  wave).
+
+### Determinism + honesty laws
+
+- **No clock, no randomness, no network, no filesystem** — nothing but
+  the events enters (§9: v0.1 mines patterns only, no policy; repair-
+  policy learning is future model improvement).
+- **Input-order independence.** The same events in ANY input order
+  produce a deep-equal patterns array (canonical signature order) with
+  identical ids.
+- **The miner never mutates its inputs**; every pattern field is a fresh
+  value (the anchor union is a fresh sorted array over the RESOLVED
+  events only — an unresolved event's partial fixes never anchor).
+- **Fail closed.** A non-array input or ANY invalid entry (checked
+  against the frozen `FAILURE_VERSION`, the `fail_` id prefix, the frozen
+  vocabulary, the repair-facts shapes, and calendar-valid RFC3339) is a
+  collected error naming its index and field — ALL errors, never just
+  the first; nothing is mined from partial data. Empty input is legal:
+  `{ ok: true, patterns: [] }` — zero groups, counted honestly.
+- **Counts are measured, never asserted.** total/resolved/generalized and
+  the anchors union are measured from the events given.
+- **Candidates, not guards.** The miner mines and reports; deciding which
+  patterns become guards, tests, or package corrections is the tech
+  lead's and later lanes' call (062 archetypes, 063 composition planning,
+  064 improvement benchmarks).
