@@ -1744,3 +1744,54 @@ each with its platform's honest-refusal observation law (AT-SPI / UIA
 no-fork law is pinned by an import-discipline test in every package.
 
 Remaining: P9 — Autonomous App Factory (5 items).
+
+## 2026-10-03 — Phase 9 lane 1 integrated: target classification (CLAPP-085)
+
+The P9 opener — the factory's entry contract.
+
+Delivery chain (Worker 1, chat 07265b02, ~20 min execution):
+- 5d18930 — CLAPP-085 (W1): `feat(factory): CLAPP-085 target
+  classification — the P8 platforms + learn archetypes bound into the
+  factory's fail-closed entry contract` (7 files, +1,104, all under
+  packages/factory/).
+- (lock regen) — +13: the @clapp/factory workspace registration.
+- (merge) — `integrate: merge CLAPP-085 packages/factory target
+  classification` (--no-ff).
+
+Components:
+- `src/target-classification.ts` — TargetRequest (platform from the
+  five frozen P8 literals, the learn classification consumed as DATA
+  with the honest-agreement law — outcome 'classified' must agree with
+  matches present/absent, a disagreement is a named error), the frozen
+  budget-tier vocabulary (minimal|standard|extended — the tags
+  CLAPP-086 spends), classifyTarget: fail-closed with ALL errors named
+  (observed values carried), primaryArchetype = matches[0].name
+  DERIVED (the learn table's canonical first, never chosen),
+  matchCount MEASURED, content-addressed 'tcls_' ids (canonicalJson of
+  the classification minus id — classifiedAt caller-injected and
+  EXCLUDED from the id body), @clapp/learn TYPE-ONLY.
+- `test/target-classification.test.ts` — the 8 named tests incl. the
+  import-discipline pin (runtime @clapp/core + @clapp/observe; learn
+  import-type ONLY; exact two-file src list).
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1405 pass / 0 fail / 14,573 expect() / 131 files**
+  (43-44s) — exactly baseline 1397 + 8 (the worker measured the same).
+- bun.lock diff: new-package entries only. Owned surface strict.
+
+Interface freezes landed (binding):
+- TARGET_CLASS_VERSION '0.1' + the five-platform binding + the
+  budget-tier vocabulary + the tcls_ prefix — canonical owner
+  @clapp/factory.
+
+Operational notes (banked): the workspaces API list lagged the live
+sandbox (the 085a pod was unlisted) — the /workspaces/up POST reveals
+the pod (c-6ac0ec86, ws-2e45619f) and the files/ls-tree API accepts
+the pod name as workspace_id. The watch's marker fired early once (the
+worker echoing the §8 marker line in its plan) — the flag alone is
+never the harvest trigger; the terminal text block ending byte-exact
+with the marker is.
+
+Next unblocked work: CLAPP-086 — adaptive exploration budgets
+(Owner W1; the tiers this lane tags are what 086 spends).

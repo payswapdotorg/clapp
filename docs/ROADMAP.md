@@ -73,8 +73,8 @@ CLAPP
 │   ├── ✅ macOS (the five-component v0.1 contracts, the AX observation law, frozen accessibilityFramework/packaging vocabularies — @clapp/macos; CLAPP-083)
 │   └── ✅ iOS (the five-component v0.1 contracts, the XCUITest observation law, frozen uiTestFramework/packaging vocabularies — @clapp/ios; CLAPP-084)
 │
-└── ⬜ P9 Autonomous App Factory
-    ├── ⬜ target classification
+└── 🟡 P9 Autonomous App Factory
+    ├── ✅ target classification (the P8 platforms + learn archetypes bound into the fail-closed entry contract, tcls_ content-addressed ids, the honest-agreement law — @clapp/factory; CLAPP-085)
     ├── ⬜ adaptive exploration budgets
     ├── ⬜ package-graph synthesis
     ├── ⬜ multi-pass repair
