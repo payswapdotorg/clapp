@@ -226,6 +226,19 @@
         "@clapp/core": "workspace:*",
       },
     },
+    "packages/windows": {
+      "name": "@clapp/windows",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+        "@clapp/observe": "workspace:*",
+      },
+      "devDependencies": {
+        "@clapp/diff": "workspace:*",
+        "@clapp/ir": "workspace:*",
+        "@clapp/journey": "workspace:*",
+      },
+    },
   },
   "packages": {
     "@clapp/android": ["@clapp/android@workspace:packages/android"],
@@ -267,6 +280,8 @@
     "@clapp/security": ["@clapp/security@workspace:packages/security"],
 
     "@clapp/store": ["@clapp/store@workspace:packages/store"],
+
+    "@clapp/windows": ["@clapp/windows@workspace:packages/windows"],
 
     "@eslint-community/eslint-utils": ["@eslint-community/eslint-utils@4.10.1", "", { "dependencies": { "eslint-visitor-keys": "^3.4.3" }, "peerDependencies": { "eslint": "^6.0.0 || ^7.0.0 || >=8.0.0" } }, "sha512-cuadcxVFE8sDK6iWJbs8Sn0av2Nrh2QSGQhVlBW9AaAHqHwjWsZHT8LJ4hFGPh7ASBV2deFdM7H/DPjulmh8rg=="],
 
