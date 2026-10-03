@@ -66,12 +66,12 @@ CLAPP
 │   ├── ✅ secrets/redaction (the §3 six-class vocabulary, visible non-reversible markers, redct_ provenance — @clapp/security; CLAPP-071)
 │   └── ✅ auditability (the append-only seven-kind trail + the cancellation state machine, audit_/atrail_ identities — @clapp/security; CLAPP-073)
 │
-├── 🟡 P8 Native Adapters
+├── ✅ P8 Native Adapters
 │   ├── ✅ Android (the five-component v0.1 contracts, host seams, no-fork law — @clapp/android; CLAPP-080)
 │   ├── ✅ Linux (the five-component v0.1 contracts, the AT-SPI observation law, frozen display-server/accessibility-bus/packaging vocabularies — @clapp/linux; CLAPP-081)
 │   ├── ✅ Windows (the five-component v0.1 contracts, the UIA observation law, frozen uiAccessProvider/packaging vocabularies — @clapp/windows; CLAPP-082)
 │   ├── ✅ macOS (the five-component v0.1 contracts, the AX observation law, frozen accessibilityFramework/packaging vocabularies — @clapp/macos; CLAPP-083)
-│   └── ⬜ iOS
+│   └── ✅ iOS (the five-component v0.1 contracts, the XCUITest observation law, frozen uiTestFramework/packaging vocabularies — @clapp/ios; CLAPP-084)
 │
 └── ⬜ P9 Autonomous App Factory
     ├── ⬜ target classification

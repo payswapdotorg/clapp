@@ -1681,3 +1681,66 @@ Interface freezes landed (binding):
 
 Next unblocked work: CLAPP-084 — the iOS adapter (Owner W1; the fifth
 and final platform of the P8 sequence).
+
+## 2026-10-03 — Phase 8 lane 5 integrated: the iOS adapter (CLAPP-084) — PHASE 8 COMPLETE
+
+The P8 fifth and final platform. All five adapters now landed on the
+same v0.1 five-component pattern.
+
+Delivery chain (Worker 1, chat eff0bc50, ~25 min including one stall
+recovery):
+- 581293a — CLAPP-084 (W1): `feat(ios): CLAPP-084 iOS adapter — the
+  five platform components as v0.1 contracts, duck-typed host seams,
+  the no-fork law pinned` (14 files, +1,890, all under packages/ios/).
+- (lock regen) — +15: the @clapp/ios workspace registration.
+- (merge) — `integrate: merge CLAPP-084 packages/ios adapter` (--no-ff).
+
+Components (the five per WORK_ITEMS P8):
+- `src/environment.ts` — IOSEnvironment (osMajor, the frozen
+  xcuitest|none uiTestFramework vocabulary — 'none' is the VALID honest
+  no-framework descriptor; its observation refusal is the XCUITest
+  law), the fail-closed validator.
+- `src/observation.ts` — IOSViewNode (the XCUITest element-tree
+  equivalence: elementId/elementType/label/value), the duck-typed
+  IOSObservationHost seam, observeIOSScreen: THE XCUITEST LAW (a
+  'none' framework refuses with a named error, the host NEVER called),
+  THE BUDGET LAW, screenDigest MEASURED.
+- `src/evidence.ts` — core-shaped EvidenceRef (TYPE-ONLY),
+  deterministic 'idev_' + digest-derived ids.
+- `src/synthesis-target.ts` — productName, sorted/deduped
+  bundleIdentifiers, the frozen five-format packaging vocabulary
+  (ipa|app|xcarchive|dSYM|zip), the fail-closed validator.
+- `src/verification.ts` — the duck-typed runJourney seam, counts
+  MEASURED, reasons VERBATIM, no DiffReport construction.
+- `test/ios.test.ts` — the 8 named tests incl. the import-discipline
+  pin.
+
+Note: the first turn stalled mid-flight (README written, fixtures
+next) for ~10 min — recovered via the continuation directive (the
+061a pattern) through the capacity fight; the worker resumed and
+completed cleanly.
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1397 pass / 0 fail / 14,477 expect() / 130 files**
+  (45-46s) — exactly baseline 1389 + 8 (the worker measured the same).
+- bun.lock diff: new-package entries only. Owned surface strict.
+
+Interface freezes landed (binding):
+- IOS_ENVIRONMENT_VERSION/IOS_TARGET_VERSION '0.1' + the
+  uiTestFramework/packaging vocabularies + the five component
+  contracts + the idev_ prefix — canonical owner @clapp/ios.
+
+## PHASE 8 COMPLETE — 5/5 (Android, Linux, Windows, macOS, iOS)
+
+The native-adapter seam is now closed across all five platforms: every
+adapter implements the five components (environment descriptor,
+observation adapter + host seam, evidence emitter, synthesis target,
+verification adapter + host seam) as v0.1 frozen contracts over the
+core/observe runtime and the diff/ir/journey type-only boundaries,
+each with its platform's honest-refusal observation law (AT-SPI / UIA
+/ AX / XCUITest), its content-derived evidence prefix (andev_ / lidev_
+/ wdev_ / mdev_ / idev_), and its frozen packaging vocabulary. The
+no-fork law is pinned by an import-discipline test in every package.
+
+Remaining: P9 — Autonomous App Factory (5 items).
