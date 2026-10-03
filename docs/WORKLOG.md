@@ -1880,3 +1880,42 @@ Interface freezes landed (binding):
   pgraph_ prefix — canonical owner @clapp/factory.
 
 Next unblocked work: CLAPP-088 — multi-pass repair (Owner W1).
+
+## 2026-10-03 — Phase 9 lane 4 integrated: multi-pass repair (CLAPP-088)
+
+The factory's fourth component — the pass scheduler over repair rounds.
+
+Delivery chain (Worker 1, chat 46fb755a, ~30 min incl. the recovery):
+- f752a35 — CLAPP-088 (W1): `feat(factory): CLAPP-088 multi-pass repair
+  — the tier-capped pass scheduler, derived outcomes, the honest
+  convergence/regression stops` (+ the new module + tests + fixtures +
+  the additive index re-exports + the grown five-file pin).
+- (merge) — `integrate: merge CLAPP-088 factory multi-pass repair`
+  (--no-ff). No lock change.
+
+Components:
+- `src/multi-pass-repair.ts` — TIER_PASS_CAPS (the frozen v0.1
+  tier→pass-cap table: minimal 2, standard 4, extended 8), the
+  duck-typed RepairRoundRunner seam (runRound → RoundFacts: the
+  round's OWN converged flag + MEASURED remainingFindings — the seam
+  reports facts only, never outcomes), PassRecord/PassOutcome (DERIVED
+  by comparison: converged/improved/stalled/regressed), the scheduler:
+  fail-closed validation, the cap a LAW, convergence terminal, a
+  REGRESSION an honest stop (never spend on a diverging candidate),
+  budget exhaustion honest (converged NEVER inferred from findings
+  alone), content-addressed 'mpass_' ids (scheduledAt caller-injected
+  and excluded), the repair lane NOT imported (the no-fork pin).
+- `test/multi-pass-repair.test.ts` — the 8 named tests.
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1429 pass / 0 fail / 14,929 expect() / 134 files**
+  (43-44s) — exactly baseline 1421 + 8 (the worker measured the same).
+- bun.lock unchanged. Owned surface strict.
+
+Interface freezes landed (binding):
+- MULTI_PASS_REPAIR_VERSION '0.1' + TIER_PASS_CAPS + the pass-outcome
+  vocabulary — canonical owner @clapp/factory.
+
+Next unblocked work: CLAPP-089 — the human release gate (Owner W1; the
+factory's final component).
