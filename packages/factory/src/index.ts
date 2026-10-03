@@ -68,3 +68,26 @@ export type {
   SpendRequest,
   SpendResult,
 } from './exploration-budgets';
+
+// ---- the package-graph synthesis (CLAPP-087 — the P9 third lane) --------------------
+// The graph the codegen lane walks: synthesized fail-closed from a
+// CLAPP-085 target classification + a learn composition plan (both
+// consumed as DATA, never forked), one 'target' node + one 'component'
+// node per selected manifest + one 'targets' edge per component (the
+// 'depends' kind reserved for the later cgraph-edge lane), counts
+// MEASURED, the tcls_/comp_ provenance carried verbatim, and
+// content-addressed 'pgraph_' ids (a DISTINCT prefix — the library
+// lane's 'cgraph_' is its own frozen identity, never re-used here).
+export {
+  COMPOSITION_BINDING_VERSION,
+  PACKAGE_GRAPH_VERSION,
+  synthesizePackageGraph,
+} from './package-graph';
+export type {
+  PackageGraph,
+  PackageGraphEdge,
+  PackageGraphEdgeKind,
+  PackageGraphNode,
+  PackageGraphNodeKind,
+  PackageGraphResult,
+} from './package-graph';

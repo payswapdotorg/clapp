@@ -459,10 +459,14 @@ describe('CLAPP-086 — adaptive exploration budgets (the P9 factory second lane
     const packageRoot = dirname(import.meta.dir); // packages/factory (one level above test/)
 
     // ---- 1. the exact src file list (the delivered surface) ----
+    // CLAPP-087 grew the surface to four files (package-graph is this
+    // package's third component); the pin stays exact — the living
+    // list, per the security imports.test.ts precedent.
     const srcFiles = listTsFiles(join(packageRoot, 'src')).sort();
     expect(srcFiles.map((file) => file.slice(packageRoot.length + 1))).toEqual([
       'src/exploration-budgets.ts',
       'src/index.ts',
+      'src/package-graph.ts',
       'src/target-classification.ts',
     ]);
 
