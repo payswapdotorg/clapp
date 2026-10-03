@@ -119,11 +119,11 @@
       "version": "0.1.0",
       "dependencies": {
         "@clapp/core": "workspace:*",
+        "@clapp/library": "workspace:*",
         "@clapp/observe": "workspace:*",
       },
       "devDependencies": {
         "@clapp/diff": "workspace:*",
-        "@clapp/library": "workspace:*",
         "@clapp/repair": "workspace:*",
       },
     },

@@ -49,3 +49,7 @@ export type { MiningResult, RepairPattern } from './repair-patterns';
 // ---- the archetype classifier (CLAPP-062 — the P6 third lane) -----------------------
 export { ARCHETYPE_TABLE_VERSION, ARCHETYPE_VERSION, classifyManifest } from './archetypes';
 export type { ArchetypeClassification, ArchetypeMatch, ClassificationResult } from './archetypes';
+
+// ---- the composition planner (CLAPP-063 — the P6 fourth lane) ----------------------
+export { COMPOSITION_VERSION, planComposition } from './composition';
+export type { CompositionPlan, CompositionResult, ExcludedComponent, SelectedComponent } from './composition';
