@@ -1,0 +1,18 @@
+{
+  "name": "@clapp/android",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CLAPP Android adapter (CLAPP-080): the P8 opener — the five platform components as v0.1 contracts (environment descriptor, observation/evidence/verification host seams, synthesis target) over the frozen core/diff/journey contracts. Linux/Windows/macOS/iOS and real device bindings are later lanes.",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "typecheck": "tsc --noEmit -p ." },
+  "dependencies": {
+    "@clapp/core": "workspace:*",
+    "@clapp/observe": "workspace:*"
+  },
+  "devDependencies": {
+    "@clapp/diff": "workspace:*",
+    "@clapp/ir": "workspace:*",
+    "@clapp/journey": "workspace:*"
+  }
+}
