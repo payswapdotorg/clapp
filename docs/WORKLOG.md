@@ -1418,3 +1418,56 @@ Next: P8 — Native Adapters (Android → Linux → Windows → macOS → iOS; p
 the WORK_ITEMS P8 section each platform implements the observation
 adapter, environment descriptor, evidence emitter, synthesis target, and
 verification adapter; the core Behavioral IR is never forked).
+
+## 2026-10-03 — PHASE 7 COMPLETE (for real): resource budgets integrated (CLAPP-075)
+
+Wave/phase: P7 Production Hardening closing lane, worker lane clapp-075a
+(Worker 1 — the sandbox/platform owner; the lane declared by the TL after
+the roadmap-gap correction).
+
+Integrated commits:
+- 6e147bc — CLAPP-075 (W1): `feat(security): CLAPP-075 resource budgets —
+  the §4 six-axis envelope, fail-closed accounting, over-budget refusal
+  that never consumes, budget_ content-addressed state`
+- (merge) — `integrate: merge CLAPP-075 packages/security budgets` (--no-ff)
+- (docs commit) — ROADMAP P7 ✅ 5/5 + this record.
+
+Delivered surface (6 files / +1,161 / −2):
+- `src/budgets.ts` (549 lines) — BUDGETS_VERSION '0.1'; the §4 six-axis
+  vocabulary (cpu-ms | memory-mb | process-count | filesystem-bytes |
+  network-egress-count | timeout-ms); createBudgetAccount (fail-closed
+  envelope: EVERY axis a positive integer — zero/negative/fractional/
+  missing limits are named errors); use() (fail-closed usage validation:
+  axis in the vocabulary, non-negative integer amount, calendar-valid
+  RFC3339 usedAt; within-budget → RECORDED with the MEASURED remaining;
+  over-budget → REFUSED with the named exceedance and the charge NEVER
+  consumes; exactly-at-limit → allowed, remaining 0); used()/remaining()
+  (measured, fresh defensive copies); snapshot 'budget_' content-addressed
+  over the canonical state (usage-order permutations of the same multiset
+  → the same digest — the observable state is the charge multiset).
+- `test/budgets.test.ts` (403) + fixtures (84) + the imports file-list
+  extension.
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1357 pass / 0 fail / 14,131 expect() / 125 files** (44.98s)
+  — exactly baseline 1349 + 8 (the worker's full-battery run hit the
+  documented CLAPP-010 e2e flake once — isolated clean, both measurements
+  disclosed; the Lead box ran clean).
+- package.json/tsconfig/bun.lock byte-identical. Owned surface strict.
+
+## PHASE 7 CLOSED — all five P7 checkboxes ✅ (070, 071, 072, 073, 074 + 075)
+
+The @clapp/security package now carries the complete Production Hardening
+v0.1: authorization boundary, redaction, isolation, audit + cancellation,
+the readiness gate, and resource budgets — 6 modules, ~2,900 lines, 48
+named tests, content-addressed identities throughout
+(authz_/redct_/iso_/audit_/atrail_/ready_/budget_). Honest boundary:
+v0.1 is the CONTRACT + ACCOUNTING core for each surface; OS-level
+enforcement and the operational demonstration campaigns are the runtime
+deployment's concern.
+
+Next: P8 — Native Adapters (Android → Linux → Windows → macOS → iOS; each
+platform: observation adapter, environment descriptor, evidence emitter,
+synthesis target, verification adapter; the core Behavioral IR is never
+forked).

@@ -59,10 +59,10 @@ CLAPP
 │   ├── ✅ composition planning (greedy rank-ordered selection over the frozen retrieval + compat verdicts, comp_ plans — @clapp/learn; CLAPP-063)
 │   └── ✅ improvement benchmarks (the acceptance harness: measured plan deltas over ordered snapshots, honest verdict cascade, bench_ reports — @clapp/learn; CLAPP-064, the tech lead's lane)
 │
-├── 🟡 P7 Production Hardening
+├── ✅ P7 Production Hardening
 │   ├── ✅ auth/session boundary (the §1 five-kind statement capture, per-target observation gate, authz_ sessions — @clapp/security; CLAPP-070)
 │   ├── ✅ tenancy (the §6 five-domain separation, tenant zones, the publish-leak guard, iso_ snapshots — @clapp/security; CLAPP-072)
-│   ├── ⬜ resource budgets (CLAPP-075 — declared 2026-10-03; the §4 sandboxing budgets)
+│   ├── ✅ resource budgets (the §4 six-axis envelope, fail-closed accounting, refusal-never-consumes — @clapp/security; CLAPP-075)
 │   ├── ✅ secrets/redaction (the §3 six-class vocabulary, visible non-reversible markers, redct_ provenance — @clapp/security; CLAPP-071)
 │   └── ✅ auditability (the append-only seven-kind trail + the cancellation state machine, audit_/atrail_ identities — @clapp/security; CLAPP-073)
 │
