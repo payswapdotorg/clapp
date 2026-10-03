@@ -461,3 +461,188 @@ zone snapshot id and requires a contract version bump.
 - Runtime dependencies are exactly `@clapp/core` (`sha256Hex`) and
   `@clapp/observe` (`canonicalJson`); the isolation shapes are fully
   local (no devDependencies in v0.1).
+
+## Audit/cancellation/resume (CLAPP-073)
+
+The Phase-7 FOURTH lane (the `docs/ROADMAP.md` P7 checkbox
+"auditability", `docs/WORK_ITEMS.md`: "CLAPP-073 —
+Audit/cancellation/resume, Owner W3"): the **audit trail** — the
+production-hardening spine's RECORDING layer — plus the **honest
+cancellation state machine**. The three security surfaces that landed
+before this lane (the §1 boundary, the §3 redaction, the §6 isolation)
+all ACT; this module RECORDS those actions and makes the long
+operations they guard CANCELLABLE and RESUMABLE.
+
+### The contract
+
+```
+createAuditTrail()                            → AuditTrail
+trail.record(input, options)                  → Promise<{ ok: true, event } | { ok: false, errors[] }>
+trail.list()                                  → AuditEvent[]           // canonical (id) order, defensively copied
+trail.countsByKind()                          → Record<string, number> // MEASURED, only kinds that fired
+trail.snapshot()                              → Promise<string>         // 'atrail_' + 64 lowercase hex
+trail.registerOperation(input, options)       → Promise<OperationResult>
+trail.cancel(operationId, options)            → Promise<OperationResult>
+trail.resume(operationId, options)            → Promise<OperationResult>
+trail.operation(operationId)                  → CancellableOperation | null
+```
+
+- **`record(input, options)`** — `input` = `{ kind, actor, subject,
+  facts? }`; `options` = `{ recordedAt }` (RFC3339 calendar-valid,
+  caller-injected). Fail-closed: the `kind` must be IN the frozen
+  seven-kind vocabulary (an unknown kind is a named error listing the
+  observed value), `actor`/`subject` non-empty strings, and `facts` —
+  when present — a plain object of canonical-JSON-serializable MEASURED
+  values (arrays are not facts objects; an ABSENT facts rides as `{}` —
+  the event's non-optional slot, freshly minted per event). ALL errors
+  are collected (each naming its field, the list canonicalized —
+  sorted, deduped) and the call NEVER throws. Extra input keys are
+  ignored (the isolation `put()` precedent — the event is constructed
+  from the named fields).
+- **The operation methods are ASYNC and return `OperationResult`** —
+  the ok branch carries the `operation` record, with `event` present
+  exactly when the transition moved the trail (cancel and resume record
+  an event; registration does not — the seven-kind v0.1 vocabulary has
+  no registration kind). The work order's earlier
+  `AuditResult & { operation? }` sketch is superseded by its own
+  binding prose (the CLAPP-072 `ZoneResult` precedent): the sketch's
+  synchronous signatures cannot mint content-addressed event ids
+  (WebCrypto `sha256Hex` is async by design), and the sketch's required
+  `event` on every ok branch would force registration to fabricate an
+  off-vocabulary event. The rule the resolution yields: every TRAIL
+  MUTATION is async (it may mint an id); every query is synchronous
+  except `snapshot` (which hashes).
+- **`operation(operationId)`** — a query never errors: non-string,
+  empty, or unknown → an honest `null`; a hit is the operation record.
+
+### The seven-kind vocabulary (the frozen v0.1 audit action kinds)
+
+The recorded action kinds — the security surfaces that exist:
+
+| kind                   | the recorded action                                   |
+| ---------------------- | ----------------------------------------------------- |
+| `session-admitted`     | an authorization session was admitted                 |
+| `observation-refused`  | the §1 boundary refused                               |
+| `redaction-applied`    | sensitive fields were redacted (the count is a fact)  |
+| `zone-write`           | a datum entered an isolation zone                     |
+| `zone-refused`         | a zone write was refused                              |
+| `operation-cancelled`  | a cancellable operation was cancelled                 |
+| `operation-resumed`    | a cancelled operation was resumed                    |
+
+An off-vocabulary kind is a named error listing the observed value and
+the frozen vocabulary.
+
+### The append-only law and the duplicate refusal
+
+Once recorded, an event is NEVER rewritten, NEVER removed, and NEVER
+re-recorded — the trail stores events verbatim (facts carried verbatim,
+a deep copy preserving every key and value exactly), insert-only (the
+fail-closed memory precedent, CLAPP-060). The event id is
+content-addressed: `'audit_' +
+sha256Hex(canonicalJson(event minus id))` — so the identical event
+content (including `recordedAt`, because **the timestamp is content**)
+re-recorded into the same trail mints the same id and is refused as the
+`duplicate event:` (naming the already-recorded id); the same content
+under a different `recordedAt` is a DISTINCT event, and both are
+stored. Two separate trails may hold the same event content — the
+duplicate law is per-trail (separate instances share NOTHING).
+
+### The cancellation state machine (running → cancelled → resumed, the cycle)
+
+`registerOperation({ operationId }, { registeredAt })` — the CALLER
+supplies the non-empty operation id (the module never generates one —
+determinism; there is no `oper_` prefix law in v0.1, the caller's
+naming discipline is the boundary). A duplicate `operationId` is
+refused (named, the existing record carried). The operation starts
+`'running'`, `cancellationCount` 0, and records NO event.
+
+- **`cancel(operationId, { cancelledAt })`** — legal from `'running'`
+  OR `'resumed'`: state `'cancelled'`, `cancelledAt` set, the MEASURED
+  `cancellationCount` +1, and an `operation-cancelled` event recorded
+  (actor `'system'`, subject the operationId, facts
+  `{ cancellationCount }` measured, `recordedAt` the cancelledAt) — the
+  trail and the state machine move TOGETHER. Cancelling an
+  already-cancelled operation is refused (`already cancelled:`, the
+  state carried).
+- **`resume(operationId, { resumedAt })`** — legal ONLY from
+  `'cancelled'`: state `'resumed'`, `resumedAt` set, an
+  `operation-resumed` event recorded (the count STANDS on resume —
+  resume measures nothing new). A running operation is refused
+  (`not cancelled:`); a resumed one is refused (`already resumed:`);
+  both carry the state.
+- **The cycle continues**: a resumed operation may be cancelled again
+  (and again) — each cancellation bumps the measured count. The
+  single-slot `cancelledAt`/`resumedAt` fields carry the LATEST
+  transition's timestamp; `cancellationCount` is the cumulative
+  MEASURED total — the honest v0.1 record of a cycling operation.
+- **Atomicity**: a legal cancel or resume mints its event (duplicate
+  check included) BEFORE mutating the operation record — a transition
+  whose event would collide with an already-recorded identical event
+  is refused WHOLE (neither the state nor the trail moves).
+
+`registeredAt` is validated (the caller-injected-clock law holds at
+every mutation) and then deliberately NOT retained: the frozen v0.1
+`CancellableOperation` shape carries no registration slot, and
+retaining an unobservable timestamp would be unverifiable decoration.
+
+### The caller-injected-clock law
+
+`recordedAt`, `registeredAt`, `cancelledAt`, and `resumedAt` are
+CALLER-injected and validated (RFC3339, calendar-valid —
+2026-02-30-style rollover dates are refused); the trail never reads a
+clock (there is no clock to read). The timestamp is content: a
+different `recordedAt` is a different event, and a state-machine
+transition's caller-injected timestamp IS its event's `recordedAt`.
+
+### The prefixes
+
+The event id and the trail snapshot are content-addressed — this lane's
+two frozen proposals in the house prefix discipline (`pkg_` / `cgraph_`
+/ `rq_` / `creg_` / `fail_` / `fmem_` / `rpat_` / `arch_` / `comp_` /
+`bench_` / `authz_` / `redct_` / `iso_`):
+
+- **`audit_`** — `'audit_' + sha256Hex(canonicalJson(event minus id))`**
+  + 64 lowercase hex chars (`AUDIT_EVENT_ID_PATTERN`, module-level).
+- **`atrail_`** — `'atrail_' +
+  sha256Hex(canonicalJson(the canonically-sorted events))`** + 64
+  lowercase hex chars (`ATRAIL_SNAPSHOT_PATTERN`, module-level). The
+  events are sorted by id before hashing, so the same events recorded
+  in ANY order produce the identical snapshot and any change (any new
+  event) moves it; the empty trail hashes the empty array — a valid
+  digest.
+
+Changing either prefix changes every minted id and requires a contract
+version bump.
+
+### The determinism discipline
+
+- Same events + operations in ANY order → the identical `atrail_`
+  snapshot (the events are canonically sorted by id before hashing).
+- No clock, no randomness, no network, no filesystem, no module-level
+  mutable state, no hidden global state; separate `createAuditTrail()`
+  instances share NOTHING.
+- The module never mutates its inputs; events are stored VERBATIM
+  (facts carried verbatim, never normalized).
+- **The trail is SEALED** (a deliberate strengthening over the registry
+  alias precedent): every event and every operation record handed to
+  the caller — from `record`, `cancel`, `resume`,
+  `registerOperation`, `list`, and `operation` — is a FRESH DEEP COPY.
+  There is no alias channel at all: no caller can silently rewrite an
+  audit record (the audit law — immutable once recorded). This is also
+  why `snapshot()` can never fail on a well-formed trail: every stored
+  event was validated canonical-serializable at record time, and no
+  documented mutation channel exists.
+- All error lists canonical (sorted, deduped where multiple).
+
+### Honest scope notes
+
+- **In-memory v0.1**: the trail is a closure-private store; persistence,
+  tamper-evident external storage, and retention policy are later,
+  tech-lead-declared scope. The production readiness gate (CLAPP-074)
+  is the tech lead's lane and depends on this one.
+- The audit vocabulary records the security surfaces THAT EXIST; when
+  later surfaces land (resource budgets, native adapters), their kinds
+  arrive via a contract version bump, never a quiet widening.
+- Runtime dependencies are exactly `@clapp/core` (`sha256Hex`) and
+  `@clapp/observe` (`canonicalJson`); the audit shapes are fully local
+  (no devDependencies in v0.1).

@@ -56,3 +56,8 @@ export type { RedactionEntry, RedactionReport, RedactionResult, SensitiveKind } 
 
 export { ISOLATION_VERSION, createTenantZone } from './isolation';
 export type { DataDomain, IsolatedDatum, IsolationZone, StoreResult, ZoneResult } from './isolation';
+
+// ---- audit/cancellation/resume (CLAPP-073 — the P7 fourth lane) -----------------------
+
+export { AUDIT_VERSION, createAuditTrail } from './audit';
+export type { AuditActionKind, AuditEvent, AuditResult, AuditTrail, CancellableOperation } from './audit';
