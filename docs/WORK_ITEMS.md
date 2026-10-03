@@ -221,6 +221,10 @@ Depends on: 046,075
 Owner: W1
 Depends on: 080
 
+### CLAPP-082 — Windows adapter
+Owner: W1
+Depends on: 081
+
 Each native platform must implement:
 - observation adapter
 - environment descriptor
