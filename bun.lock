@@ -185,6 +185,14 @@
         "@clapp/core": "workspace:*",
       },
     },
+    "packages/security": {
+      "name": "@clapp/security",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+        "@clapp/observe": "workspace:*",
+      },
+    },
     "packages/store": {
       "name": "@clapp/store",
       "version": "0.1.0",
@@ -225,6 +233,8 @@
     "@clapp/repair": ["@clapp/repair@workspace:packages/repair"],
 
     "@clapp/sandbox": ["@clapp/sandbox@workspace:packages/sandbox"],
+
+    "@clapp/security": ["@clapp/security@workspace:packages/security"],
 
     "@clapp/store": ["@clapp/store@workspace:packages/store"],
 

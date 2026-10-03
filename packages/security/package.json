@@ -1,0 +1,17 @@
+{
+  "name": "@clapp/security",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CLAPP production hardening (CLAPP-070): the authorized-session boundary — the §1 authorization-statement capture and the observation gate. Redaction/isolation/audit/readiness are later lanes.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@clapp/core": "workspace:*",
+    "@clapp/observe": "workspace:*"
+  }
+}
