@@ -930,3 +930,59 @@ Interface freezes landed (binding):
 
 Next unblocked work: CLAPP-061 — Repair pattern mining (Owner W2; depends
 on 060, now landed).
+
+## 2026-10-03 — Phase 6 lane 2 integrated: repair pattern mining (CLAPP-061)
+
+Wave/phase: P6 Continuous Learning lane 2, worker lane clapp-061a
+(Worker 2 — Behavioral Model and Package Learning).
+
+Integrated commits:
+- 215812b — CLAPP-061 (W2): `feat(learn): CLAPP-061 repair pattern mining —
+  deterministic signature grouping over failure events, measured support,
+  fail-closed three-status verdicts, rpat_ content-addressed candidates`
+- (merge) — `integrate: merge CLAPP-061 packages/learn repair-patterns` (--no-ff)
+- (docs commit) — ROADMAP ✅ + this record.
+
+Delivered surface (6 files / +1,274 / −1 — the −1 is the licensed
+count-comment line):
+- `src/repair-patterns.ts` (519 lines) — PATTERN_VERSION '0.1';
+  mineRepairPatterns(events): fail-closed validation (every entry a valid
+  FailureRecord: failureVersion, frozen-vocabulary signature, repair facts,
+  calendar-valid observedAt — ALL errors collected with index+field names);
+  GROUPING by signature (dimension+severity+summary — findingIds are
+  anchors, not keys); MEASURED support (total/resolved/generalized) and the
+  resolved-events' anchor union (sorted, deduped, verbatim); the three-status
+  cascade: 'repair-pattern' (recurrence + a resolved repair with anchors),
+  'insufficient-evidence' (singleton, or recurrence with no resolution
+  anywhere), 'unresolved-dominant' (partial resolution — the honest ratio in
+  reasons); rpat_ content-addressed pattern ids; canonical signature-order
+  emission (input-order independent); empty input legal (zero groups,
+  honestly counted). Candidates only — the guard/test/correction decision
+  is the TL's and later lanes' (documented boundary).
+- `test/repair-patterns.test.ts` (582) + fixture appends (+72) — the 8
+  named tests; the import-discipline assertion extended at its ACTUAL
+  location (inside failure-memory.test.ts — the packet referenced a
+  non-existent file; the worker disclosed and applied the licensed edit
+  correctly).
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1284 pass / 0 fail / 13,102 expect() / 115 files** (44.66s)
+  — exactly baseline 1276 + 8 (the worker's box showed rotating flake
+  classes — isolated and disclosed both measurements; the Lead box ran
+  clean).
+- package.json/tsconfig byte-identical; src/failure-memory.ts untouched.
+
+Interface freezes landed (binding):
+- PATTERN_VERSION '0.1' + RepairPattern + MiningResult + the rpat_ prefix —
+  canonical owner @clapp/learn (repair-patterns.ts).
+
+Notable decisions:
+- The §3.2 status overlap (partial resolution WITH anchors) resolves as a
+  priority cascade: the anchor mints 'repair-pattern', the split rides in
+  the measured support — fixed by the packet's own tests 4/6 contrast.
+- Fixture builders appended to the existing failure-fixtures.ts (the frozen
+  fixtures-list assertion enumerates exactly one fixtures file).
+
+Next unblocked work: CLAPP-062 — Archetype classifier (Owner W1; depends on
+020 + 050, both landed).
