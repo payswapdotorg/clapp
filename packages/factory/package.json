@@ -1,0 +1,16 @@
+{
+  "name": "@clapp/factory",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CLAPP factory (CLAPP-085): the P9 opener — target classification binding the five frozen P8 platforms and the learn lane's frozen archetypes into the factory's entry contract (fail-closed, content-addressed tcls_ ids, caller-injected clocks). Exploration budgets, package-graph synthesis, multi-pass repair, and the human release gate are later lanes.",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "typecheck": "tsc --noEmit -p ." },
+  "dependencies": {
+    "@clapp/core": "workspace:*",
+    "@clapp/observe": "workspace:*"
+  },
+  "devDependencies": {
+    "@clapp/learn": "workspace:*"
+  }
+}
