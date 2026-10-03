@@ -327,8 +327,12 @@ describe('CLAPP-085 — target classification (the P9 factory opener)', () => {
     const packageRoot = dirname(import.meta.dir); // packages/factory (one level above test/)
 
     // ---- 1. the exact src file list (the delivered surface) ----
+    // CLAPP-086 grew the surface to three files (exploration-budgets is
+    // this package's second component); the pin stays exact — the living
+    // list, per the security imports.test.ts precedent.
     const srcFiles = listTsFiles(join(packageRoot, 'src')).sort();
     expect(srcFiles.map((file) => file.slice(packageRoot.length + 1))).toEqual([
+      'src/exploration-budgets.ts',
       'src/index.ts',
       'src/target-classification.ts',
     ]);

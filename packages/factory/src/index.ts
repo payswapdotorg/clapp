@@ -45,3 +45,26 @@ export type {
   TargetClassificationResult,
   TargetRequest,
 } from './target-classification';
+
+// ---- the adaptive exploration budgets (CLAPP-086 — the P9 second lane) --------------
+// The frozen v0.1 tier table that spends the CLAPP-085 budget-tier tags
+// as exploration caps (the explore policy's three budget axes as data),
+// the fail-closed resolver (a fresh caps copy per resolution, the tcls_
+// provenance carried verbatim), and the CLAPP-075-law ledger (a refused
+// spend never consumes; remaining is measured from the given caps,
+// never asserted from the tier name).
+export {
+  EXPLORATION_BUDGET_VERSION,
+  TIER_CAPS,
+  createBudgetLedger,
+  resolveExplorationBudget,
+} from './exploration-budgets';
+export type {
+  BudgetLedger,
+  ExplorationBudget,
+  ExplorationBudgetResult,
+  ExplorationCaps,
+  LedgerResult,
+  SpendRequest,
+  SpendResult,
+} from './exploration-budgets';
