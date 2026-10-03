@@ -1525,3 +1525,63 @@ Interface freezes landed (binding):
 
 Next unblocked work: CLAPP-081 — the Linux adapter (Owner W1; the second
 platform in the frozen sequence).
+
+## 2026-10-03 — Phase 8 lane 2 integrated: the Linux adapter (CLAPP-081)
+
+The P8 second platform, executed on the corrected packet (the original
+081 dispatch was VOIDED — the 080→081 adaptation had left android
+literals, adb/uiautomator tooling refs, a stale 1357 baseline, and the
+'none'-bus contradiction; the prime-kick BLOCKED report caught it BEFORE
+a wasted worker run — the packet was re-issued with linux literals, the
+AT-SPI law made explicit, and the measured baseline 1365/126/14,201).
+
+Delivery chain (Worker 1, chat 544c72db, ~16 min execution):
+- 96c33c7 — CLAPP-081 (W1): `feat(linux): CLAPP-081 Linux adapter —
+  the five platform components as v0.1 contracts, duck-typed host
+  seams, the no-fork law pinned` (14 files, +1,886, all under
+  packages/linux/; bun.lock reverted per the protocol).
+- 9f0223d — TL lock regen (+15: the @clapp/linux workspace
+  registration — new entries only).
+- 85f52c3 — `integrate: merge CLAPP-081 packages/linux adapter`
+  (--no-ff).
+
+Components (the five per WORK_ITEMS P8):
+- `src/environment.ts` (216) — LinuxEnvironment (kernelMajor, the
+  frozen x11|wayland display-server vocabulary, the frozen at-spi|none
+  accessibility-bus vocabulary — 'none' is the VALID honest no-bus
+  descriptor; its observation refusal is the AT-SPI law, not a
+  validator error), the fail-closed validator with named observed-value
+  errors.
+- `src/observation.ts` (278) — LinuxViewNode (the AT-SPI-tree
+  equivalence; screen-level, the IR stays authoritative), the duck-typed
+  LinuxObservationHost seam, observeLinuxScreen: THE AT-SPI LAW (a
+  'none' bus refuses with a named error, the host NEVER called), THE
+  BUDGET LAW (over-depth trees refuse), screenDigest =
+  sha256Hex(canonicalJson(tree)) + nodeCount/observedDepth MEASURED,
+  throwing hosts propagate loudly.
+- `src/evidence.ts` (136) — core-shaped EvidenceRef (TYPE-ONLY, never
+  forked), deterministic 'lidev_' + digest-derived ids, EVIDENCE_KINDS
+  consumed from the core's runtime mirror.
+- `src/synthesis-target.ts` (211) — binaryName, sorted/deduped
+  WM_CLASS windowClasses, the frozen five-format packaging vocabulary
+  (deb|rpm|flatpak|appimage|tarball), the fail-closed validator.
+- `src/verification.ts` (221) — the duck-typed runJourney seam,
+  completed/failed MEASURED, failure reasons VERBATIM, no DiffReport
+  ever constructed (the diff boundary documented).
+- `test/linux.test.ts` (407) — the 8 named tests incl. the
+  import-discipline pin (runtime @clapp/core + @clapp/observe only) +
+  fixtures (environments, view trees, targets, fake hosts).
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1373 pass / 0 fail / 14,273 expect() / 127 files**
+  (63-65s) — exactly baseline 1365 + 8 (the worker measured the same).
+- bun.lock diff: new-package entries only. Owned surface strict.
+
+Interface freezes landed (binding):
+- LINUX_ENVIRONMENT_VERSION/LINUX_TARGET_VERSION '0.1' + the
+  display-server/accessibility-bus/packaging vocabularies + the five
+  component contracts + the lidev_ prefix — canonical owner @clapp/linux.
+
+Next unblocked work: CLAPP-082 — the Windows adapter (Owner W1; the
+third platform in the frozen sequence).

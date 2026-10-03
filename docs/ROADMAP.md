@@ -68,7 +68,7 @@ CLAPP
 │
 ├── 🟡 P8 Native Adapters
 │   ├── ✅ Android (the five-component v0.1 contracts, host seams, no-fork law — @clapp/android; CLAPP-080)
-│   ├── ⬜ Linux
+│   ├── ✅ Linux (the five-component v0.1 contracts, the AT-SPI observation law, frozen display-server/accessibility-bus/packaging vocabularies — @clapp/linux; CLAPP-081)
 │   ├── ⬜ Windows
 │   ├── ⬜ macOS
 │   └── ⬜ iOS
