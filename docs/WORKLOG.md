@@ -1260,3 +1260,44 @@ Interface freezes landed (binding):
   @clapp/security (redaction.ts).
 
 Next unblocked work: CLAPP-072 — Multi-tenant isolation (Owner W3).
+
+## 2026-10-03 — Phase 7 lane 3 integrated: multi-tenant isolation (CLAPP-072)
+
+Wave/phase: P7 Production Hardening lane 3, worker lane clapp-072a
+(Worker 3 — assigned per WORK_ITEMS).
+
+Integrated commits:
+- 0f556ba — CLAPP-072 (W3): `feat(security): CLAPP-072 multi-tenant
+  isolation — the §6 five-domain separation, immutable zone data, the
+  executable publish-leak guard, iso_ content-addressed snapshots`
+- (merge) — `integrate: merge CLAPP-072 packages/security isolation` (--no-ff)
+- (docs commit) — ROADMAP ✅ + this record.
+
+Delivered surface (6 files / +1,254 / −1 — the −1 is the count-comment):
+- `src/isolation.ts` (560 lines) — ISOLATION_VERSION '0.1'; the §6
+  five-domain vocabulary (user-project | target-evidence | generated-code
+  | package-library | benchmark-corpus); createTenantZone (fail-closed
+  tenantId validation); put (fail-closed; the immutability law — a
+  same-(domain,key) changed rewrite refused, an identical duplicate
+  refused; the PUBLISH-LEAK GUARD — an input originDomain differing from
+  the target domain is refused with both named, making the §6 acceptance
+  law executable and generalized; storedAt caller-injected RFC3339); get
+  (honest nulls, verbatim hits — the registry alias precedent); list
+  (canonical, fresh arrays); counts (measured per non-empty domain);
+  snapshot ('iso_' + sha256Hex over sorted [{domain, key, valueDigest}] —
+  values hashed, never leaked; input-order independent). Tenant zones are
+  separate instances — zero shared state.
+- `test/isolation.test.ts` (429) + fixtures (88) + the imports file-list
+  extension.
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1333 pass / 0 fail / 13,727 expect() / 122 files** (68.34s)
+  — exactly baseline 1325 + 8 (the worker measured the same).
+- package.json/tsconfig/bun.lock byte-identical. Owned surface strict.
+
+Interface freezes landed (binding):
+- ISOLATION_VERSION '0.1' + DataDomain + IsolationZone + the iso_ prefix —
+  canonical owner @clapp/security (isolation.ts).
+
+Next unblocked work: CLAPP-073 — Audit/cancellation/resume (Owner W3).

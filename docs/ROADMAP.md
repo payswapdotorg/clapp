@@ -61,7 +61,7 @@ CLAPP
 │
 ├── 🟡 P7 Production Hardening
 │   ├── ✅ auth/session boundary (the §1 five-kind statement capture, per-target observation gate, authz_ sessions — @clapp/security; CLAPP-070)
-│   ├── ⬜ tenancy
+│   ├── ✅ tenancy (the §6 five-domain separation, tenant zones, the publish-leak guard, iso_ snapshots — @clapp/security; CLAPP-072)
 │   ├── ⬜ resource budgets
 │   ├── ✅ secrets/redaction (the §3 six-class vocabulary, visible non-reversible markers, redct_ provenance — @clapp/security; CLAPP-071)
 │   └── ⬜ auditability
