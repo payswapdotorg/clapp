@@ -225,6 +225,10 @@ Depends on: 080
 Owner: W1
 Depends on: 081
 
+### CLAPP-083 — macOS adapter
+Owner: W1
+Depends on: 082
+
 Each native platform must implement:
 - observation adapter
 - environment descriptor
