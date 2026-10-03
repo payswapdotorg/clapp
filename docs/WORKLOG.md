@@ -1392,7 +1392,18 @@ Acceptance (measured at the merge):
   — exactly baseline 1341 + 8.
 - package.json/tsconfig/bun.lock byte-identical; frozen modules untouched.
 
-## PHASE 7 CLOSED — all five P7 checkboxes ✅ (070, 071, 072, 073, 074)
+## P7 at 4/5 + the readiness gate (074) — resource budgets declared as CLAPP-075
+
+Correction (same class as the P5 registry gap): the roadmap's P7 section
+has FIVE checkboxes and WORK_ITEMS' 070-074 covered four of them
+(auth/session boundary, secrets/redaction, tenancy, auditability) plus
+the readiness gate — the "resource budgets" checkbox (SECURITY §4
+sandboxing: filesystem boundaries, CPU/memory budgets, process limits,
+network allowlists, execution timeouts, artifact quotas) had NO
+WORK_ITEMS entry. The tech lead declares CLAPP-075 — Resource budgets
+(Owner W1, the platform-adapter/sandbox owner; Depends on 074) to close
+P7 completely. The premature ✅ above is corrected to 🟡 in the same
+docs commit. The phase summary below stands as the 070-074 record.
 
 The @clapp/security package now carries the complete Production Hardening
 v0.1: the authorized-session boundary (070), secret redaction (071),

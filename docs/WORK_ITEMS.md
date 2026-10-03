@@ -207,6 +207,10 @@ Owner: W3
 Owner: tech lead
 Depends on: 070,071,072,073
 
+### CLAPP-075 — Resource budgets
+Owner: W1
+Depends on: 074
+
 ## P8 — Native adapters
 
 Each native platform must implement:
