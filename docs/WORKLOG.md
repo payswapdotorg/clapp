@@ -1351,3 +1351,59 @@ Next unblocked work: CLAPP-074 — Production readiness gate (Owner: TECH
 LEAD; depends on 070-073, ALL landed). The TL implements it directly: the
 readiness gate that weighs the four landed security surfaces and issues
 the honest production verdict.
+
+## 2026-10-03 — PHASE 7 COMPLETE: the production readiness gate (CLAPP-074, the tech lead's lane)
+
+Wave/phase: P7 Production Hardening closing lane. Per WORK_ITEMS
+("CLAPP-074 — Production readiness gate, Owner: tech lead, Depends on:
+070,071,072,073", all landed), this lane was implemented DIRECTLY by the
+tech lead.
+
+Integrated commits:
+- `feat(security): CLAPP-074 production readiness gate — the frozen
+  eight-check table over the four surfaces' measured evidence, the
+  absolute zero-leak law, ready_ content-addressed verdicts`
+- (merge) — `integrate: merge CLAPP-074 packages/security readiness` (--no-ff)
+- (docs commit) — ROADMAP P7 ✅ + this record.
+
+Delivered surface (src/readiness.ts + test/readiness.test.ts + the
+index/imports/README sanctioned extensions):
+- READINESS_VERSION '0.1'; evaluateReadiness(evidence, options): the
+  frozen EIGHT-CHECK table over the four surfaces' measured evidence
+  (authorization positive+negative, redaction positive+THE ABSOLUTE
+  ZERO-LEAK LAW, isolation positive+negative, audit positive+lifecycle);
+  readiness is a JUDGMENT over the caller's measured facts (never
+  re-measured, never fabricated — the promotion-gate pattern); ALL eight
+  met → 'ready'; ANY unmet → 'not-ready' with every unmet check named
+  and its measured value carried; evidence-shape failures collected and
+  named (results, never exceptions); ready_ content-addressed reports;
+  evaluatedAt caller-injected RFC3339 (calendar-valid; the clock-free
+  proof — a different timestamp moves the id, the checks stay
+  byte-identical).
+- Eight named tests, all green: determinism; fail-closed; the
+  all-eight-met ready case with the frozen check order; the not-ready
+  case (every unmet check named with measured values); the absolute
+  zero-leak law; measured-values-ride-verbatim; content-addressing; the
+  caller-injected-clock proof.
+
+Acceptance (measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1349 pass / 0 fail / 14,002 expect() / 124 files** (44.88s)
+  — exactly baseline 1341 + 8.
+- package.json/tsconfig/bun.lock byte-identical; frozen modules untouched.
+
+## PHASE 7 CLOSED — all five P7 checkboxes ✅ (070, 071, 072, 073, 074)
+
+The @clapp/security package now carries the complete Production Hardening
+v0.1: the authorized-session boundary (070), secret redaction (071),
+multi-tenant isolation (072), the audit trail + cancellation state
+machine (073), and the readiness gate (074) — 5 modules, ~2,400 lines, 40
+named tests, every interface frozen with content-addressed identities
+(authz_/redct_/iso_/audit_/atrail_/ready_). The production readiness
+verdict is now EXECUTABLE (the gate; the demonstration campaign with real
+measured evidence is future operational work the gate weighs).
+
+Next: P8 — Native Adapters (Android → Linux → Windows → macOS → iOS; per
+the WORK_ITEMS P8 section each platform implements the observation
+adapter, environment descriptor, evidence emitter, synthesis target, and
+verification adapter; the core Behavioral IR is never forked).
