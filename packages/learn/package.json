@@ -1,0 +1,21 @@
+{
+  "name": "@clapp/learn",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CLAPP continuous learning (CLAPP-060): the failure-event store — fail-closed in-memory failure memory over the frozen diff/repair vocabulary, content-addressed event identities, honest recurrence tracking. Pattern mining/archetypes/composition are later lanes.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@clapp/core": "workspace:*",
+    "@clapp/observe": "workspace:*"
+  },
+  "devDependencies": {
+    "@clapp/diff": "workspace:*",
+    "@clapp/repair": "workspace:*"
+  }
+}
