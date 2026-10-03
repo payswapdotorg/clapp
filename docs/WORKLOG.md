@@ -1836,3 +1836,47 @@ Interface freezes landed (binding):
 
 Next unblocked work: CLAPP-087 — package-graph synthesis (Owner W1;
 the resolved budgets are what synthesis spends against).
+
+## 2026-10-03 — Phase 9 lane 3 integrated: package-graph synthesis (CLAPP-087)
+
+The factory's third component — what the codegen lane walks.
+
+Delivery chain (Worker 1, chat de90e256, ~35 min incl. a hard tab
+reset + the capacity fight; the worker also self-recovered one
+capacity interlude mid-run):
+- c65fc23 — CLAPP-087 (W1): `feat(factory): CLAPP-087 package-graph
+  synthesis — the derived target+components graph, pgraph_
+  content-addressed ids, the identity law` (6 files, +1,104: the new
+  module + tests + fixtures + the additive index re-exports + the
+  grown file-list pin).
+- (merge) — `integrate: merge CLAPP-087 factory package-graph
+  synthesis` (--no-ff). No lock change.
+
+Components:
+- `src/package-graph.ts` — PackageGraph (the frozen v0.1 shape: nodes
+  sorted by id, edges sorted by (from,to,kind), nodeCount/edgeCount
+  MEASURED), the node-kind vocabulary ('target'|'component'), the
+  edge-kind vocabulary ('targets' now; 'depends' reserved for the
+  cgraph-edge binding — never minted here), synthesizePackageGraph:
+  fail-closed (plan compositionVersion '0.1' binding, malformed
+  selected named), DERIVED (the target node = the classification's
+  tcls_ id exactly once; the components = the plan's selected ids
+  verbatim; one 'targets' edge per component), the identity law
+  (duplicate selected ids and selected==target are NAMED errors),
+  content-addressed 'pgraph_' ids (DISTINCT from the library's
+  cgraph_ — the identity no-fork), synthesizedAt caller-injected and
+  excluded from the id body, the empty selection honest (target-only
+  graph, 1 node, 0 edges).
+- `test/package-graph.test.ts` — the 8 named tests.
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1421 pass / 0 fail / 14,832 expect() / 133 files**
+  (46-47s) — exactly baseline 1413 + 8 (the worker measured the same).
+- bun.lock unchanged. Owned surface strict.
+
+Interface freezes landed (binding):
+- PACKAGE_GRAPH_VERSION '0.1' + the node/edge-kind vocabularies + the
+  pgraph_ prefix — canonical owner @clapp/factory.
+
+Next unblocked work: CLAPP-088 — multi-pass repair (Owner W1).
