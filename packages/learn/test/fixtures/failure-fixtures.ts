@@ -237,3 +237,53 @@ export function failureRecord(spec: FailureRecordSpec): FailureRecord {
     observedAt: spec.observedAt ?? OBSERVED_AT_A,
   };
 }
+
+// ---- the archetype-classifier fixtures (CLAPP-062) ----------------------------------
+//
+// The classifier consumes manifest-SHAPED data — the @clapp/library
+// PackageManifest's id/version/capabilities/interface fields (its LOCAL
+// admission shape; the full manifest validation is the library's own
+// business). The builders below produce deliberately-overridable
+// manifest-shaped literals with varied capabilities/interface, so the
+// table tests exercise every rule and the fail-closed tests inject
+// contract-violating DATA on purpose.
+//
+// This section is APPENDED below the 060/061 exports (a pure addition —
+// the existing exports above are byte-identical). @clapp/library is the
+// TYPE-ONLY source for the manifest vocabulary (the 062 contract set —
+// pinned, with diff/repair, by the import-discipline test inside
+// test/failure-memory.test.ts).
+
+import type { PackageManifest } from '@clapp/library';
+
+/** Fixed caller-injected classification timestamps (fixtures never read the clock). */
+export const CLASSIFIED_AT_A = '2026-10-02T22:00:00Z';
+export const CLASSIFIED_AT_B = '2026-10-02T23:00:00Z';
+
+/** The manifest fields the classifier consumes — the frozen manifest's own shapes. */
+export type ManifestAdmission = Pick<
+  PackageManifest,
+  'id' | 'version' | 'capabilities' | 'interface'
+>;
+
+/** The manifest-shaped literal spec (deliberately permissive for the classifier tests). */
+export interface ManifestSpec {
+  /** Short lowercase-hex seed for the minted-shaped package id (packageId above). */
+  idSeed?: string;
+  /** Defaults to '1.0.0' — the manifest's immutable version. */
+  version?: string;
+  /** Defaults to [] — an interface-only manifest. */
+  capabilities?: string[];
+  /** Defaults to []. */
+  interface?: string[];
+}
+
+/** A manifest-shaped literal — the classifier's admission data, as fixture data. */
+export function manifestShape(spec: ManifestSpec = {}): ManifestAdmission {
+  return {
+    id: packageId(spec.idSeed ?? 'e5'),
+    version: spec.version ?? '1.0.0',
+    capabilities: spec.capabilities ?? [],
+    interface: spec.interface ?? [],
+  };
+}

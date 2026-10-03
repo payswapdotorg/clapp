@@ -99,7 +99,7 @@ async function admit(
 // ---- the import-discipline test's machinery (module level, like the library's) ------
 
 /** The frozen contract owners: import-type ONLY (src/** and test/fixtures/**). */
-const CONTRACT_PACKAGES = ['@clapp/diff', '@clapp/repair'] as const;
+const CONTRACT_PACKAGES = ['@clapp/diff', '@clapp/library', '@clapp/repair'] as const;
 
 /** The complete runtime dependency set. */
 const RUNTIME_ALLOWED = new Set(['@clapp/core', '@clapp/observe']);
@@ -541,8 +541,9 @@ describe('the failure memory (CLAPP-060)', () => {
 
   test('the package imports only frozen contracts — no cross-implementation import', () => {
     const files = listTsFiles(SRC_ROOT).sort();
-    // the three modules of the delivered surface
+    // the four modules of the delivered surface
     expect(files.map((file) => file.slice(PACKAGE_ROOT.length + 1))).toEqual([
+      'src/archetypes.ts',
       'src/failure-memory.ts',
       'src/index.ts',
       'src/repair-patterns.ts',
@@ -555,7 +556,7 @@ describe('the failure memory (CLAPP-060)', () => {
     const violations: string[] = [];
 
     // src/**: @clapp/core + @clapp/observe at RUNTIME; @clapp/diff +
-    // @clapp/repair for TYPES ONLY; nothing else.
+    // @clapp/repair + @clapp/library for TYPES ONLY; nothing else.
     for (const file of files) {
       const display = file.slice(PACKAGE_ROOT.length + 1);
       const source = readFileSync(file, 'utf8');

@@ -45,3 +45,7 @@ export type { FailureMemory, FailureRecord, FailureResult } from './failure-memo
 // ---- the repair-pattern miner (CLAPP-061 — the P6 second lane) ----------------------
 export { PATTERN_VERSION, mineRepairPatterns } from './repair-patterns';
 export type { MiningResult, RepairPattern } from './repair-patterns';
+
+// ---- the archetype classifier (CLAPP-062 — the P6 third lane) -----------------------
+export { ARCHETYPE_TABLE_VERSION, ARCHETYPE_VERSION, classifyManifest } from './archetypes';
+export type { ArchetypeClassification, ArchetypeMatch, ClassificationResult } from './archetypes';

@@ -243,3 +243,130 @@ the measured support:
   patterns become guards, tests, or package corrections is the tech
   lead's and later lanes' call (062 archetypes, 063 composition planning,
   064 improvement benchmarks).
+
+## Archetype classifier (CLAPP-062)
+
+The P6 THIRD lane (Worker 1 — Observation and Platform Adapters).
+`docs/LEARNING_AND_LIBRARY.md` §10's target end state starts with
+"**identify archetype**" — a future build recognizes what KIND of
+application it is before retrieving 70–95% of its architecture from the
+library (aspirational targets, §10's own caveat). This module is that
+first step's executable seed: it classifies ONE manifest-shaped input
+against the frozen five-rule table, minting content-addressed
+classifications from MEASURED manifest facts (the §8
+contamination-guard spirit — a classification is minted only from
+manifest FACTS, never guessed).
+
+### The contract
+
+```
+classifyManifest(manifest, { classifiedAt }): Promise<ClassificationResult>
+  ├─ { ok: true, classification: ArchetypeClassification }
+  └─ { ok: false, errors: string[] }            // fail-closed — results, never exceptions
+
+ArchetypeClassification:
+  ├─ archetypeVersion            // '0.1' (ARCHETYPE_VERSION)
+  ├─ tableVersion                // '0.1' (ARCHETYPE_TABLE_VERSION)
+  ├─ id                          // 'arch_' + sha256Hex(canonicalJson(classification minus id))
+  ├─ manifestId / manifestVersion  // the classified manifest's own identity, verbatim
+  ├─ matches                     // every matched rule, in the table's canonical order
+  ├─ outcome                     // 'classified' | 'unclassified'
+  ├─ classifiedAt                // RFC3339, caller-injected — the classifier never reads a clock
+  └─ reasons                     // [] when classified; the unclaimed capabilities when unclassified
+
+ArchetypeMatch:
+  ├─ name                 // the archetype's frozen name
+  ├─ matchedCapabilities  // MEASURED — the capabilities that satisfied the rule (sorted)
+  ├─ matchedInterface     // MEASURED — the interface facts the rule used (sorted)
+  └─ reasons              // honest, sorted, deduped; each names a measured fact
+```
+
+**Disclosed additive field (the packet-conflict resolution):** the work
+order's §3.2 requires the `'unclassified'` outcome to carry "the honest
+reason naming the unclaimed capabilities" while `matches` is empty — and
+the frozen §3.1 field list had nowhere to carry it. The classification
+therefore carries `reasons: string[]` (empty when classified; one entry
+per unclaimed capability when unclassified). Every §3.1 field keeps its
+exact name and semantics; the reasons ride inside the content-addressed
+identity like every other measured fact.
+
+### The frozen five-rule table (v0.1 — binding)
+
+Evaluated in this canonical order; each rule's evidence is the MEASURED
+intersection of the manifest's actual facts with the rule's requirements:
+
+| # | name | rule (over the manifest's ACTUAL facts) |
+|---|---|---|
+| 1 | `'api-backed-app'` | capabilities includes `'api-mock'` OR (interface contains ≥1 string starting with `'/api/'`) |
+| 2 | `'form-driven-app'` | capabilities includes `'form'` |
+| 3 | `'persistent-app'` | capabilities includes ≥1 entry starting with `'storage:'` |
+| 4 | `'navigable-app'` | capabilities includes BOTH `'route'` AND `'navigation'` |
+| 5 | `'static-content-app'` | capabilities is EMPTY (an interface-only manifest — routes may exist, no behavioral capability) |
+
+### Tags, not a partition
+
+One manifest may match SEVERAL rules — a manifest with forms AND storage
+is BOTH `'form-driven-app'` and `'persistent-app'` — and `matches`
+carries them ALL, in table order. A rule matches only with NON-EMPTY
+measured evidence; rule 5's evidence is the measured emptiness itself
+(`matchedCapabilities` and `matchedInterface` both `[]`, the reason
+naming the measured emptiness).
+
+**'unclassified' is honest, never a guess.** Zero matches is legal only
+when capabilities is NON-empty but no rule's evidence exists (e.g.
+capabilities `['route']` alone): outcome `'unclassified'`, with the
+reasons naming the unclaimed capabilities. Rule 5 means empty
+capabilities ⇒ at least `'static-content-app'` matches — that is the
+complete, deterministic cascade.
+
+### The admission gate (fail closed)
+
+The classifier consumes manifest-SHAPED data — the `@clapp/library`
+`PackageManifest`'s `id`/`version`/`capabilities`/`interface` — and
+validates exactly those fields locally (the FULL manifest validation is
+the library's business — `validatePackageManifest`, CLAPP-050):
+`capabilities`/`interface` arrays of non-empty strings, `id`/`version`
+non-empty strings. Extra manifest fields (packageVersion, category,
+provenance, …) are the library's own admission business. `options` must
+be `{ classifiedAt }` with `classifiedAt` RFC3339 **calendar-valid**
+(the house helper discipline: `Date.parse` is deliberately not used — it
+accepts rollover dates such as `2026-02-30`, which the classifier
+refuses). Every error is collected (never just the first) with the field
+named — `{ ok: false, errors }` results, never an exception; nothing is
+classified from partial data.
+
+### Prefix proposal (frozen for v0.1)
+
+- `arch_` — classification ids: `'arch_' + 64 lowercase hex chars`
+  (`sha256Hex(canonicalJson(classification minus id))`), THIS lane's
+  proposal in the repo's `pkg_` / `cgraph_` / `rq_` / `creg_` / `fail_` /
+  `fmem_` / `rpat_` content-addressing discipline. Changing it changes
+  every minted id and requires a contract version bump (only via a
+  tech-lead declaration wave).
+
+### Determinism + honesty laws
+
+- **No clock, no randomness, no network, no filesystem.** `classifiedAt`
+  is caller-injected per classification (RFC3339, calendar-valid).
+- **Fact-order independence.** The measured facts are sorted + deduped in
+  fresh arrays — the same facts in ANY input order produce a deep-equal
+  classification with an identical id (canonicalJson sorts keys at every
+  level; the matches are in the table's canonical order).
+- **The classifier never mutates its inputs**; every evidence and reason
+  array is a fresh value.
+- **Evidence is measured, never asserted** — each rule's
+  `matchedCapabilities`/`matchedInterface` are exactly the facts the rule
+  used; each reason names a measured fact.
+- **Ids are content-addressed** — any measured change (a fact, a match,
+  the outcome, the reasons, the caller-injected clock) moves the id.
+- **'unclassified' is a verdict, not an error** — a measured outcome
+  naming the unclaimed capabilities, so no caller mistakes silence for
+  success.
+
+### Import discipline (this lane's extension)
+
+`src/**` may import `@clapp/core` + `@clapp/observe` at RUNTIME, and
+`@clapp/diff` + `@clapp/repair` + `@clapp/library` for TYPES ONLY
+(`@clapp/library` — a devDependency — is the classifier's
+`PackageManifest` type source); nothing else. Pinned by the
+import-discipline test inside `test/failure-memory.test.ts`.
