@@ -233,6 +233,34 @@ Depends on: 082
 Owner: W1
 Depends on: 083
 
+## P9 — Autonomous App Factory
+
+### CLAPP-085 — Target classification
+Owner: W1
+Depends on: 084
+
+### CLAPP-086 — Adaptive exploration budgets
+Owner: W1
+Depends on: 085
+
+### CLAPP-087 — Package-graph synthesis
+Owner: W1
+Depends on: 086
+
+### CLAPP-088 — Multi-pass repair
+Owner: W1
+Depends on: 087
+
+### CLAPP-089 — Human release gate
+Owner: W1
+Depends on: 088
+
+The factory turns a build request into a classified target, explores
+within adaptive budgets, synthesizes the package graph, repairs
+multi-pass, and holds the release for the human gate. The five frozen
+platform contracts (P8) and the learn lane's frozen archetypes are its
+inputs. Do not fork the core Behavioral IR.
+
 Each native platform must implement:
 - observation adapter
 - environment descriptor
