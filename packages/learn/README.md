@@ -519,3 +519,32 @@ fixtures may import the runtime set's members for TYPES ONLY (the frozen
 the licensed consequence of moving `@clapp/library` between the sets; a
 RUNTIME fixture import remains a violation). Pinned by the
 import-discipline test inside `test/failure-memory.test.ts`.
+
+## Improvement benchmark (CLAPP-064)
+
+P6's closing lane — owned and implemented by the **tech lead**: the P6
+acceptance gate ("repeated benchmark families show measurable reduction in
+build/repair work") as an executable harness. `runImprovementBenchmark(family,
+options)` runs a family — a fixed list of retrieval queries against ORDERED
+library snapshots — through the FROZEN composition machinery
+(`planComposition`, corpus admission via the frozen graph, retrieval via the
+frozen ranking), measures every plan (selected/excluded/considered counts,
+mean selected score), and mints a content-addressed report (`'bench_'` +
+sha256Hex over the canonical report minus its id — this lane's frozen prefix
+proposal) with an honest verdict:
+
+| verdict | condition (all measured) |
+| --- | --- |
+| `'improvement-detected'` | every consecutive snapshot pair's totalSelected non-decreasing, at least one strictly increased, no query's selected count ever decreased |
+| `'regression'` | some query's selected count decreased between consecutive snapshots (named in the reasons) |
+| `'no-improvement'` | everything else — including the honest nothing-measured case (zero queries or a single snapshot) |
+
+What is measured (v0.1, honest scope): the composition pipeline's observable
+work facts — selected coverage (more pre-built, verified components = less
+gap-filling build work), excluded/considered counts, mean score. The report
+never fabricates a reduction: every number comes from the plans the frozen
+machinery actually produced; corpus/query validation failures are carried
+VERBATIM from the frozen modules (they are the authorities). `benchmarkedAt`
+is caller-injected RFC3339 (calendar-valid; the harness never reads a
+clock — a different timestamp moves the id, the measured facts stay
+byte-identical). Deterministic: same family + options → deep-equal report.
