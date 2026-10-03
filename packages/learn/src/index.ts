@@ -53,3 +53,14 @@ export type { ArchetypeClassification, ArchetypeMatch, ClassificationResult } fr
 // ---- the composition planner (CLAPP-063 — the P6 fourth lane) ----------------------
 export { COMPOSITION_VERSION, planComposition } from './composition';
 export type { CompositionPlan, CompositionResult, ExcludedComponent, SelectedComponent } from './composition';
+
+// ---- the improvement benchmark (CLAPP-064 — the tech lead's lane) --------------------
+export { BENCHMARKED_BY, BENCHMARK_VERSION, runImprovementBenchmark } from './improvement';
+export type {
+  BenchmarkQuery,
+  BenchmarkResult,
+  ImprovementBenchmarkReport,
+  ImprovementFamily,
+  SnapshotAggregate,
+  SnapshotDelta,
+} from './improvement';
