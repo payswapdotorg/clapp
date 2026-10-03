@@ -882,3 +882,51 @@ tests, every interface frozen with content-addressed identities
 Next: P6 — Continuous Learning (CLAPP-060 failure memory, Owner W3,
 depends 044 ✅; 061 repair pattern mining W2; 062 archetype classifier W1;
 then 063/064 composition planning + improvement benchmarks).
+
+## 2026-10-03 — Phase 6 lane 1 integrated: failure memory (CLAPP-060)
+
+Wave/phase: P6 Continuous Learning (opener), worker lane clapp-060a
+(Worker 3 — Synthesis, Verification, and Repair, the failure-classification
+owner). NEW package `@clapp/learn`.
+
+Integrated commits:
+- d82cc42 — CLAPP-060 (W3): `feat(learn): CLAPP-060 failure memory —
+  fail-closed event store over the frozen diff/repair vocabulary,
+  content-addressed identities, honest recurrences`
+- (lock) — `chore(learn): regenerate bun.lock — @clapp/learn workspace
+  registration` (+14 lines, new-package entries only)
+- (merge) — `integrate: merge CLAPP-060 packages/learn failure-memory` (--no-ff)
+- (docs commit) — ROADMAP P6 🟡 + this record.
+
+Delivered surface (7 files / +1,612 / −0 — all under packages/learn/):
+- `src/failure-memory.ts` (599 lines) — FAILURE_VERSION '0.1';
+  createFailureMemory(): fail-closed admission over the §7 field list
+  (finding validated against the FROZEN diff-contract vocabulary —
+  dimension/severity/findingId/summary VERBATIM; repair facts
+  attempted/resolved/resolvedFindingIds/generalized: boolean|null — caller-
+  judged, never fabricated; packageRef null-legal; expected/actual carried
+  verbatim); event ids content-addressed ('fail_' + sha256Hex over the
+  record minus id) — duplicates refused by name, RECURRENCES stored as
+  distinct events (061's raw material); bySignature/byPackage/list (canonical
+  order, deep copies); size measured; snapshot 'fmem_' + sha256Hex over the
+  canonically-sorted records — input-order independent, empty memory valid;
+  observedAt caller-injected RFC3339 (calendar-valid, rollover rejected).
+- `test/failure-memory.test.ts` (622) + `test/fixtures/failure-fixtures.ts`
+  (167) — the 8 named tests incl. the adapted import-discipline test
+  (runtime @clapp/core + @clapp/observe; @clapp/diff + @clapp/repair
+  import-type ONLY).
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1276 pass / 0 fail / 13,035 expect() / 114 files** —
+  exactly baseline 1268 + 8 (the worker measured the same; its baseline run
+  disclosed one 2-CPU sandbox flake honestly — isolated 13/0, both
+  measurements reported).
+- bun.lock diff: new-package entries only. Owned surface strict.
+
+Interface freezes landed (binding):
+- FAILURE_VERSION '0.1' + FailureRecord + the fail_/fmem_ prefixes +
+  FailureMemory surface — canonical owner @clapp/learn (failure-memory.ts).
+
+Next unblocked work: CLAPP-061 — Repair pattern mining (Owner W2; depends
+on 060, now landed).
