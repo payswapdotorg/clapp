@@ -1471,3 +1471,57 @@ Next: P8 — Native Adapters (Android → Linux → Windows → macOS → iOS; e
 platform: observation adapter, environment descriptor, evidence emitter,
 synthesis target, verification adapter; the core Behavioral IR is never
 forked).
+
+## 2026-10-03 — Phase 8 lane 1 integrated: the Android adapter (CLAPP-080)
+
+Wave/phase: P8 Native Adapters (opener), worker lane clapp-080a
+(Worker 1 — the platform-adapter owner). NEW package `@clapp/android`.
+
+Integrated commits:
+- 31a708a — CLAPP-080 (W1): `feat(android): CLAPP-080 Android adapter —
+  the five platform components as v0.1 contracts, duck-typed host seams,
+  the no-fork law pinned`
+- (lock) — `chore(android): regenerate bun.lock — @clapp/android workspace
+  registration` (+15 lines, new-package entries only)
+- (merge) — `integrate: merge CLAPP-080 packages/android adapter` (--no-ff)
+- (docs commit) — ROADMAP P8 🟡 + this record.
+
+Delivered surface (14 files / +1,815 / −0 — all under packages/android/):
+- THE FIVE COMPONENTS (per the WORK_ITEMS P8 spec):
+  1. `src/environment.ts` — the AndroidEnvironment descriptor (apiLevel,
+     screenDp, the frozen ANDROID_PERMISSIONS vocabulary, the
+     maxHierarchyDepth observation budget) + the fail-closed validator.
+  2. `src/observation.ts` — the observation adapter: the AndroidViewNode
+     tree (the a11y-tree equivalence) + the DUCK-TYPED
+     AndroidObservationHost seam (in-test fakes; real adb/uiautomator are
+     deployment scope) + observeAndroidScreen (fail-closed; the
+     over-depth budget law; screenDigest/nodeCount/observedDepth all
+     MEASURED).
+  3. `src/evidence.ts` — the evidence emitter: core-shaped EvidenceRefs
+     (TYPE-ONLY — no IR forking) with deterministic 'andev_' ids derived
+     from the capture digest; the frozen EVIDENCE_KINDS validated.
+  4. `src/synthesis-target.ts` — the AndroidSynthesisTarget descriptor
+     (applicationId, activities, the frozen five-density vocabulary,
+     minApiLevel) + the fail-closed validator.
+  5. `src/verification.ts` — the verification adapter: the duck-typed
+     AndroidVerificationHost seam + verifyAndroidJourneys (journeys
+     sorted/deduped; completed/failed MEASURED; failure reasons carried
+     VERBATIM; throwing hosts propagate loudly).
+- `test/android.test.ts` (399) — the 8 named tests incl. the import-
+  discipline test PINNING the no-fork law (runtime @clapp/core +
+  @clapp/observe; @clapp/diff + @clapp/ir + @clapp/journey import-type
+  ONLY) + fixtures (environments, view trees, targets, fake hosts).
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1365 pass / 0 fail / 14,201 expect() / 126 files** (43.43s)
+  — exactly baseline 1357 + 8 (the worker measured the same).
+- bun.lock diff: new-package entries only. Owned surface strict.
+
+Interface freezes landed (binding):
+- ANDROID_ENVIRONMENT_VERSION/ANDROID_TARGET_VERSION '0.1' + the
+  permission/density vocabularies + the five component contracts + the
+  andev_ prefix — canonical owner @clapp/android.
+
+Next unblocked work: CLAPP-081 — the Linux adapter (Owner W1; the second
+platform in the frozen sequence).

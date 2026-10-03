@@ -66,8 +66,8 @@ CLAPP
 │   ├── ✅ secrets/redaction (the §3 six-class vocabulary, visible non-reversible markers, redct_ provenance — @clapp/security; CLAPP-071)
 │   └── ✅ auditability (the append-only seven-kind trail + the cancellation state machine, audit_/atrail_ identities — @clapp/security; CLAPP-073)
 │
-├── ⬜ P8 Native Adapters
-│   ├── ⬜ Android
+├── 🟡 P8 Native Adapters
+│   ├── ✅ Android (the five-component v0.1 contracts, host seams, no-fork law — @clapp/android; CLAPP-080)
 │   ├── ⬜ Linux
 │   ├── ⬜ Windows
 │   ├── ⬜ macOS
