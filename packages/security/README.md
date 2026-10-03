@@ -646,3 +646,33 @@ version bump.
 - Runtime dependencies are exactly `@clapp/core` (`sha256Hex`) and
   `@clapp/observe` (`canonicalJson`); the audit shapes are fully local
   (no devDependencies in v0.1).
+
+## Production readiness gate (CLAPP-074)
+
+P7's closing lane — owned and implemented by the **tech lead**: readiness
+is a JUDGMENT over measured facts (the promotion-gate pattern applied to
+production). `evaluateReadiness(evidence, options)` weighs the four landed
+surfaces' measured evidence against the frozen v0.1 check table — the
+gate never inspects implementations and never re-measures; it weighs the
+caller's own numbers:
+
+| # | surface | requirement (frozen v0.1) |
+|---|---|---|
+| 1 | authorization | sessionsAdmitted >= 1 (the boundary admits) |
+| 2 | authorization | observationRefusals >= 1 (the fail-closed path PROVEN exercised) |
+| 3 | redaction | fieldsRedacted >= 1 (the engine redacts) |
+| 4 | redaction | rawSecretLeaks === 0 — **absolute**: any measured leak is not-ready regardless of everything else |
+| 5 | isolation | zoneWrites >= 1 (zones store) |
+| 6 | isolation | crossOriginRefusals >= 1 (the publish-leak guard PROVEN exercised) |
+| 7 | audit | eventsRecorded >= 1 (the trail records) |
+| 8 | audit | cancellationCycles >= 1 (cancel/resume PROVEN exercised) |
+
+ALL eight met → `'ready'`; ANY unmet → `'not-ready'` with every unmet
+check named and its measured value carried. Evidence-shape failures
+(non-objects, negative or non-integer counts, a non-RFC3339 evaluatedAt)
+are collected, named errors — results, never exceptions. The report is
+content-addressed (`'ready_'` + sha256Hex over the canonical report minus
+its id — this lane's frozen prefix proposal); `evaluatedAt` is
+caller-injected (calendar-valid; a different timestamp moves the id, the
+weighed checks stay byte-identical — the clock-free proof). Deterministic:
+same evidence + options → deep-equal report.
