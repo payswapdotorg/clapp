@@ -91,3 +91,27 @@ export type {
   PackageGraphNodeKind,
   PackageGraphResult,
 } from './package-graph';
+
+// ---- the multi-pass repair scheduler (CLAPP-088 — the P9 fourth lane) ----------------
+// The tier-capped pass scheduler that drives bounded repair rounds
+// through a duck-typed runner seam (ONE bounded repair round per
+// invocation — the repair lane's frozen loop, scheduled, never
+// re-implemented) until convergence (terminal), an honest regression
+// stop, or pass-cap exhaustion: outcomes DERIVED from each round's own
+// facts (never reported by the seam), counts MEASURED, convergence
+// never inferred, the tcls_ provenance carried verbatim, and
+// content-addressed 'mpass_' ids (a DISTINCT prefix — the repair
+// lane's own ids are its own frozen identity, never re-used here).
+export {
+  MULTI_PASS_REPAIR_VERSION,
+  TIER_PASS_CAPS,
+  scheduleMultiPassRepair,
+} from './multi-pass-repair';
+export type {
+  MultiPassResult,
+  MultiPassSchedule,
+  PassOutcome,
+  PassRecord,
+  RepairRoundRunner,
+  RoundFacts,
+} from './multi-pass-repair';
