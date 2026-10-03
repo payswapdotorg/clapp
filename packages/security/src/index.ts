@@ -51,3 +51,8 @@ export type {
 
 export { REDACTION_VERSION, classifyFieldName, redactSensitiveFields } from './redaction';
 export type { RedactionEntry, RedactionReport, RedactionResult, SensitiveKind } from './redaction';
+
+// ---- multi-tenant isolation (CLAPP-072 — the P7 third lane) ---------------------------
+
+export { ISOLATION_VERSION, createTenantZone } from './isolation';
+export type { DataDomain, IsolatedDatum, IsolationZone, StoreResult, ZoneResult } from './isolation';

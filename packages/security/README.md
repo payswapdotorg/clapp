@@ -291,3 +291,173 @@ changes every minted report id and requires a contract version bump.
   mutable state, no hidden global state.
 - The module never mutates its inputs.
 - All error lists canonical (sorted, deduped where multiple).
+
+## Multi-tenant isolation (CLAPP-072)
+
+The Phase-7 THIRD lane (the `docs/ROADMAP.md` P7 checkbox "tenancy",
+`docs/WORK_ITEMS.md`: "CLAPP-072 — Multi-tenant isolation, Owner W3"):
+the **tenant isolation zone** — the §6 data-domain separation, made
+executable.
+
+`docs/SECURITY_AND_AUTHORIZATION.md` §6 (Data isolation) reads:
+
+> Separate:
+> - user project data
+> - target app evidence
+> - generated code
+> - package library
+> - benchmark corpus
+>
+> Library promotion must never accidentally publish private project data.
+
+This module IS that separation: `createTenantZone` mints a fail-closed
+tenant zone — an in-memory store whose every datum lives under exactly
+one of the five frozen §6 domains, inside exactly one tenant's zone
+instance — and the zone's write path enforces the two §6 laws: domain
+integrity (insert-only per (domain, key) pair) and the publish-leak
+guard (the §6 acceptance law, executable).
+
+### The contract
+
+```
+createTenantZone(tenantId)                  → { ok: true, zone } | { ok: false, errors[] }
+zone.put(input, options)                    → Promise<{ ok: true, datum } | { ok: false, errors[] }>
+zone.get(domain, key)                       → IsolatedDatum | null
+zone.list(domain)                           → string[]
+zone.counts()                               → Record<string, number>
+zone.snapshot()                             → Promise<string>   // 'iso_' + 64 lowercase hex
+```
+
+- **The factory is fail-closed**: the `tenantId` must be a non-empty
+  string — anything else (empty, null, a number, …) is a named error and
+  no zone is minted; the call never throws. (A valid zone is
+  `{ ok: true, zone }`, reading like the siblings'
+  `AuthorizationSessionResult`.)
+- **`put(input, options)`** — `input` = `{ domain, key, value }`
+  (optionally `originDomain`); `options` = `{ storedAt }` (RFC3339,
+  caller-injected per write). Fail-closed: ALL field errors are
+  collected and named (the list canonicalized — sorted, deduped), and a
+  rejected write stores nothing. The datum value must be
+  canonical-JSON-serializable plain data — the write path refuses what
+  the snapshot channel could never hash.
+- **Queries never error**: `get` with a non-string domain/key, an empty
+  key, or a miss is an honest `null`; `list` of a non-string or unknown
+  domain is `[]`; `counts()` is MEASURED per domain (only non-empty
+  domains listed, a fresh record every call).
+- **Query-handle policy (the registry precedent)**: `put` and `get`
+  return the STORED RECORD itself — an alias by construction; the stored
+  VALUE is verbatim BY VALUE (a deep copy preserving every key and value
+  exactly — the caller can never mutate a stored datum through the
+  object they passed in). `list` and `counts` are the sealed fresh-copy
+  channels.
+
+### The five §6 domains (the frozen v0.1 vocabulary)
+
+| domain             | the §6 class (verbatim)   |
+| ------------------ | ------------------------- |
+| `user-project`     | user project data         |
+| `target-evidence`  | target app evidence       |
+| `generated-code`   | generated code            |
+| `package-library`  | the package library       |
+| `benchmark-corpus` | the benchmark corpus      |
+
+A datum may live in no other domain: an off-vocabulary domain is a named
+error listing the frozen vocabulary.
+
+### The immutability law (insert-only zone data)
+
+The integrity unit is the **(domain, key) pair** — the registry's
+`(id, version)` precedent: a datum may be written ONCE per pair. The
+same key MAY live in several domains as separate, unrelated data (the
+domain is part of the address; there is no cross-domain overwrite
+channel — a write addressed to another domain never touches the first
+domain's datum). A rewrite of an existing pair is refused, naming the
+key and the domain:
+
+- **a CHANGED rewrite** — a different value, or the same value under a
+  different `storedAt` (the timestamp is content) — is the
+  `immutable datum:` refusal;
+- **an IDENTICAL rewrite** — same value AND same `storedAt` — is the
+  `duplicate datum:` refusal (an idempotent no-op refused as a
+  duplicate, the fail-closed memory precedent).
+
+### The publish-leak guard (the §6 acceptance law, executable)
+
+> Library promotion must never accidentally publish private project data.
+
+The write input MAY carry an optional `originDomain: DataDomain` — the
+domain the value came FROM. When it is present and differs from the
+target `domain`, the write is REFUSED with the named error:
+
+```
+cross-domain publication refused: "user-project" data cannot enter the "package-library" domain
+```
+
+This makes the §6 law EXECUTABLE for the one case it names (private
+project data never entering the library) and honestly GENERALIZES it to
+every domain pair (`target-evidence` → `generated-code` is refused the
+same way). A present `originDomain` EQUAL to the target domain is the
+explicit same-origin assertion — the write proceeds. When `originDomain`
+is ABSENT, the write also proceeds — **the caller asserts same-origin by
+omission**, an honesty this module documents rather than hides: v0.1
+cannot read a value's provenance off its bytes; the declaring caller IS
+the provenance channel. A present-but-malformed `originDomain`
+(non-string, off-vocabulary) fails closed with a named error.
+
+### The tenant-zone model
+
+The zone IS the tenant. `createTenantZone` validates the tenantId and
+the minted instance holds its data in a closure-private store: separate
+instances share NOTHING (no module-level state, no tenant-keyed
+registry), so one tenant's data is invisible to another zone — even
+another zone minted with the SAME tenantId string (the instance, not the
+string, is the boundary). The tenantId is deliberately not retained
+after validation: there is nothing to look the tenant up BY in a model
+where the instance is the boundary.
+
+### The `iso_` prefix proposal
+
+The zone snapshot is content-addressed: `'iso_' + sha256Hex(
+canonicalJson(the canonically-sorted [{ domain, key, valueDigest }]))`
+where each `valueDigest = sha256Hex(canonicalJson(value))` — this lane's
+frozen proposal in the house prefix discipline (`pkg_` / `cgraph_` /
+`rq_` / `creg_` / `fail_` / `fmem_` / `rpat_` / `arch_` / `comp_` /
+`bench_` / `authz_` / `redct_`). Shape: `iso_` + 64 lowercase hex chars
+(`ISO_SNAPSHOT_PATTERN`). The values are HASHED — never serialized into
+the id — so the snapshot is a leak-free fingerprint; the entries are
+sorted by (domain, key) before hashing, so the writes' input order never
+leaks; any change moves the snapshot. Changing the prefix changes every
+zone snapshot id and requires a contract version bump.
+
+### The determinism discipline
+
+- Same writes in ANY order → the identical `iso_` snapshot (entries are
+  canonically sorted before hashing); any change moves the snapshot.
+- No clock: `storedAt` is caller-injected per write and validated
+  (RFC3339, calendar-valid — 2026-02-30-style rollover dates are
+  refused); the zone never reads a clock. The timestamp is content — a
+  different `storedAt` is a different write.
+- No randomness, no network, no filesystem, no module-level mutable
+  state, no hidden global state.
+- The module never mutates its inputs; stored values are VERBATIM (by
+  value — a deep copy, never aliased to the caller's input).
+- All error lists canonical (sorted, deduped where multiple).
+
+### Honest scope notes
+
+- **In-memory v0.1**: the zone is a closure-private store; persistence,
+  cross-zone process isolation, and multi-process tenancy are later,
+  tech-lead-declared lanes. The §4 sandbox budgets (filesystem
+  boundaries, CPU/memory, process limits, network egress) are a
+  DIFFERENT section's lane — this one separates the DATA domains.
+- The write path validates value serializability precisely so
+  `snapshot()` — whose frozen signature returns `Promise<string>` with
+  no refusal branch — can never fail on a well-formed zone; the one
+  documented way to violate that invariant is to mutate a stored record
+  through the `get()` alias (the registry precedent's same trade-off,
+  outside the contract).
+- Audit (CLAPP-073) and the production readiness gate (CLAPP-074) are
+  later lanes, not this one.
+- Runtime dependencies are exactly `@clapp/core` (`sha256Hex`) and
+  `@clapp/observe` (`canonicalJson`); the isolation shapes are fully
+  local (no devDependencies in v0.1).
