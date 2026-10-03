@@ -12,6 +12,19 @@
         "typescript-eslint": "^8",
       },
     },
+    "packages/android": {
+      "name": "@clapp/android",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+        "@clapp/observe": "workspace:*",
+      },
+      "devDependencies": {
+        "@clapp/diff": "workspace:*",
+        "@clapp/ir": "workspace:*",
+        "@clapp/journey": "workspace:*",
+      },
+    },
     "packages/codegen": {
       "name": "@clapp/codegen",
       "version": "0.1.0",
@@ -202,6 +215,8 @@
     },
   },
   "packages": {
+    "@clapp/android": ["@clapp/android@workspace:packages/android"],
+
     "@clapp/codegen": ["@clapp/codegen@workspace:packages/codegen"],
 
     "@clapp/core": ["@clapp/core@workspace:packages/core"],
