@@ -104,6 +104,17 @@
         "playwright": "1.63.0",
       },
     },
+    "packages/factory": {
+      "name": "@clapp/factory",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+        "@clapp/observe": "workspace:*",
+      },
+      "devDependencies": {
+        "@clapp/learn": "workspace:*",
+      },
+    },
     "packages/gentests": {
       "name": "@clapp/gentests",
       "version": "0.1.0",
@@ -282,6 +293,8 @@
     "@clapp/explore": ["@clapp/explore@workspace:packages/explore"],
 
     "@clapp/extract": ["@clapp/extract@workspace:packages/extract"],
+
+    "@clapp/factory": ["@clapp/factory@workspace:packages/factory"],
 
     "@clapp/gentests": ["@clapp/gentests@workspace:packages/gentests"],
 
