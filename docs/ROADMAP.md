@@ -63,7 +63,7 @@ CLAPP
 │   ├── ✅ auth/session boundary (the §1 five-kind statement capture, per-target observation gate, authz_ sessions — @clapp/security; CLAPP-070)
 │   ├── ⬜ tenancy
 │   ├── ⬜ resource budgets
-│   ├── ⬜ secrets/redaction
+│   ├── ✅ secrets/redaction (the §3 six-class vocabulary, visible non-reversible markers, redct_ provenance — @clapp/security; CLAPP-071)
 │   └── ⬜ auditability
 │
 ├── ⬜ P8 Native Adapters

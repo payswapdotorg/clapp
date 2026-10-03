@@ -1216,3 +1216,47 @@ Notable decisions (disclosed by the worker):
   (the boundary is synchronous/pure by contract — documented).
 
 Next unblocked work: CLAPP-071 — Secret redaction (Owner W2).
+
+## 2026-10-03 — Phase 7 lane 2 integrated: secret redaction (CLAPP-071)
+
+Wave/phase: P7 Production Hardening lane 2, worker lane clapp-071a
+(Worker 2 — assigned per WORK_ITEMS).
+
+Integrated commits:
+- 16543f1 — CLAPP-071 (W2): `feat(security): CLAPP-071 secret redaction —
+  the §3 six-class vocabulary, visible non-reversible markers, measured
+  provenance digests, redct_ reports`
+- (merge) — `integrate: merge CLAPP-071 packages/security redaction` (--no-ff)
+- (docs commit) — ROADMAP ✅ + this record.
+
+Delivered surface (6 files / +1,071 / −0):
+- `src/redaction.ts` (446 lines) — REDACTION_VERSION '0.1'; the frozen
+  §3 six-class vocabulary (cookie | authorization-header | bearer-token |
+  api-key | password | private-user-data); classifyFieldName (the ordered
+  rule table: ends-with/exact matches, case-insensitive, first-match-wins,
+  honest null misses); redactSensitiveFields: the recursive walk (deep
+  copy, input never mutated, non-sensitive values verbatim), markers
+  'REDACTED:<kind>:<fingerprint8>' (a NON-REVERSIBLE sha256-8 prefix —
+  visible in provenance, distinguishable, never recoverable), entries
+  with dot/bracket paths in canonical order, countsByKind MEASURED,
+  originalDigest/redactedDigest measured (equal on a no-op — honest),
+  redct_ content-addressed report ids; cycles DETECTED and refused
+  (named error, no hang); scalar roots refused (named). Deterministic;
+  no clock/randomness/network/filesystem.
+- `test/redaction.test.ts` (236) + `test/imports.test.ts` (131, the FRESH
+  import-discipline test: exact 3-file src list, runtime set core+observe)
+  + `test/fixtures/redaction-fixtures.ts` (113).
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1325 pass / 0 fail / 13,564 expect() / 121 files** (66.19s)
+  — exactly baseline 1316 + 9 (8 redaction tests + the imports test; the
+  worker measured the same, zero flakes).
+- package.json/tsconfig/bun.lock byte-identical. Owned surface strict.
+
+Interface freezes landed (binding):
+- REDACTION_VERSION '0.1' + SensitiveKind + the rule table +
+  RedactionEntry/Report + the redct_ prefix — canonical owner
+  @clapp/security (redaction.ts).
+
+Next unblocked work: CLAPP-072 — Multi-tenant isolation (Owner W3).
