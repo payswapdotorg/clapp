@@ -1637,3 +1637,47 @@ Interface freezes landed (binding):
 
 Next unblocked work: CLAPP-083 — the macOS adapter (Owner W1; the
 fourth platform in the frozen sequence).
+
+## 2026-10-03 — Phase 8 lane 4 integrated: the macOS adapter (CLAPP-083)
+
+The P8 fourth platform, on the proven platform-lane pattern.
+
+Delivery chain (Worker 1, chat 1a0072ce, ~11 min execution):
+- e78f450 — CLAPP-083 (W1): `feat(macos): CLAPP-083 macOS adapter — the
+  five platform components as v0.1 contracts, duck-typed host seams, the
+  no-fork law pinned` (14 files, +1,874, all under packages/macos/).
+- (lock regen) — +15: the @clapp/macos workspace registration.
+- (merge) — `integrate: merge CLAPP-083 packages/macos adapter` (--no-ff).
+
+Components (the five per WORK_ITEMS P8):
+- `src/environment.ts` — MacOSEnvironment (osMajor, the frozen ax|none
+  accessibilityFramework vocabulary — 'none' is the VALID honest
+  no-framework descriptor; its observation refusal is the AX law), the
+  fail-closed validator.
+- `src/observation.ts` — MacOSViewNode (the AX-tree equivalence:
+  axId/role/title/description), the duck-typed MacOSObservationHost seam,
+  observeMacOSScreen: THE AX LAW (a 'none' framework refuses with a named
+  error, the host NEVER called), THE BUDGET LAW, screenDigest MEASURED.
+- `src/evidence.ts` — core-shaped EvidenceRef (TYPE-ONLY), deterministic
+  'mdev_' + digest-derived ids.
+- `src/synthesis-target.ts` — bundleName, sorted/deduped
+  bundleIdentifiers, the frozen five-format packaging vocabulary
+  (app|dmg|pkg|zip|universal), the fail-closed validator.
+- `src/verification.ts` — the duck-typed runJourney seam, counts
+  MEASURED, reasons VERBATIM, no DiffReport construction.
+- `test/macos.test.ts` — the 8 named tests incl. the import-discipline
+  pin.
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1389 pass / 0 fail / 14,409 expect() / 129 files**
+  (46s) — exactly baseline 1381 + 8 (the worker measured the same).
+- bun.lock diff: new-package entries only. Owned surface strict.
+
+Interface freezes landed (binding):
+- MACOS_ENVIRONMENT_VERSION/MACOS_TARGET_VERSION '0.1' + the
+  accessibilityFramework/packaging vocabularies + the five component
+  contracts + the mdev_ prefix — canonical owner @clapp/macos.
+
+Next unblocked work: CLAPP-084 — the iOS adapter (Owner W1; the fifth
+and final platform of the P8 sequence).

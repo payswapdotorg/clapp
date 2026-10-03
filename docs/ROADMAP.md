@@ -70,7 +70,7 @@ CLAPP
 │   ├── ✅ Android (the five-component v0.1 contracts, host seams, no-fork law — @clapp/android; CLAPP-080)
 │   ├── ✅ Linux (the five-component v0.1 contracts, the AT-SPI observation law, frozen display-server/accessibility-bus/packaging vocabularies — @clapp/linux; CLAPP-081)
 │   ├── ✅ Windows (the five-component v0.1 contracts, the UIA observation law, frozen uiAccessProvider/packaging vocabularies — @clapp/windows; CLAPP-082)
-│   ├── ⬜ macOS
+│   ├── ✅ macOS (the five-component v0.1 contracts, the AX observation law, frozen accessibilityFramework/packaging vocabularies — @clapp/macos; CLAPP-083)
 │   └── ⬜ iOS
 │
 └── ⬜ P9 Autonomous App Factory
