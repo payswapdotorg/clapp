@@ -112,6 +112,19 @@
         "@clapp/journey": "workspace:*",
       },
     },
+    "packages/ios": {
+      "name": "@clapp/ios",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+        "@clapp/observe": "workspace:*",
+      },
+      "devDependencies": {
+        "@clapp/diff": "workspace:*",
+        "@clapp/ir": "workspace:*",
+        "@clapp/journey": "workspace:*",
+      },
+    },
     "packages/ir": {
       "name": "@clapp/ir",
       "version": "0.1.0",
@@ -271,6 +284,8 @@
     "@clapp/extract": ["@clapp/extract@workspace:packages/extract"],
 
     "@clapp/gentests": ["@clapp/gentests@workspace:packages/gentests"],
+
+    "@clapp/ios": ["@clapp/ios@workspace:packages/ios"],
 
     "@clapp/ir": ["@clapp/ir@workspace:packages/ir"],
 

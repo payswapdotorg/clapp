@@ -1,0 +1,18 @@
+{
+  "name": "@clapp/ios",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CLAPP iOS adapter (CLAPP-084): the P8 fifth and final platform — the five platform components as v0.1 contracts (environment descriptor, observation/evidence/verification host seams, synthesis target) over the frozen core/diff/journey contracts. Real XCUITest/UIKit bindings are deployment scope.",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "typecheck": "tsc --noEmit -p ." },
+  "dependencies": {
+    "@clapp/core": "workspace:*",
+    "@clapp/observe": "workspace:*"
+  },
+  "devDependencies": {
+    "@clapp/diff": "workspace:*",
+    "@clapp/ir": "workspace:*",
+    "@clapp/journey": "workspace:*"
+  }
+}
