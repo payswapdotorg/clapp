@@ -213,6 +213,10 @@ Depends on: 074
 
 ## P8 — Native adapters
 
+### CLAPP-080 — Android adapter
+Owner: W1
+Depends on: 046,075
+
 Each native platform must implement:
 - observation adapter
 - environment descriptor
