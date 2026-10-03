@@ -7,8 +7,8 @@
 // own files, and node: builtins are runtime-provided, not packages.
 // test/fixtures/** may import @clapp packages for TYPES ONLY (relative
 // imports allowed — fixtures are plain data builders). The src file list
-// is asserted EXACT: audit.ts, authorization.ts, index.ts, isolation.ts,
-// redaction.ts.
+// is asserted EXACT: audit.ts, authorization.ts, budgets.ts, index.ts,
+// isolation.ts, readiness.ts, redaction.ts.
 
 import { describe, expect, test } from 'bun:test';
 import { readdirSync, readFileSync } from 'node:fs';
@@ -58,6 +58,7 @@ describe('the frozen-contract import discipline', () => {
     expect(files.map((file) => file.slice(PACKAGE_ROOT.length + 1))).toEqual([
       'src/audit.ts',
       'src/authorization.ts',
+      'src/budgets.ts',
       'src/index.ts',
       'src/isolation.ts',
       'src/readiness.ts',

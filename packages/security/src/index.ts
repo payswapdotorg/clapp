@@ -65,3 +65,7 @@ export type { AuditActionKind, AuditEvent, AuditResult, AuditTrail, CancellableO
 // ---- the production readiness gate (CLAPP-074 — the tech lead's lane) ----------------
 export { EVALUATED_BY, READINESS_VERSION, evaluateReadiness } from './readiness';
 export type { ReadinessCheck, ReadinessEvidence, ReadinessReport, ReadinessResult } from './readiness';
+
+// ---- resource budgets (CLAPP-075 — the P7 closing lane) -------------------------------
+export { BUDGETS_VERSION, createBudgetAccount } from './budgets';
+export type { BudgetAccount, BudgetAxis, BudgetEnvelope, BudgetResult, BudgetUsage } from './budgets';
