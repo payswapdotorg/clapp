@@ -167,6 +167,19 @@
         "@clapp/journey": "workspace:*",
       },
     },
+    "packages/macos": {
+      "name": "@clapp/macos",
+      "version": "0.1.0",
+      "dependencies": {
+        "@clapp/core": "workspace:*",
+        "@clapp/observe": "workspace:*",
+      },
+      "devDependencies": {
+        "@clapp/diff": "workspace:*",
+        "@clapp/ir": "workspace:*",
+        "@clapp/journey": "workspace:*",
+      },
+    },
     "packages/observe": {
       "name": "@clapp/observe",
       "version": "0.1.0",
@@ -268,6 +281,8 @@
     "@clapp/library": ["@clapp/library@workspace:packages/library"],
 
     "@clapp/linux": ["@clapp/linux@workspace:packages/linux"],
+
+    "@clapp/macos": ["@clapp/macos@workspace:packages/macos"],
 
     "@clapp/observe": ["@clapp/observe@workspace:packages/observe"],
 
