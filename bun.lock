@@ -123,6 +123,7 @@
       },
       "devDependencies": {
         "@clapp/diff": "workspace:*",
+        "@clapp/library": "workspace:*",
         "@clapp/repair": "workspace:*",
       },
     },
