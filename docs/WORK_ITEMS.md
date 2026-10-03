@@ -217,6 +217,10 @@ Depends on: 074
 Owner: W1
 Depends on: 046,075
 
+### CLAPP-081 — Linux adapter
+Owner: W1
+Depends on: 080
+
 Each native platform must implement:
 - observation adapter
 - environment descriptor
