@@ -334,12 +334,15 @@ describe('CLAPP-085 — target classification (the P9 factory opener)', () => {
     // package's third component); the pin stays exact — the living list.
     // CLAPP-088 grew the surface to five files (multi-pass-repair is
     // this package's fourth component); the pin stays exact — the living list.
+    // CLAPP-089 grew the surface to six files (release-gate is this
+    // package's fifth and final component); the pin stays exact — the living list.
     const srcFiles = listTsFiles(join(packageRoot, 'src')).sort();
     expect(srcFiles.map((file) => file.slice(packageRoot.length + 1))).toEqual([
       'src/exploration-budgets.ts',
       'src/index.ts',
       'src/multi-pass-repair.ts',
       'src/package-graph.ts',
+      'src/release-gate.ts',
       'src/target-classification.ts',
     ]);
 
