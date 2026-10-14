@@ -18,7 +18,7 @@
 // verbatim, content-addressed deterministic 'mpass_' ids with
 // scheduledAt excluded from the minting body, a changed tier moves the
 // id), and the import-discipline pin (the no-fork law over the exact
-// five-file src list: @clapp/core + @clapp/observe at RUNTIME,
+// six-file src list: @clapp/core + @clapp/observe at RUNTIME,
 // @clapp/learn TYPE-ONLY, no other packages — the repair lane NOT
 // imported, the loop scheduled through the duck-typed seam).
 
@@ -369,12 +369,16 @@ describe('CLAPP-088 — multi-pass repair (the P9 factory fourth lane)', () => {
     // CLAPP-088 grew the surface to five files (multi-pass-repair is
     // this package's fourth component); the pin stays exact — the living
     // list, per the security imports.test.ts precedent.
+    // CLAPP-089 grew the surface to six files (release-gate is this
+    // package's fifth and final component); the pin stays exact — the living
+    // list, per the security imports.test.ts precedent.
     const srcFiles = listTsFiles(join(packageRoot, 'src')).sort();
     expect(srcFiles.map((file) => file.slice(packageRoot.length + 1))).toEqual([
       'src/exploration-budgets.ts',
       'src/index.ts',
       'src/multi-pass-repair.ts',
       'src/package-graph.ts',
+      'src/release-gate.ts',
       'src/target-classification.ts',
     ]);
 

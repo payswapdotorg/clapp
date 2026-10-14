@@ -29,7 +29,8 @@
  * public surface below re-exports ONLY this package's own contracts.
  * Exploration budgets (CLAPP-086), package-graph synthesis (CLAPP-087),
  * multi-pass repair (CLAPP-088), and the human release gate (CLAPP-089)
- * are later lanes, never this package's.
+ * have since landed as this package's later lanes — the P9 factory is
+ * complete, and the roadmap with it.
  */
 
 // ---- the target classifier (CLAPP-085 — the P9 opener) ------------------------------
@@ -115,3 +116,35 @@ export type {
   RepairRoundRunner,
   RoundFacts,
 } from './multi-pass-repair';
+
+// ---- the human release gate (CLAPP-089 — the P9 fifth and final lane) -----------------
+// The honesty seam between the autonomous factory and the human: the
+// gate that holds every release until a CALLER-PRESENTED verdict
+// seals it. Five iron laws, frozen with RELEASE_GATE_VERSION '0.1':
+// never fabricate approval (no path through the module can produce a
+// verdict that did not arrive as an argument); the verdict vocabulary
+// is frozen to exactly 'approved' and 'rejected' ('pending' is a
+// STATE, never a verdict, and anything outside the two values is a
+// named error before any state change); one gate, one verdict (the
+// first verdict is permanent — no re-vote, no overwrite, no appeal);
+// pending and rejected never release (honest refusal DATA, never a
+// thrown exception); and content-addressed 'rgate_' ids with gatedAt
+// excluded from the minting body and the sealed verdict inside it (a
+// different verdict is a different gate identity). The bound CLAPP-088
+// MultiPassSchedule enters as DATA — duck-validated field by field,
+// never re-derived, never re-run — and its tcls_ + mpass_ provenance
+// chain appears verbatim in the gate and release records.
+export {
+  RELEASE_GATE_VERSION,
+  applyVerdict,
+  openReleaseGate,
+  releaseFromGate,
+} from './release-gate';
+export type {
+  GateState,
+  GateVerdict,
+  ReleaseGate,
+  ReleaseGateResult,
+  ReleaseRecord,
+  ReleaseResult,
+} from './release-gate';
