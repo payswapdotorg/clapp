@@ -1919,3 +1919,91 @@ Interface freezes landed (binding):
 
 Next unblocked work: CLAPP-089 — the human release gate (Owner W1; the
 factory's final component).
+
+## 2026-10-14 — Phase 9 lane 5 integrated: the human release gate (CLAPP-089) — PHASE 9 COMPLETE — THE ROADMAP IS COMPLETE
+
+The factory's fifth and final component — the honesty seam between the
+autonomous factory and the human, and the last line of the roadmap.
+
+Delivery chain (Worker 1, durable bundle download/clapp-089/,
+byte-verified against the 6253aa7 basis):
+- 4086b9b — CLAPP-089 (W1): `feat(factory): CLAPP-089 human release
+  gate — the caller-presented verdict seam, one-verdict-per-gate,
+  pending/rejected never release, rgate_ content-addressed ids`
+  (8 files, +1,575/−2, all under packages/factory/).
+- (merge) — `integrate: merge CLAPP-089 factory human release gate`
+  (--no-ff). No lock change.
+
+Components:
+- `src/release-gate.ts` — RELEASE_GATE_VERSION '0.1', the gate record
+  (content-addressed 'rgate_' + sha256Hex(canonicalJson(body minus id
+  minus gatedAt)), gatedAt excluded from the minting body, the sealed
+  verdict inside it), the five iron laws: never fabricate approval (a
+  verdict is CALLER-PRESENTED data only), the frozen two-value verdict
+  vocabulary ('approved'|'rejected'; 'pending' is a STATE never a
+  verdict), one gate one verdict (the second applyVerdict is a named
+  error; the first stands, sealed by re-minting the id), pending and
+  rejected never release (honest refusal DATA, never a thrown
+  exception), and the rgate_ id law. The CLAPP-088 MultiPassSchedule
+  bound as DATA (duck-validated field by field incl. totalRounds — the
+  085/088 house law "validates exactly the fields it reads" — the
+  mpass_ id passing through verbatim as scheduleId, convergence never
+  re-derived, the scheduler never re-run, MULTI_PASS_REPAIR_VERSION
+  pinned '0.1' as a named literal per the no-fork law). Runtime
+  imports @clapp/core + @clapp/observe only, plus in-package
+  ./target-classification for the frozen BUDGET_TIERS; the repair lane
+  never imported, not even type-only.
+- `test/release-gate.test.ts` — the 8 named tests: fail-closed gate
+  open; pending never releases; one gate one verdict; rejected never
+  releases; approved releases honestly (provenance chain + measured
+  facts verbatim); rgate_ id determinism (clock never moves the id;
+  verdict and tier do); the provenance chain law (non-mpass_
+  scheduleId never opens a gate); the import-discipline pin (the
+  six-file src list).
+- `test/fixtures/release-gates.ts` — minimal + extended schedules
+  minted by the ACTUAL 088 scheduler over the 088 fixtures (real
+  mpass_/tcls_ provenance: one honestly-converged, one
+  honestly-never-converged), the malformed-per-field override builder,
+  caller-injected clocks; no verdict fixtures (verdicts are
+  caller-presented literals).
+- `src/index.ts` — additive re-exports; the four sibling test pins
+  grown to the six-file list.
+
+Acceptance (Lead-side, measured at the merge):
+- `bun run typecheck` — 0 errors. `bun run lint` — 0 problems.
+- `bun test` — **1425 pass / 0 fail / 14,580 expect() / 135 files**
+  (this lead environment; 18 e2e sandbox-flavor skips are
+  environmental). Delta over the 6253aa7 baseline measured in the SAME
+  environment (1417 pass / 14,476 expect() / 134 files): exactly **+8
+  pass / +104 expect() / +1 file / 0 fail** — the worker's own numbers
+  (1429→1437 pass, 14,929→15,033 expect()) carry the identical delta;
+  every number reconciles.
+- bun.lock unchanged. Owned surface strict (the eight paths, verified
+  against the diff stat).
+- Bundle integrity: `git bundle verify` OK; commit proof, author, and
+  single-line message byte-exact.
+
+Interface freezes landed (binding):
+- RELEASE_GATE_VERSION '0.1' + the GateVerdict/GateState vocabularies +
+  the rgate_ prefix + the five iron laws — canonical owner
+  @clapp/factory.
+
+## PHASE 9 COMPLETE — 5/5 (classification, budgets, synthesis, repair, release gate) — THE ROADMAP IS COMPLETE
+
+The autonomous app factory is closed end to end: a build request is
+classified against the frozen P8 platform contracts and the learn
+lane's archetypes (085, tcls_), explored within adaptive fail-closed
+budgets (086), synthesized into the derived package graph (087,
+pgraph_), repaired under the tier-capped multi-pass scheduler (088,
+mpass_), and held for the one human decision — the release gate (089,
+rgate_), which never fabricates approval, never re-votes, and never
+releases on pending or rejected.
+
+Every phase of the roadmap is now ✅: P1 evidence, P2 behavioral model,
+P3 web synthesis, P4 differential verification, P5 package library,
+P6 continuous learning, P7 production hardening, P8 native adapters
+(5/5 platforms), P9 autonomous app factory (5/5 lanes). 89 work items,
+all delivered by dispatched workers, reviewed, merged --no-ff, and
+published to origin/main.
+
+Remaining: none. The roadmap is complete.
